@@ -10,8 +10,13 @@ object FlowBuild extends Build {
 
   lazy val root = Project(
     id = "flow",
-    base = file("."),
-    settings = buildSettings ++ jniSettings ++ runSettings ++ Seq(libraryDependencies ++= Dependencies.all))
+    base = file("main"),
+    settings = buildSettings ++ jniSettings ++ Seq(libraryDependencies ++= Dependencies.all))
+    
+  lazy val example = Project(
+    id = "flow-example",
+    base = file("example"),
+    settings = buildSettings ++ runSettings ++ Seq(libraryDependencies ++= Dependencies.all))
 
   lazy val buildSettings = Defaults.defaultSettings ++ Seq(
     organization := Organization,
@@ -33,7 +38,8 @@ object FlowBuild extends Build {
     mappings in (Compile, packageBin) <+= linkerOutput map { out =>
       out -> ("native/" + System.getProperty("os.name").toLowerCase + "/" + System.getProperty("os.arch").toLowerCase + "/libflow.so")
     },
-    Keys.`package` in (Compile, packageBin) <<= (Keys.`package` in (Compile, packageBin)).dependsOn(NativeBuild.link)
+    Keys.`package` in (Compile, packageBin) <<= (Keys.`package` in (Compile, packageBin)).dependsOn(NativeBuild.link),
+    exportJars := true
   )
 
   lazy val runSettings = Seq(
