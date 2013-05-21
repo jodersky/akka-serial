@@ -1,7 +1,8 @@
-package com.github.jodersky.flow
+package com.github.jodersky.flow.example
 
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
+import com.github.jodersky.flow.Serial
 
 object Main {
 
