@@ -1,0 +1,56 @@
+import sbt._
+import Keys._
+
+object NativeSettings {
+  
+  val jdkHome = SettingKey[File]("jdk-home", "Home of JDK.")
+  
+  val javaClass = SettingKey[String]("native-java-file", "Fully qualified name of class containing native declarations.")
+  val sourceDirectory = SettingKey[File]("native-source-directory", "Native source directory ontaining files to compile.")
+  val sources = SettingKey[File]("native-source", "Native source files to compile.")
+  
+  val compiler = SettingKey[String]("native-compiler", "Native compiler.")
+  val flags = SettingKey[Seq[String]]("native-flags", "Flags for native compiler.")
+  val includeDirectories = SettingKey[Seq[File]]("native-include-directories", "Include directories for native compiler.")
+  val outputDirectory = SettingKey[File]("native-output-directory", "Directory for native output.")
+
+  val makeOutputDirectory = TaskKey[Unit]("native-make-output-directory", "Make native output directory.")
+  val compile = TaskKey[Unit]("native-compile", "Compiles native sources.")
+  val javah = TaskKey[Unit]("native-javah", "Generate JNI headers.")
+  
+  val javahTask = javah <<= (javaClass, sourceDirectory, Keys.classDirectory) map {(j, src, cp) =>
+    val cmd = "javah -d " + source.absolutePath + " -cp " + cp.absolutePath + " " + javaClass
+    cmd !
+  }
+
+  def compileTask(compiler: String, flags: Seq[String], includeDirectories: Seq[File], source: File, outputDirectory: File): Unit = {
+    val cmdParts =
+      List(compiler) ++
+        flags ++
+        includeDirectories.map(i => "-I" + i.absolutePath) ++
+        List("-c", source.absolutePath) ++
+        List("-o", (outputDirectory / source.base).absolutePath + ".o")
+
+    val cmd = cmdParts.mkString(" ")
+    println(cmd)
+    cmd !
+  }
+
+  def jdkHome = 
+
+  lazy val defaults = Seq(
+    jdkHome := file(System.getProperty("java.home")) / "..",
+    compiler := "gcc",
+    flags := Seq(),
+    source <<= sourceDirectory(_ / "main" / "c" / "flow.c"),
+    includeDirectories := Seq(jdkHome / "include", jdkHome / "include" / "linux"),
+    outputDirectory <<= target(_ / "c"),
+    makeOutputDirectory <<= (outputDirectory) map {o => o.mkdirs()},
+    
+    
+    compile <<= ((compiler, flags, includeDirectories, source, outputDirectory) map {
+      (c, f, i, s, o) => compileTask(c, f, i, s, o)
+    }).dependsOn(makeOutputDirectory)
+    )
+
+}
