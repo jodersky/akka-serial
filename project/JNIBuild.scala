@@ -13,9 +13,10 @@ object JNIBuild {
     {}
   } dependsOn (Keys.compile in Compile)
 
-  val defaults = NativeBuild.defaults ++ Seq(
+  val defaults: Seq[Setting[_]] = NativeBuild.defaults ++ Seq(
     javahTask,
-    NativeBuild.compile <<= NativeBuild.compile.dependsOn(javah))
+    NativeBuild.compile <<= NativeBuild.compile.dependsOn(javah)
+    )
 
 }
 

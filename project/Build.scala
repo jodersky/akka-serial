@@ -11,7 +11,7 @@ object FlowBuild extends Build {
   lazy val root = Project(
     id = "flow",
     base = file("."),
-    settings = buildSettings ++ jniSettings ++ runSettings)
+    settings = buildSettings ++ jniSettings ++ runSettings ++ Seq(libraryDependencies ++= Dependencies.all))
 
   lazy val buildSettings = Defaults.defaultSettings ++ Seq(
     organization := Organization,
@@ -19,8 +19,8 @@ object FlowBuild extends Build {
     scalaVersion := ScalaVersion,
     resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/",
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"),
-    compileOrder in Compile := CompileOrder.JavaThenScala)
-   
+    compileOrder in Compile := CompileOrder.Mixed)
+
   lazy val jniSettings = JNIBuild.defaults ++ Seq(
     jdkHome := file(System.getProperty("java.home")) / "..",
     javaClass := "com.github.jodersky.flow.NativeSerial",
@@ -29,9 +29,13 @@ object FlowBuild extends Build {
     NativeBuild.includeDirectories <<= jdkHome apply (jdk => Seq(jdk / "include", jdk / "include" / "linux")),
     linker := "gcc",
     linkerOptions := Seq("-shared", "-Wl,-soname,libflow.so.1"),
-    linkerOutput <<= NativeBuild.outputDirectory(_ / "libflow.so")
+    linkerOutput <<= NativeBuild.outputDirectory(_ / "libflow.so"),
+    mappings in (Compile, packageBin) <+= linkerOutput map { out =>
+      out -> ("native/" + System.getProperty("os.name").toLowerCase + "/" + System.getProperty("os.arch").toLowerCase + "/libflow.so")
+    },
+    Keys.`package` in (Compile, packageBin) <<= (Keys.`package` in (Compile, packageBin)).dependsOn(NativeBuild.link)
   )
-  
+
   lazy val runSettings = Seq(
     fork := true,
     connectInput in run := true,
@@ -41,7 +45,7 @@ object FlowBuild extends Build {
 object Dependencies {
   lazy val all = Seq()
 
-  //lazy val io = "com.github.scala-incubator.io" %% "scala-io-core" % "0.4.2"
-  //lazy val file = "com.github.scala-incubator.io" %% "scala-io-file" % "0.4.2"
+  lazy val io = "com.github.scala-incubator.io" %% "scala-io-core" % "0.4.2"
+  lazy val file = "com.github.scala-incubator.io" %% "scala-io-file" % "0.4.2"
 
 }

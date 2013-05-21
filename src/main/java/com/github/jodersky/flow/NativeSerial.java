@@ -3,7 +3,7 @@ package com.github.jodersky.flow;
 public class NativeSerial {
 	
 	static {
-		System.loadLibrary("flow");
+		NativeLoader.load();
 	}
 	
 	final static int E_PERMISSION = -1;
