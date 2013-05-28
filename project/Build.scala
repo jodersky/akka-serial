@@ -28,7 +28,7 @@ object FlowBuild extends Build {
 
   lazy val jniSettings = JNIBuild.defaults ++ Seq(
     jdkHome := file(System.getProperty("java.home")) / "..",
-    javaClass := "com.github.jodersky.flow.NativeSerial",
+    javaClass := "com.github.jodersky.flow.low.NativeSerial",
     NativeBuild.compiler := "gcc",
     options := Seq("-fPIC"),
     NativeBuild.includeDirectories <<= jdkHome apply (jdk => Seq(jdk / "include", jdk / "include" / "linux")),
@@ -49,9 +49,11 @@ object FlowBuild extends Build {
 }
 
 object Dependencies {
-  lazy val all = Seq()
 
   lazy val io = "com.github.scala-incubator.io" %% "scala-io-core" % "0.4.2"
   lazy val file = "com.github.scala-incubator.io" %% "scala-io-file" % "0.4.2"
+  lazy val akka = "com.typesafe.akka" %% "akka-actor" % "2.2-M3"
+  
+  lazy val all = Seq(akka)
 
 }

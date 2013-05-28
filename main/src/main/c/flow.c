@@ -37,7 +37,7 @@
 #include <termios.h>
 #include <fcntl.h>
 #include <poll.h>
-#include "com_github_jodersky_flow_NativeSerial.h"
+#include "com_github_jodersky_flow_low_NativeSerial.h"
 
 #define E_PERMISSION -1
 #define E_OPEN -2
@@ -236,7 +236,7 @@ inline jlong s2j(struct serial_config* pointer) {
   return (jlong) pointer;
 }
 
-JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_NativeSerial_open
+JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_low_NativeSerial_open
   (JNIEnv *env, jclass clazz, jstring device, jint baud, jlongArray jserialp)
 { 
   const char *dev = (*env)->GetStringUTFChars(env, device, 0);
@@ -250,13 +250,13 @@ JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_NativeSerial_open
   return r;
 }
 
-JNIEXPORT void JNICALL Java_com_github_jodersky_flow_NativeSerial_close
+JNIEXPORT void JNICALL Java_com_github_jodersky_flow_low_NativeSerial_close
   (JNIEnv * env, jclass clazz, jlong serial)
 {
   serial_close(j2s(serial));
 }
 
-JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_NativeSerial_read
+JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_low_NativeSerial_read
   (JNIEnv * env, jclass clazz, jlong serial, jbyteArray jbuffer)
 {
   
@@ -272,7 +272,7 @@ JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_NativeSerial_read
   return n;
 }
 
-JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_NativeSerial_write
+JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_low_NativeSerial_write
   (JNIEnv * env, jclass clazz, jlong serial, jbyteArray jbuffer)
 {
   unsigned char * buffer = (*env)->GetByteArrayElements(env, jbuffer, NULL);
@@ -284,7 +284,7 @@ JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_NativeSerial_write
   return r;
 }
 
-JNIEXPORT void JNICALL Java_com_github_jodersky_flow_NativeSerial_debug
+JNIEXPORT void JNICALL Java_com_github_jodersky_flow_low_NativeSerial_debug
   (JNIEnv *env, jclass clazz, jboolean value)
 {
   debug = (bool) value;

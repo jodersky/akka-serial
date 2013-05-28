@@ -1,41 +1,44 @@
-package com.github.jodersky.flow.example
+package com.github.jodersky.flow
+package example
 
-import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
-import com.github.jodersky.flow.Serial
-import scala.util.Try
 import scala.util.Success
+import scala.util.Try
+
+import com.github.jodersky.flow.Serial
+import com.github.jodersky.flow.Serial._
+
+import akka.actor.ActorSystem
+import akka.actor.Props
+import akka.io.IO
+import akka.util.ByteString
 
 object Main {
 
   def main(args: Array[String]): Unit = {
-    val isInt = Try(args(1).toInt) match {case Success(_) => true; case _ => false}
+    /*val isInt = Try(args(1).toInt) match { case Success(_) => true; case _ => false }
     if (!(args.length == 2 && isInt)) {
       println("invalid parameters")
       println("parameters: port baud")
       println("example: /dev/ttyACM0 115200")
       return
-    }
-    val port = args(0)
-    val baud = args(1).toInt
+    }*/
+    val port = "/dev/ttyACM0"
+    val baud = 115200
 
-    Serial.debug(true)
-    
-    println("opening " + port)
-    val serial = Serial.open(port, baud) { data =>
-      println("received: " + data.mkString("[", ",", "]"))
-    }
-    
-    println("press enter to write a looong array of data")
-    Console.readLine()
+    //low.Serial.debug(true)
 
-    val data: Array[Byte] = Array.fill(100)(42)
-    serial.write(data).map(d => println("wrote: " + d.mkString("[", ",", "]"))).recover { case t => println("write error") }
-
-    println("press enter to exit")
-    Console.readLine()
+    implicit val system = ActorSystem("flow")
+    val serial = system.actorOf(Props[SerialHandler], name = "serial-handler")
     
-    println("exiting")
-    Console.flush()
+    IO(Serial) ! Serial.Open(serial, port, baud)
+    
+    readLine()
+    serial ! Write(ByteString(42))
+    
+    readLine()
+    //serial ! Close
+    system.shutdown()
+
   }
 }

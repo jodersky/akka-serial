@@ -1,4 +1,4 @@
-package com.github.jodersky.flow
+package com.github.jodersky.flow.low
 
 import java.io.File
 import java.io.FileOutputStream

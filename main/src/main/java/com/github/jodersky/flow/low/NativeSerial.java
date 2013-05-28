@@ -1,6 +1,6 @@
-package com.github.jodersky.flow;
+package com.github.jodersky.flow.low;
 
-public class NativeSerial {
+class NativeSerial {
 	
 	static {
 		NativeLoader.load();
