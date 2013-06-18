@@ -13,7 +13,7 @@ object Jni {
     javahHeaderDirectory := (sourceManaged in Native).value / "javah",
     javah := {
     
-      val cp = (fullClasspath in Compile).value.map(_.data.getAbsolutePath).mkString(":")
+      val cp = (classDirectory in Compile).value
       for (clazz <- javahClasses.value) {
         val parts = Seq(
           "javah",
