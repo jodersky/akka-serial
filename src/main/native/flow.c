@@ -205,7 +205,6 @@ int serial_read(struct serial_config* serial, unsigned char * buffer, size_t siz
     }
     return r;
   } else {
-    DEBUG(printf("poll pipe result %d\n", pp.revents));
     return E_CLOSE;
   }
 }
