@@ -153,7 +153,9 @@ void serial_close(struct serial_config* serial) {
   int data = 0xffffffff;
   
   //write to pipe to wake up any blocked read thread (self-pipe trick)
-  write(serial->pipe_write, &data, 1);
+  if (write(serial->pipe_write, &data, 1) <= 0) {
+    DEBUG(perror("error writing to pipe during close"))
+  }
   
   close(serial->pipe_write);
   close(serial->pipe_read);

@@ -1,22 +1,33 @@
 import sbt._
 import Keys._
-import NativeBuild._
-import JNIBuild._
+
+import com.github.jodersky.build.NativeKeys._
+import com.github.jodersky.build.NativePlugin._
+import Jni._
 
 object FlowBuild extends Build {
   val Organization = "com.github.jodersky"
   val Version = "1.0-SNAPSHOT"
   val ScalaVersion = "2.10.1"
 
-  lazy val root = Project(
-    id = "flow",
-    base = file("main"),
-    settings = buildSettings ++ jniSettings ++ Seq(libraryDependencies ++= Dependencies.all))
+  lazy val main = Project("flow-main", file("flow-main")).settings(
+    buildSettings ++ Seq(libraryDependencies ++= Dependencies.all): _*
+  )
+    
+  lazy val native = NativeProject("flow-native", file("flow-native")).settings((Seq(
+    javahClasses := Seq("com.github.jodersky.flow.low.NativeSerial"),
+    includeDirectories in Native += jdkHome.value / "include" / "linux",
+    nativeSource in Native := baseDirectory.value / "src",
+    binaryType in Native := SharedLibrary,
+    binaryName in Native := "flow",
+    options in Native := Seq("-fPIC", "-O2"),
+    linkOptions in Native := Seq("-Wl,-soname,libflow.so.1")
+    ) ++ Jni.defaultSettings): _*).dependsOn(main)
     
   lazy val example = Project(
     id = "flow-example",
     base = file("example"),
-    settings = buildSettings ++ runSettings ++ Seq(libraryDependencies ++= Dependencies.all)).dependsOn(root)
+    settings = buildSettings ++ runSettings ++ Seq(libraryDependencies ++= Dependencies.all))
 
   lazy val buildSettings = Defaults.defaultSettings ++ Seq(
     organization := Organization,
@@ -25,22 +36,6 @@ object FlowBuild extends Build {
     resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/",
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"),
     compileOrder in Compile := CompileOrder.Mixed)
-
-  lazy val jniSettings = JNIBuild.defaults ++ Seq(
-    jdkHome := file(System.getProperty("java.home")) / "..",
-    javaClass := "com.github.jodersky.flow.low.NativeSerial",
-    NativeBuild.compiler := "gcc",
-    options := Seq("-fPIC"),
-    NativeBuild.includeDirectories <<= jdkHome apply (jdk => Seq(jdk / "include", jdk / "include" / "linux")),
-    linker := "gcc",
-    linkerOptions := Seq("-shared", "-Wl,-soname,libflow.so.1"),
-    linkerOutput <<= NativeBuild.outputDirectory(_ / "libflow.so"),
-    Keys.packageBin in Compile <<= (Keys.packageBin in Compile).dependsOn(NativeBuild.link),
-    mappings in (Compile, packageBin) <+= linkerOutput map { out =>
-      out -> ("native/" + System.getProperty("os.name").toLowerCase + "/" + System.getProperty("os.arch").toLowerCase + "/libflow.so")
-    },
-    exportJars := true
-  )
 
   lazy val runSettings = Seq(
     fork := true,
