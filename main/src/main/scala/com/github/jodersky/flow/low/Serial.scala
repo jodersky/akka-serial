@@ -12,7 +12,7 @@ import scala.util.Try
 class Serial private (val port: String, private val pointer: Long) {
   import NativeSerial._
 
-  private def doRead(): Array[Byte] = synchronized {
+  def read(): Array[Byte] = synchronized {
     val buffer = new Array[Byte](100)
     NativeSerial.read(pointer, buffer) match {
       case E_POINTER => throw new NullPointerException("pointer to native serial")
@@ -24,7 +24,7 @@ class Serial private (val port: String, private val pointer: Long) {
     }
   }
 
-  private def doWrite(data: Array[Byte]): Array[Byte] = {
+  def write(data: Array[Byte]): Array[Byte] = {
     import NativeSerial._
     NativeSerial.write(pointer, data) match {
       case E_POINTER => throw new NullPointerException("pointer to native serial")
@@ -34,10 +34,6 @@ class Serial private (val port: String, private val pointer: Long) {
     }
   }
 
-  def read() = future { doRead() }
-
-  def write(data: Array[Byte]) = future { doWrite(data) }
-
   def close() = {
     NativeSerial.close(pointer)
   }
@@ -46,7 +42,7 @@ class Serial private (val port: String, private val pointer: Long) {
 
 object Serial {
 
-  def doOpen(port: String, baud: Int) = synchronized {
+  def open(port: String, baud: Int) = synchronized {
     val pointer = new Array[Long](1)
     val result = NativeSerial.open(port, baud, pointer)
 
@@ -63,8 +59,6 @@ object Serial {
       case error => throw new IOException(s"unknown error ${error}")
     }
   }
-
-  def open(port: String, baud: Int) = future { doOpen(port, baud) }
 
   def debug(value: Boolean) = NativeSerial.debug(value)
 
