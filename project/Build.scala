@@ -30,10 +30,10 @@ object FlowBuild extends Build {
       }
     ) ++ Jni.defaultSettings)
     
-  lazy val example = Project(
-    id = "flow-example",
-    base = file("example"),
-    settings = buildSettings ++ runSettings ++ Seq(libraryDependencies ++= Dependencies.all))
+  lazy val samples = Project(
+    id = "flow-samples",
+    base = file("samples"),
+    settings = buildSettings ++ runSettings ++ Seq(libraryDependencies ++= Dependencies.all)).dependsOn(main)
 
   lazy val buildSettings = Defaults.defaultSettings ++ Seq(
     organization := Organization,

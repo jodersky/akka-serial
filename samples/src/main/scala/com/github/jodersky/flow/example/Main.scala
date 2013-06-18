@@ -26,15 +26,13 @@ object Main {
     val port = "/dev/ttyACM0"
     val baud = 115200
 
-    //low.Serial.debug(true)
+    low.Serial.debug(true)
 
     implicit val system = ActorSystem("flow")
-    val serial = system.actorOf(Props[SerialHandler], name = "serial-handler")
-    
-    IO(Serial) ! Serial.Open(serial, port, baud)
-    
+    val serial = system.actorOf(Props(classOf[SerialHandler], port, baud), name = "serial-handler")
+        
     readLine()
-    serial ! Write(ByteString(42))
+    serial ! ByteString(42)
     
     readLine()
     //serial ! Close

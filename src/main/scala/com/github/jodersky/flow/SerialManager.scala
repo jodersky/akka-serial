@@ -19,7 +19,7 @@ class SerialManager extends Actor {
           val operator = context.actorOf(Props(classOf[SerialOperator], serial, handler), name = escapePortString(port))
           handler ! Opened(operator)
         }
-        case Failure(t) => sender ! CommandFailed(command, t)
+        case Failure(t) => handler ! CommandFailed(command, t)
       })
   }
 
