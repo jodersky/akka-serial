@@ -15,7 +15,7 @@ To see an example, switch to project 'flow-samples' and then type 'run'. Don't f
 The build currently only works on Linux.
 
 ## License
-Copyright (c) 2012 by Jakob Odersky
+Copyright (c) 2013 by Jakob Odersky
 
 All rights reserved.
 
