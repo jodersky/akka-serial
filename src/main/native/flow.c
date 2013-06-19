@@ -178,24 +178,22 @@ int serial_read(struct serial_config* serial, unsigned char * buffer, size_t siz
     return E_POINTER;
   }
   
-  struct pollfd sp; //serial poll
-  sp.fd = serial->fd;
-  sp.events = POLLIN;
   
-  struct pollfd pp; //pipe poll
-  pp.fd = serial->pipe_read;
-  pp.events = POLLIN;
+  struct pollfd polls[2];
+  polls[0].fd = serial->fd; // serial poll
+  polls[0].events = POLLIN;
   
-  struct pollfd poll_list[] = {sp, pp};
+  polls[1].fd = serial->pipe_read; // pipe poll
+  polls[1].events = POLLIN;
   
-  int n = poll(poll_list,(unsigned long)3,-1);
+  int n = poll(polls,2,-1);
   if (n < 0) {
     DEBUG(perror("read"));
     return E_IO;
   }
   
-  if (sp.revents & POLLIN != 0) {
-    int r = read(sp.fd, buffer, size);
+  if ((polls[0].revents & POLLIN) != 0) {
+    int r = read(polls[0].fd, buffer, size);
     
     //treat 0 bytes read as an error to avoid problems on disconnect
     //anyway, after a poll there should be more than 0 bytes available to read
@@ -291,4 +289,3 @@ JNIEXPORT void JNICALL Java_com_github_jodersky_flow_low_NativeSerial_debug
 {
   debug = (bool) value;
 }
-
