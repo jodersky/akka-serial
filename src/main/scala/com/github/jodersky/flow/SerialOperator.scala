@@ -18,6 +18,7 @@ class SerialOperator(serial: LowSerial, handler: ActorRef) extends Actor {
     private var continueReading = true 
     
     override def run() {
+      Thread.currentThread().setName("flow-reader" + serial.port)
       while (continueReading) {
         println("beginning read")
         val data = ByteString(serial.read())
