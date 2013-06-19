@@ -42,7 +42,6 @@ class SerialOperator(serial: LowSerial, handler: ActorRef) extends Actor {
     }
     
     case Close => {
-      serial.close()
       sender ! Closed
       context.stop(self)
     }

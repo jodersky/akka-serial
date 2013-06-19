@@ -35,7 +35,8 @@ object Main {
     serial ! ByteString(42)
     
     readLine()
-    //serial ! Close
+    serial ! "close"
+    readLine()
     system.shutdown()
 
   }
