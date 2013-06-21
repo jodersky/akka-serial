@@ -143,19 +143,23 @@ int serial_open(const char* port_name, int baud, struct serial_config** serial) 
   return 0;
 }
 
-void serial_close(struct serial_config* serial) {
+int serial_close(struct serial_config* serial) {
   if (close(serial->pipe_write_fd) < 0) {
     DEBUG(perror("close write end of pipe"););
+    return E_IO;
   }
   if (close(serial->pipe_read_fd) < 0) {
     DEBUG(perror("close read end of pipe"););
+    return E_IO;
   }
   
   if (flock(serial->port_fd, LOCK_UN) < 0){
     DEBUG(perror("release lock on port"););
+    return E_IO;
   }
   if (close(serial->port_fd) < 0) {
     DEBUG(perror("close port"););
+    return E_IO;
   }
   
   free(serial);
@@ -194,6 +198,15 @@ int serial_read(struct serial_config* serial, unsigned char* buffer, size_t size
   }
 }
 
+int serial_write(struct serial_config* serial, unsigned char* data, size_t size) {
+  int r = write(serial->port_fd, data, size);
+  if (r < 0) {
+    DEBUG(perror("write"););
+    return E_IO;
+  }
+  return r;
+}
+
 int serial_interrupt(struct serial_config* serial) {
   int data = 0xffffffff;
   
@@ -205,16 +218,6 @@ int serial_interrupt(struct serial_config* serial) {
   
   return 0;
 }
-
-int serial_write(struct serial_config* serial, unsigned char* data, size_t size) {
-  int r = write(serial->port_fd, data, size);
-  if (r < 0) {
-    DEBUG(perror("write"););
-    return E_IO;
-  }
-  return r;
-}
-
 
 
 // JNI bindings
@@ -242,7 +245,7 @@ JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_low_NativeSerial_open
   return r;
 }
 
-JNIEXPORT void JNICALL Java_com_github_jodersky_flow_low_NativeSerial_close
+JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_low_NativeSerial_close
   (JNIEnv * env, jclass clazz, jlong serial)
 {
   serial_close(j2s(serial));
@@ -274,6 +277,12 @@ JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_low_NativeSerial_write
   (*env)->ReleaseByteArrayElements(env, jbuffer, buffer, JNI_ABORT);
   
   return r;
+}
+
+JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_low_NativeSerial_interrupt
+  (JNIEnv * env, jclass clazz, jlong serial)
+{
+  return serial_interrupt(j2s(serial));
 }
 
 JNIEXPORT void JNICALL Java_com_github_jodersky_flow_low_NativeSerial_debug

@@ -38,8 +38,10 @@ int serial_open(const char* port_name, int baud, struct serial_config** serial);
  * this function, the 'serial' pointer will become invalid, make sure you only call it once. This function is NOT
  * thread safe, make sure no read or write is in prgress when this function is called (the reason is that per 
  * close manual page, close should not be called on a file descriptor that is in use by another thread). 
- * @param serial pointer to serial configuration that is to be closed (and freed) */
-void serial_close(struct serial_config* serial);
+ * @param serial pointer to serial configuration that is to be closed (and freed)
+ * @return 0 on success
+ * @return E_IO on error */
+int serial_close(struct serial_config* serial);
 
 /**Starts a blocking read from a previously opened serial port. The read is blocking, however it may be
  * interrupted by calling 'serial_interrupt' on the given serial port.
