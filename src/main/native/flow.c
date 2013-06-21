@@ -31,59 +31,34 @@
  
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include <unistd.h>
 #include <errno.h>
 #include <termios.h>
 #include <fcntl.h>
 #include <poll.h>
 #include "com_github_jodersky_flow_low_NativeSerial.h"
-
-#define E_PERMISSION -1
-#define E_OPEN -2
-#define E_BUSY -3
-#define E_BAUD -4
-#define E_PIPE -5
-#define E_MALLOC -6
-#define E_POINTER -7
-#define E_POLL -8
-#define E_IO -9
-#define E_CLOSE -10
-
+#include "flow.h"
 
 static bool debug = false;
-#define DEBUG(f) if (debug) {f;}
+#define DEBUG(f) if (debug) {f}
 
-//contains file descriptors used in managing a serial port
-struct serial_config {
-  
-  int fd; //serial port
-  int pipe_read; //event
-  int pipe_write; //event
-  
-};
+void serial_debug(bool value) {
+  debug = value;
+}
 
-/* return values:
- * 0 ok
- * E_PERMISSION don't have permission to open
- * E_OPEN can't get file descriptor
- * E_BUSY device busy
- * E_BAUD invalid baudrate
- * E_PIPE can't open pipe for graceful closing
- * E_MALLOC malloc error
- */
-int serial_open(const char* device, int baud, struct serial_config** serial) {
+int serial_open(const char* port_name, int baud, struct serial_config** serial) {
   
-  int fd = open(device, O_RDWR | O_NOCTTY | O_NONBLOCK);
+  int fd = open(port_name, O_RDWR | O_NOCTTY | O_NONBLOCK);
   
   if (fd < 0) {
-    DEBUG(perror(device));
-    if (errno == EACCES) return E_PERMISSION;
-    else return E_OPEN;
+    DEBUG(perror("obtain file descriptor"););
+    if (errno == EACCES) return E_ACCESS_DENIED;
+    else return E_IO;
   }
   
   if (flock(fd, LOCK_EX | LOCK_NB) < 0) {
-    DEBUG(perror(device));
+    DEBUG(perror("acquire lock on port"););
+    close(fd);
     return E_BUSY;
   }
   
@@ -107,7 +82,10 @@ int serial_open(const char* device, int baud, struct serial_config** serial) {
     case 57600: bd = B57600; break;
     case 115200: bd = B115200; break;
     case 230400: bd = B230400; break;
-    default: return E_BAUD; break;
+    default:
+      close(fd);
+      return E_INVALID_BAUD;
+      break;
   }
 
   /* configure new port settings */
@@ -118,77 +96,83 @@ int serial_open(const char* device, int baud, struct serial_config** serial) {
   newtio.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG); // make raw
   newtio.c_oflag &= ~OPOST; // make raw
 
-  // see: http://unixwiz.net/techtips/termios-vmin-vtime.html
+  //see: http://unixwiz.net/techtips/termios-vmin-vtime.html
   //newtio.c_cc[VMIN] = 1;
   //newtio.c_cc[VTIME] = 2*10/baud;
-  cfsetspeed(&newtio, bd);
+  
+  if (cfsetspeed(&newtio, bd) < 0) {
+    DEBUG(perror("set baud rate"););
+    close(fd);
+    return E_IO;
+  }
   
   /* load new settings to port */
-  tcflush(fd, TCIOFLUSH);
-  tcsetattr(fd,TCSANOW,&newtio);
+  if (tcflush(fd, TCIOFLUSH) < 0) {
+    DEBUG(perror("flush serial settings"););
+    close(fd);
+    return E_IO;
+  }
+  
+  if (tcsetattr(fd, TCSANOW, &newtio) < 0) {
+    DEBUG(perror("apply serial settings"););
+    close(fd);
+    return E_IO;
+  }
   
   int pipe_fd[2];
   if (pipe2(pipe_fd, O_NONBLOCK) < 0) {
-    DEBUG(perror(device));
-    return E_PIPE;
+    DEBUG(perror("open pipe"););
+    close(fd);
+    return E_IO;
   }
   
   struct serial_config* s = malloc(sizeof(s));
   if (s == NULL) {
-    return E_MALLOC;
+    DEBUG(perror("allocate memory for serial configuration"););
+    close(fd);
+    close(pipe_fd[0]);
+    close(pipe_fd[1]);
+    return E_IO;
   }
   
-  s->fd = fd;
-  s->pipe_read = pipe_fd[0];
-  s->pipe_write = pipe_fd[1];
+  s->port_fd = fd;
+  s->pipe_read_fd = pipe_fd[0];
+  s->pipe_write_fd = pipe_fd[1];
   (*serial) = s;
   
   return 0;
 }
 
 void serial_close(struct serial_config* serial) {
-  
-  if (serial == NULL) return;
-  
-  int data = 0xffffffff;
-  
-  //write to pipe to wake up any blocked read thread (self-pipe trick)
-  if (write(serial->pipe_write, &data, 1) <= 0) {
-    DEBUG(perror("error writing to pipe during close"))
+  if (close(serial->pipe_write_fd) < 0) {
+    DEBUG(perror("close write end of pipe"););
+  }
+  if (close(serial->pipe_read_fd) < 0) {
+    DEBUG(perror("close read end of pipe"););
   }
   
-  close(serial->pipe_write);
-  close(serial->pipe_read);
-  
-  flock(serial->fd, LOCK_UN);
-  close(serial->fd);
+  if (flock(serial->port_fd, LOCK_UN) < 0){
+    DEBUG(perror("release lock on port"););
+  }
+  if (close(serial->port_fd) < 0) {
+    DEBUG(perror("close port"););
+  }
   
   free(serial);
 }
 
-/* return
- * >0 number of bytes read
- * E_POINTER invalid serial pointer
- * E_POLL poll error
- * E_IO read error
- * E_CLOSE close request
- */
-int serial_read(struct serial_config* serial, unsigned char * buffer, size_t size) {
-  if (serial == NULL) {
-    return E_POINTER;
-  }
-  
+int serial_read(struct serial_config* serial, unsigned char* buffer, size_t size) {
   
   struct pollfd polls[2];
-  polls[0].fd = serial->fd; // serial poll
+  polls[0].fd = serial->port_fd; // serial poll
   polls[0].events = POLLIN;
   
-  polls[1].fd = serial->pipe_read; // pipe poll
+  polls[1].fd = serial->pipe_read_fd; // pipe poll
   polls[1].events = POLLIN;
   
   int n = poll(polls,2,-1);
   if (n < 0) {
-    DEBUG(perror("read"));
+    DEBUG(perror("poll"););
     return E_IO;
   }
   
@@ -197,27 +181,35 @@ int serial_read(struct serial_config* serial, unsigned char * buffer, size_t siz
     
     //treat 0 bytes read as an error to avoid problems on disconnect
     //anyway, after a poll there should be more than 0 bytes available to read
-    if (r <= 0) { 
-      if (r < 0) DEBUG(perror("read"));
+    if (r <= 0) {
+      DEBUG(perror("read"););
       return E_IO;
     }
     return r;
+  } else if ((polls[1].revents & POLLIN) != 0) {
+    return E_INTERRUPT;
   } else {
-    return E_CLOSE;
+    fputs("poll revents: unknown revents\n", stderr);
+    return E_IO;
   }
 }
 
-/*return
- * >0 number of bytes written
- * E_POINTER invalid serial config (null pointer)
- * E_IO write error
- */
-int serial_write(struct serial_config* serial, unsigned char* data, size_t size) {
-  if (serial == NULL) return E_POINTER;
+int serial_interrupt(struct serial_config* serial) {
+  int data = 0xffffffff;
   
-  int r = write(serial->fd, data, size);
+  //write to pipe to wake up any blocked read thread (self-pipe trick)
+  if (write(serial->pipe_write_fd, &data, 1) < 0) {
+    DEBUG(perror("write to pipe for interrupt"););
+    return E_IO;
+  }
+  
+  return 0;
+}
+
+int serial_write(struct serial_config* serial, unsigned char* data, size_t size) {
+  int r = write(serial->port_fd, data, size);
   if (r < 0) {
-    DEBUG(perror("write"));
+    DEBUG(perror("write"););
     return E_IO;
   }
   return r;
@@ -237,12 +229,12 @@ inline jlong s2j(struct serial_config* pointer) {
 }
 
 JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_low_NativeSerial_open
-  (JNIEnv *env, jclass clazz, jstring device, jint baud, jlongArray jserialp)
+  (JNIEnv *env, jclass clazz, jstring port_name, jint baud, jlongArray jserialp)
 { 
-  const char *dev = (*env)->GetStringUTFChars(env, device, 0);
+  const char *dev = (*env)->GetStringUTFChars(env, port_name, 0);
   struct serial_config* serial;
   int r = serial_open(dev, baud, &serial);
-  (*env)->ReleaseStringUTFChars(env, device, dev);
+  (*env)->ReleaseStringUTFChars(env, port_name, dev);
   
   long serialp = s2j(serial);
   (*env)->SetLongArrayRegion(env, jserialp, 0, 1, &serialp);
@@ -287,5 +279,5 @@ JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_low_NativeSerial_write
 JNIEXPORT void JNICALL Java_com_github_jodersky_flow_low_NativeSerial_debug
   (JNIEnv *env, jclass clazz, jboolean value)
 {
-  debug = (bool) value;
+  serial_debug((bool) value);
 }

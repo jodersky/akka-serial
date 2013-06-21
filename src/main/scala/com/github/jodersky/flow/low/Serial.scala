@@ -7,28 +7,41 @@ import com.github.jodersky.flow.AccessDeniedException
 import com.github.jodersky.flow.NoSuchPortException
 import com.github.jodersky.flow.PortInUseException
 import com.github.jodersky.flow.PortClosingException
+import com.github.jodersky.flow.IllegalBaudRateException
 import scala.util.Try
+
 
 class Serial private (val port: String, private val pointer: Long) {
   import NativeSerial._
+  
+  /** State of current connection, required so that close may not be called multiple
+   *  times and used to ensure close and read are never called at the same moment. */
+  private var _closed = false;
+  private def closed = synchronized{_closed}
+  private def closed_=(newValue: Boolean) = synchronized{_closed = newValue} 
+  
 
-  def read(): Array[Byte] = synchronized {
+  def read(): Array[Byte] = {
+    if (!closed) {
+      //read
+    } else {
+      //
+    }
+    
     val buffer = new Array[Byte](100)
+    
     NativeSerial.read(pointer, buffer) match {
-      case E_POINTER => throw new NullPointerException("pointer to native serial")
-      case E_POLL => throw new IOException(port + ": polling")
-      case E_IO => throw new IOException(port + ": reading")
-      case E_CLOSE => throw new PortClosingException(port + " closing")
+      case E_INTERRUPT => throw new PortClosingException(port)
       case bytes if bytes > 0 => buffer.take(bytes)
-      case error => throw new IOException(s"unknown read error ${error}")
+      case error => throw new IOException(s"unknown error code: ${error}")
     }
   }
 
   def write(data: Array[Byte]): Array[Byte] = {
+    //
     import NativeSerial._
     NativeSerial.write(pointer, data) match {
-      case E_POINTER => throw new NullPointerException("pointer to native serial")
-      case E_IO => throw new IOException(port + ": writing")
+      case E_IO => throw new IOException(port)
       case bytes if bytes > 0 => data.take(bytes)
       case error => throw new IOException(s"unknown write error ${error}")
     }
@@ -41,22 +54,26 @@ class Serial private (val port: String, private val pointer: Long) {
 }
 
 object Serial {
+  import NativeSerial._
 
-  def open(port: String, baud: Int) = synchronized {
+  def except(result: Int): Int = result match {
+    case E_IO => throw new IOException("")
+    case E_ACCESS_DENIED => 0
+    case E_BUSY => 0
+    case E_INVALID_BAUD => 0
+    case E_INTERRUPT => 0
+  }
+
+  def open(port: String, baud: Int): Serial = synchronized {
     val pointer = new Array[Long](1)
-    val result = NativeSerial.open(port, baud, pointer)
-
-    import NativeSerial._
-
-    result match {
-      case E_PERMISSION => throw new AccessDeniedException(port)
-      case E_OPEN => throw new NoSuchPortException(port)
+    NativeSerial.open(port, baud, pointer) match {
+      case E_IO => throw new IOException("")
+      case E_ACCESS_DENIED => throw new AccessDeniedException(port)
       case E_BUSY => throw new PortInUseException(port)
-      case E_BAUD => throw new IllegalArgumentException(s"invalid baudrate ${baud}, use standard unix values")
-      case E_PIPE => throw new IOException("cannot create pipe")
-      case E_MALLOC => throw new IOException("cannot allocate memory for serial port")
+      case E_INVALID_BAUD => throw new IllegalBaudRateException(baud.toString)
+      //handle no such port
       case 0 => new Serial(port, pointer(0))
-      case error => throw new IOException(s"unknown error ${error}")
+      case error => throw new IOException(s"unknown error code: ${error}")
     }
   }
 
