@@ -13,34 +13,38 @@ import scala.concurrent._
 
 class SerialOperator(serial: LowSerial, handler: ActorRef) extends Actor {
   import context._
-  
+
   object Reader extends Thread {
-    private var continueReading = true 
-    
+    private var continueReading = true
+
     override def run() {
       Thread.currentThread().setName("flow-reader " + serial.port)
       while (continueReading) {
-        println("beginning read")
-        val data = ByteString(serial.read())
-        println("return from read")
-        handler ! Received(data)
+        try {
+          println("beginning read")
+          val data = ByteString(serial.read())
+          println("return from read")
+          handler ! Received(data)
+        } catch {
+          case ex: PortInterruptedException => continueReading = false 
+        }
       }
     }
   }
-  
+
   Reader.start()
-  
+
   context.watch(handler)
 
   def receive = {
     case c @ Write(data) => {
       val writer = sender
-      future{serial.write(data.toArray)}.onComplete {
+      future { serial.write(data.toArray) }.onComplete {
         case Success(data) => writer ! Wrote(ByteString(data))
         case Failure(t) => writer ! CommandFailed(c, t)
       }
     }
-    
+
     case Close => {
       sender ! Closed
       context.stop(self)

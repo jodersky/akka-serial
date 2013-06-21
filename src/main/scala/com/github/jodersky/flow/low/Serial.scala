@@ -21,8 +21,8 @@ class Serial private (val port: String, private val pointer: Long) {
   def close(): Unit = if (!closed.get()) {
     closed.set(true)
     requireSuccess(NativeSerial.interrupt(pointer), port)
-    if (writing.get()) wait() // if reading, wait for read to finish
-    if (reading.get()) wait()
+    if (writing.get()) synchronized{wait()} // if reading, wait for read to finish
+    if (reading.get()) synchronized{wait()}
     requireSuccess(NativeSerial.close(pointer), port)
   }
 
@@ -30,7 +30,7 @@ class Serial private (val port: String, private val pointer: Long) {
     reading.set(true)
     val buffer = new Array[Byte](100)
     val readResult = NativeSerial.read(pointer, buffer)
-    if (closed.get) notify(); //read was interrupted by close
+    if (closed.get) synchronized{notify()}; //read was interrupted by close
     reading.set(false)
     val n = requireSuccess(readResult, port)
     buffer take n
@@ -41,7 +41,7 @@ class Serial private (val port: String, private val pointer: Long) {
   def write(data: Array[Byte]): Array[Byte] = if (!closed.get) {
     writing.set(true)
     val writeResult = NativeSerial.write(pointer, data)
-    if (closed.get) notify()
+    if (closed.get) synchronized{notify()}
     writing.set(false)
     val n = requireSuccess(writeResult, port)
     data take n
@@ -54,7 +54,7 @@ class Serial private (val port: String, private val pointer: Long) {
 object Serial {
   import NativeSerial._
 
-  def requireSuccess(result: Int, port: String): Int = result match {
+  private def requireSuccess(result: Int, port: String): Int = result match {
     case E_IO => throw new IOException(port)
     case E_ACCESS_DENIED => throw new AccessDeniedException(port)
     case E_BUSY => throw new PortInUseException(port)

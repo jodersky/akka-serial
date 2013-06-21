@@ -163,6 +163,7 @@ int serial_close(struct serial_config* serial) {
   }
   
   free(serial);
+  return 0;
 }
 
 int serial_read(struct serial_config* serial, unsigned char* buffer, size_t size) {
