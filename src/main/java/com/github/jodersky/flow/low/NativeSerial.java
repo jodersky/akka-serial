@@ -12,6 +12,7 @@ class NativeSerial {
 	final static int E_BUSY = -3;
 	final static int E_INVALID_BAUD = -4;
 	final static int E_INTERRUPT = -5;
+	final static int E_NO_PORT = -6;
 
 	/**Opens a serial port and allocates memory for storing configuration. Note: if this function fails,
 	 * any internally allocated resources will be freed.
@@ -19,6 +20,7 @@ class NativeSerial {
 	 * @param baud baud rate
 	 * @param serial pointer to memory that will be allocated with a serial structure
 	 * @return 0 on success
+	 * @return E_NO_PORT if the given port does not exist
 	 * @return E_ACCESS_DENIED if permissions are not sufficient to open port
 	 * @return E_BUSY if port is already in use
 	 * @return E_INVALID_BAUD if specified baudrate is non-standard

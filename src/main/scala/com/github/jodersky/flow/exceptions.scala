@@ -2,7 +2,7 @@ package com.github.jodersky.flow
 
 import java.io.IOException
 
-//class NoSuchPortException(message: String) extends IOException(message)
+class NoSuchPortException(message: String) extends Exception(message)
 class PortInUseException(message: String) extends Exception(message)
 class AccessDeniedException(message: String) extends Exception(message)
 class IllegalBaudRateException(message: String) extends Exception(message)

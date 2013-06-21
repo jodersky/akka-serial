@@ -10,6 +10,7 @@ import com.github.jodersky.flow.IllegalBaudRateException
 import scala.util.Try
 import java.util.concurrent.atomic.AtomicBoolean
 import com.github.jodersky.flow.PortInterruptedException
+import com.github.jodersky.flow.NoSuchPortException
 
 class Serial private (val port: String, private val pointer: Long) {
   import Serial._
@@ -60,6 +61,7 @@ object Serial {
     case E_BUSY => throw new PortInUseException(port)
     case E_INVALID_BAUD => throw new IllegalBaudRateException("use standard baud rate (see termios.h)")
     case E_INTERRUPT => throw new PortInterruptedException(port)
+    case E_NO_PORT => throw new NoSuchPortException(port)
     case error if error < 0 => throw new IOException(s"unknown error code: ${error}")
     case success => success
   }

@@ -9,6 +9,7 @@
 #define E_BUSY -3 // port is busy
 #define E_INVALID_BAUD -4 // baud rate is not valid
 #define E_INTERRUPT -5 // not really an error, function call aborted because port is closed
+#define E_NO_PORT -6
 
 //contains file descriptors used in managing a serial port
 struct serial_config {
@@ -28,6 +29,7 @@ struct serial_config {
  * @param baud baud rate
  * @param serial pointer to memory that will be allocated with a serial structure
  * @return 0 on success
+ * @return E_NO_PORT if the given port does not exist
  * @return E_ACCESS_DENIED if permissions are not sufficient to open port
  * @return E_BUSY if port is already in use
  * @return E_INVALID_BAUD if specified baudrate is non-standard

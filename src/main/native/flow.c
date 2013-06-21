@@ -51,9 +51,11 @@ int serial_open(const char* port_name, int baud, struct serial_config** serial) 
   int fd = open(port_name, O_RDWR | O_NOCTTY | O_NONBLOCK);
   
   if (fd < 0) {
+    int en = errno;
     DEBUG(perror("obtain file descriptor"););
-    if (errno == EACCES) return E_ACCESS_DENIED;
-    else return E_IO;
+    if (en == EACCES) return E_ACCESS_DENIED;
+    if (en == ENOENT) return E_NO_PORT;
+    return E_IO;
   }
   
   if (flock(fd, LOCK_EX | LOCK_NB) < 0) {
