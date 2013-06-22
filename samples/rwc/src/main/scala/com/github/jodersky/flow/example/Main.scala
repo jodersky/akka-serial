@@ -32,7 +32,7 @@ object Main {
     val serial = system.actorOf(Props(classOf[SerialHandler], port, baud), name = "serial-handler")
         
     readLine()
-    serial ! ByteString(42)
+    serial ! ByteString("hello back".getBytes())
     
     readLine()
     serial ! "close"

@@ -26,7 +26,10 @@ class SerialHandler(port: String, baud: Int) extends Actor with ActorLogging {
     case Opened(operator) =>
       println("Port opened.")
       context become {
-        case Received(data) => println("received data: " + formatData(data))
+        case Received(data) => {
+          println("received data: " + formatData(data))
+          println("as string: " + new String(data.toArray, "UTF-8"))
+        }
         case Wrote(data) => println("wrote ACK: " + formatData(data))
         case CommandFailed(_, _) => println("write failed")
         case Closed => context stop self
