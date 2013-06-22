@@ -10,7 +10,7 @@ Since hardware is involved in serial communication, a Scala-only solution is not
 ## Build & usage
 Run sbt in the root directory and switch to project 'flow', by typing 'project flow'. Running 'package' will compile both Scala and native sources and bundle them in the standard jar file. When using the jar in another application, the native library will be automatically extracted and loaded (i.e. no -Djava.library.path or other system parameters have to be set).
 
-To see an example, switch to project 'flow-samples' and then type 'run'. Don't forget to connect a serial device (such as an arduino) before runinng the example.
+To see an example, switch to project 'flow-rwc' and then type 'run'. Don't forget to connect a serial device (such as an arduino) before runinng the example.
 
 The build currently only works on Linux.
 

@@ -27,7 +27,7 @@ object Main {
     val baud = 115200
 
     low.Serial.debug(true)
-
+    
     implicit val system = ActorSystem("flow")
     val serial = system.actorOf(Props(classOf[SerialHandler], port, baud), name = "serial-handler")
         
@@ -37,7 +37,7 @@ object Main {
     readLine()
     serial ! "close"
     readLine()
+    
     system.shutdown()
-
   }
 }
