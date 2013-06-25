@@ -7,8 +7,9 @@ import scala.util.Success
 import scala.util.Failure
 import akka.actor.Props
 import scala.concurrent._
+import akka.actor.ActorLogging
 
-class SerialManager extends Actor {
+class SerialManager extends Actor with ActorLogging {
   import SerialManager._
   import context._
 
@@ -16,10 +17,14 @@ class SerialManager extends Actor {
     case command @ Open(handler, port, baud) =>
       future{LowSerial.open(port, baud)}.onComplete(_ match {
         case Success(serial) => {
+          log.debug(s"opened low serial port at ${port}, baud ${baud}")
           val operator = context.actorOf(Props(classOf[SerialOperator], serial, handler), name = escapePortString(port))
           handler ! Opened(operator)
         }
-        case Failure(t) => handler ! CommandFailed(command, t)
+        case Failure(t) => {
+          log.debug(s"failed to open low serial port at ${port}, baud ${baud}, reason: " + t.getMessage())
+          handler ! CommandFailed(command, t)
+        }
       })
   }
 

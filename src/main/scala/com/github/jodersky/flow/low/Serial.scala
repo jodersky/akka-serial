@@ -21,10 +21,10 @@ class Serial private (val port: String, private val pointer: Long) {
 
   def close(): Unit = if (!closed.get()) {
     closed.set(true)
-    requireSuccess(NativeSerial.interrupt(pointer), port)
+    except(NativeSerial.interrupt(pointer), port)
     if (writing.get()) synchronized{wait()} // if reading, wait for read to finish
     if (reading.get()) synchronized{wait()}
-    requireSuccess(NativeSerial.close(pointer), port)
+    except(NativeSerial.close(pointer), port)
   }
 
   def read(): Array[Byte] = if (!closed.get) {
@@ -33,7 +33,7 @@ class Serial private (val port: String, private val pointer: Long) {
     val readResult = NativeSerial.read(pointer, buffer)
     if (closed.get) synchronized{notify()}; //read was interrupted by close
     reading.set(false)
-    val n = requireSuccess(readResult, port)
+    val n = except(readResult, port)
     buffer take n
   } else {
     throw new PortClosedException(s"port ${port} is already closed")
@@ -44,7 +44,7 @@ class Serial private (val port: String, private val pointer: Long) {
     val writeResult = NativeSerial.write(pointer, data)
     if (closed.get) synchronized{notify()}
     writing.set(false)
-    val n = requireSuccess(writeResult, port)
+    val n = except(writeResult, port)
     data take n
   } else {
     throw new PortClosedException(s"port ${port} is already closed")
@@ -55,11 +55,11 @@ class Serial private (val port: String, private val pointer: Long) {
 object Serial {
   import NativeSerial._
 
-  private def requireSuccess(result: Int, port: String): Int = result match {
+  private def except(result: Int, port: String): Int = result match {
     case E_IO => throw new IOException(port)
     case E_ACCESS_DENIED => throw new AccessDeniedException(port)
     case E_BUSY => throw new PortInUseException(port)
-    case E_INVALID_BAUD => throw new IllegalBaudRateException("use standard baud rate (see termios.h)")
+    case E_INVALID_BAUD => throw new IllegalBaudRateException("use standard baud rate")
     case E_INTERRUPT => throw new PortInterruptedException(port)
     case E_NO_PORT => throw new NoSuchPortException(port)
     case error if error < 0 => throw new IOException(s"unknown error code: ${error}")
@@ -68,7 +68,7 @@ object Serial {
 
   def open(port: String, baud: Int): Serial = synchronized {
     val pointer = new Array[Long](1)
-    requireSuccess(NativeSerial.open(port, baud, pointer), port)
+    except(NativeSerial.open(port, baud, pointer), port)
     new Serial(port, pointer(0))
   }
 

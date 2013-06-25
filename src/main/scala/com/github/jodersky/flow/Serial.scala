@@ -2,7 +2,6 @@ package com.github.jodersky.flow
 
 import akka.io._
 import akka.actor.ExtensionKey
-import akka.actor.ExtendedActorSystem
 import akka.actor.Props
 import low.{ Serial => LowSerial }
 import akka.actor.ActorRef
@@ -18,7 +17,7 @@ object Serial extends ExtensionKey[SerialExt] {
   
   case class Received(data: ByteString) extends Event
   
-  case class Write(data: ByteString) extends Command
+  case class Write(data: ByteString, ack: Boolean = false) extends Command
   case class Wrote(data: ByteString) extends Event
   
   case object Close extends Command
@@ -26,9 +25,4 @@ object Serial extends ExtensionKey[SerialExt] {
 
   case class CommandFailed(command: Command, reason: Throwable) extends Event
   
-  
-}
-
-class SerialExt(system: ExtendedActorSystem) extends IO.Extension {
-  def manager = system.actorOf(Props[SerialManager], name = "IO-SERIAL")
 }

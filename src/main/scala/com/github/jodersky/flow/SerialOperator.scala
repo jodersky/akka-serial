@@ -1,17 +1,23 @@
 package com.github.jodersky.flow
 
+import scala.concurrent.future
 import scala.util.Failure
 import scala.util.Success
-import Serial._
+
+import Serial.Close
+import Serial.Closed
+import Serial.CommandFailed
+import Serial.Received
+import Serial.Write
+import Serial.Wrote
 import akka.actor.Actor
 import akka.actor.ActorLogging
 import akka.actor.ActorRef
+import akka.actor.actorRef2Scala
 import akka.util.ByteString
-import low.{ Serial => LowSerial }
-import scala.util.Try
-import scala.concurrent._
+import low.{Serial => LowSerial}
 
-class SerialOperator(serial: LowSerial, handler: ActorRef) extends Actor {
+class SerialOperator(serial: LowSerial, handler: ActorRef) extends Actor with ActorLogging {
   import context._
 
   object Reader extends Thread {
@@ -19,16 +25,21 @@ class SerialOperator(serial: LowSerial, handler: ActorRef) extends Actor {
 
     override def run() {
       Thread.currentThread().setName("flow-reader " + serial.port)
+      log.debug("started read thread " + Thread.currentThread().getName())
       while (continueReading) {
         try {
-          println("beginning read")
+          log.debug("enter blocking read")
           val data = ByteString(serial.read())
-          println("return from read")
+          log.debug("return from blocking read")
           handler ! Received(data)
         } catch {
-          case ex: PortInterruptedException => continueReading = false 
+          case ex: PortInterruptedException => {
+            continueReading = false
+            log.debug("interrupted from blocking read")
+          }
         }
       }
+      log.debug("exit read thread normally " + Thread.currentThread().getName())
     }
   }
 
@@ -37,7 +48,7 @@ class SerialOperator(serial: LowSerial, handler: ActorRef) extends Actor {
   context.watch(handler)
 
   def receive = {
-    case c @ Write(data) => {
+    case c @ Write(data, ack) => {
       val writer = sender
       future { serial.write(data.toArray) }.onComplete {
         case Success(data) => writer ! Wrote(ByteString(data))
