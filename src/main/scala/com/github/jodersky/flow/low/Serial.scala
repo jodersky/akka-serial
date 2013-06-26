@@ -11,16 +11,13 @@ import scala.util.Try
 import java.util.concurrent.atomic.AtomicBoolean
 import com.github.jodersky.flow.PortInterruptedException
 import com.github.jodersky.flow.NoSuchPortException
-import java.nio.channels.InterruptibleChannel
 
-class Serial private (val port: String, private val pointer: Long) extends InterruptibleChannel {
+class Serial private (val port: String, private val pointer: Long) {
   import Serial._
 
   private val reading = new AtomicBoolean(false)
   private val writing = new AtomicBoolean(false)
   private val closed = new AtomicBoolean(false)
-  
-  def isOpen = !closed.get
 
   def close(): Unit = synchronized {
     if (!closed.get()) {
@@ -34,27 +31,31 @@ class Serial private (val port: String, private val pointer: Long) extends Inter
 
   def read(): Array[Byte] = if (!closed.get) {
     reading.set(true)
-    val buffer = new Array[Byte](100)
-    val readResult = NativeSerial.read(pointer, buffer)
-    synchronized {
-      reading.set(false)
-      if (closed.get) notify(); //read was interrupted by close
+    try {
+      val buffer = new Array[Byte](100)
+      val bytesRead = except(NativeSerial.read(pointer, buffer), port)
+      buffer take bytesRead
+    } finally {
+      synchronized {
+        reading.set(false)
+        if (closed.get) notify(); //read was interrupted by close
+      }
     }
-    val n = except(readResult, port)
-    buffer take n
   } else {
     throw new PortClosedException(s"port ${port} is already closed")
   }
 
   def write(data: Array[Byte]): Array[Byte] = if (!closed.get) {
     writing.set(true)
-    val writeResult = NativeSerial.write(pointer, data)
-    synchronized {
-      writing.set(false)
-      if (closed.get) notify()
+    try {
+      val bytesWritten = except(NativeSerial.write(pointer, data), port)
+      data take bytesWritten
+    } finally {
+      synchronized {
+        writing.set(false)
+        if (closed.get) notify()
+      }
     }
-    val n = except(writeResult, port)
-    data take n
   } else {
     throw new PortClosedException(s"port ${port} is already closed")
   }
