@@ -1,5 +1,12 @@
 package com.github.jodersky.flow
 
+import com.github.jodersky.flow.internalial.Close;
+import com.github.jodersky.flow.internalial.Closed;
+import com.github.jodersky.flow.internalial.CommandFailed;
+import com.github.jodersky.flow.internalial.Received;
+import com.github.jodersky.flow.internalial.Write;
+import com.github.jodersky.flow.internalial.Wrote;
+
 import scala.concurrent.future
 import scala.util.Failure
 import scala.util.Success
@@ -18,7 +25,7 @@ import akka.util.ByteString
 import low.{Serial => LowSerial}
 
 class SerialOperator(serial: LowSerial, handler: ActorRef) extends Actor with ActorLogging {
-  import context._
+import context._
 
   object Reader extends Thread {
     private var continueReading = true

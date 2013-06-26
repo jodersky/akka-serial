@@ -1,4 +1,6 @@
-package com.github.jodersky.flow.low;
+package com.github.jodersky.flow.internal;
+
+import com.github.jodersky.flow.internal.NativeLoader;
 
 /** Thin layer on top of native code. */
 class NativeSerial {
