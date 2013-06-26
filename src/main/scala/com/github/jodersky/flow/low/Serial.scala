@@ -11,28 +11,35 @@ import scala.util.Try
 import java.util.concurrent.atomic.AtomicBoolean
 import com.github.jodersky.flow.PortInterruptedException
 import com.github.jodersky.flow.NoSuchPortException
+import java.nio.channels.InterruptibleChannel
 
-class Serial private (val port: String, private val pointer: Long) {
+class Serial private (val port: String, private val pointer: Long) extends InterruptibleChannel {
   import Serial._
 
   private val reading = new AtomicBoolean(false)
   private val writing = new AtomicBoolean(false)
   private val closed = new AtomicBoolean(false)
+  
+  def isOpen = !closed.get
 
-  def close(): Unit = if (!closed.get()) {
-    closed.set(true)
-    except(NativeSerial.interrupt(pointer), port)
-    if (writing.get()) synchronized{wait()} // if reading, wait for read to finish
-    if (reading.get()) synchronized{wait()}
-    except(NativeSerial.close(pointer), port)
+  def close(): Unit = synchronized {
+    if (!closed.get()) {
+      closed.set(true)
+      except(NativeSerial.interrupt(pointer), port)
+      if (writing.get()) wait() // if reading, wait for read to finish
+      if (reading.get()) wait()
+      except(NativeSerial.close(pointer), port)
+    }
   }
 
   def read(): Array[Byte] = if (!closed.get) {
     reading.set(true)
     val buffer = new Array[Byte](100)
     val readResult = NativeSerial.read(pointer, buffer)
-    if (closed.get) synchronized{notify()}; //read was interrupted by close
-    reading.set(false)
+    synchronized {
+      reading.set(false)
+      if (closed.get) notify(); //read was interrupted by close
+    }
     val n = except(readResult, port)
     buffer take n
   } else {
@@ -42,8 +49,10 @@ class Serial private (val port: String, private val pointer: Long) {
   def write(data: Array[Byte]): Array[Byte] = if (!closed.get) {
     writing.set(true)
     val writeResult = NativeSerial.write(pointer, data)
-    if (closed.get) synchronized{notify()}
-    writing.set(false)
+    synchronized {
+      writing.set(false)
+      if (closed.get) notify()
+    }
     val n = except(writeResult, port)
     data take n
   } else {
