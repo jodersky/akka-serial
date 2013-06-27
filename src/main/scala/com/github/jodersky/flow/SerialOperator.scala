@@ -1,16 +1,19 @@
 package com.github.jodersky.flow
 
-import scala.concurrent.future
-import scala.util.Failure
-import scala.util.Success
-import Serial._
+import com.github.jodersky.flow.internal.InternalSerial
+
+import Serial.Close
+import Serial.Closed
+import Serial.Opened
+import Serial.Received
+import Serial.Write
+import Serial.Wrote
 import akka.actor.Actor
 import akka.actor.ActorLogging
 import akka.actor.ActorRef
-import akka.util.ByteString
-import com.github.jodersky.flow.internal.InternalSerial
 import akka.actor.Terminated
-import scala.util.Try
+import akka.actor.actorRef2Scala
+import akka.util.ByteString
 
 class SerialOperator(handler: ActorRef, serial: InternalSerial) extends Actor with ActorLogging {
   import context._

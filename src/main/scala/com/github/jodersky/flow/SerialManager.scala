@@ -1,17 +1,22 @@
 package com.github.jodersky.flow
 
+import java.io.IOException
+
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
+
 import com.github.jodersky.flow.internal.InternalSerial
-import Serial._
+
+import Serial.Open
+import Serial.OpenFailed
 import akka.actor.Actor
 import akka.actor.ActorLogging
 import akka.actor.OneForOneStrategy
-import akka.actor.OneForOneStrategy
 import akka.actor.Props
-import akka.actor.SupervisorStrategy._
-import java.io.IOException
+import akka.actor.SupervisorStrategy.Escalate
+import akka.actor.SupervisorStrategy.Stop
+import akka.actor.actorRef2Scala
 
 class SerialManager extends Actor with ActorLogging {
   import SerialManager._

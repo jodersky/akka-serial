@@ -1,9 +1,7 @@
 package com.github.jodersky.flow
 
-import akka.io._
-import akka.actor.ExtensionKey
-import akka.actor.Props
 import akka.actor.ActorRef
+import akka.actor.ExtensionKey
 import akka.util.ByteString
 
 /** Defines messages used by serial IO layer. */
