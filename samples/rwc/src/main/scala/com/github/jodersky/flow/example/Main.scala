@@ -1,20 +1,15 @@
 package com.github.jodersky.flow
 package example
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.Success
-import scala.util.Try
-import com.github.jodersky.flow.Serial
-import com.github.jodersky.flow.Serial._
 import akka.actor.ActorSystem
 import akka.actor.Props
-import akka.io.IO
+import akka.actor.actorRef2Scala
 import akka.util.ByteString
-import com.github.jodersky.flow.internal.InternalSerial
 
 object Main {
 
   def main(args: Array[String]): Unit = {
+    
     /*val isInt = Try(args(1).toInt) match { case Success(_) => true; case _ => false }
     if (!(args.length == 2 && isInt)) {
       println("invalid parameters")
@@ -25,18 +20,18 @@ object Main {
     val port = "/dev/ttyACM0"
     val baud = 115200
 
-   // InternalSerial.debug(true)
-    
+    // InternalSerial.debug(true)
+
     implicit val system = ActorSystem("flow")
     val serial = system.actorOf(Props(classOf[SerialHandler], port, baud), name = "serial-handler")
-    
+
     readLine()
     serial ! ByteString("hello back".getBytes())
-    
+
     readLine()
     serial ! "close"
     readLine()
-    
+
     system.shutdown()
   }
 }

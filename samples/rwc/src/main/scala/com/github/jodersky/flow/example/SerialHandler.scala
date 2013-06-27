@@ -24,23 +24,23 @@ class SerialHandler(port: String, baud: Int) extends Actor with ActorLogging {
 
     case Opened(port) => {
       log.info(s"Port ${port} is now open.")
-      context watch sender
       context become opened(sender)
     }
   }
 
   def opened(operator: ActorRef): Receive = {
-    case Terminated(`operator`) => {
-      log.info("operator down, handler exiting")
-      context.stop(self)
-    }
+   
     case Received(data) => {
       log.info("Received data: " + formatData(data))
       log.info("As string: " + new String(data.toArray, "UTF-8"))
     }
     case Wrote(data) => log.info("Got ACK for writing data: " + formatData(data))
-    case Closed => {
-      log.info("Operator closed, exiting handler.")
+    case Closed(None) => {
+      log.info("Operator closed normally, exiting handler.")
+      context stop self
+    }
+    case Closed(Some(ex)) => {
+      log.info("Operator crashed, exiting handler.")
       context stop self
     }
     case "close" => {

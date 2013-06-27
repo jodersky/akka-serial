@@ -20,6 +20,6 @@ object Serial extends ExtensionKey[SerialExt] {
   case class Wrote(data: ByteString) extends Event
   
   case object Close extends Command
-  case object Closed extends Event
+  case class Closed(error: Option[Exception]) extends Event
   
 }

@@ -1,5 +1,7 @@
 package com.github.jodersky.flow
 
+import java.io.IOException
+
 import com.github.jodersky.flow.internal.InternalSerial
 
 import Serial.Close
@@ -18,7 +20,7 @@ import akka.util.ByteString
 class SerialOperator(handler: ActorRef, serial: InternalSerial) extends Actor with ActorLogging {
   import context._
 
-  case class ReadException(ex: Throwable)
+  case class ReadException(ex: Exception)
 
   object Reader extends Thread {
 
@@ -68,19 +70,29 @@ class SerialOperator(handler: ActorRef, serial: InternalSerial) extends Actor wi
   def receive: Receive = {
 
     case Write(data, ack) => {
-      serial.write(data.toArray) // no future needed as write is non-blocking
-      if (ack) sender ! Wrote(data)
+      try {
+        val sent = serial.write(data.toArray)
+        if (ack) sender ! Wrote(ByteString(sent))
+      } catch {
+        case ex: IOException => {
+          handler ! Closed(Some(ex))
+          context stop self
+        }
+      }
     }
 
     case Close => {
-      sender ! Closed
-      context.stop(self)
+      handler ! Closed(None)
+      context stop self
     }
 
     case Terminated(`handler`) => context.stop(self)
 
     //go down with reader thread
-    case ReadException(ex) => throw ex
+    case ReadException(ex) => {
+      handler ! Closed(Some(ex))
+      context stop self
+    }
 
   }
 
