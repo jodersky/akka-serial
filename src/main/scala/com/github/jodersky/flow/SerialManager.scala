@@ -1,40 +1,50 @@
 package com.github.jodersky.flow
 
-import akka.actor.Actor
-import Serial._
-import low.{ Serial => LowSerial }
-import scala.util.Success
 import scala.util.Failure
-import akka.actor.Props
-import scala.concurrent._
+import scala.util.Success
+import scala.util.Try
+import com.github.jodersky.flow.internal.InternalSerial
+import Serial._
+import akka.actor.Actor
 import akka.actor.ActorLogging
+import akka.actor.OneForOneStrategy
+import akka.actor.OneForOneStrategy
+import akka.actor.Props
+import akka.actor.SupervisorStrategy._
+import java.io.IOException
 
 class SerialManager extends Actor with ActorLogging {
   import SerialManager._
   import context._
 
+  override val supervisorStrategy =
+    OneForOneStrategy() {
+      case _: IOException => Stop
+      case _: Exception => Escalate
+    }
+
   def receive = {
-    case command @ Open(handler, port, baud) =>
-      future{LowSerial.open(port, baud)}.onComplete(_ match {
-        case Success(serial) => {
-          log.debug(s"opened low serial port at ${port}, baud ${baud}")
-          val operator = context.actorOf(Props(classOf[SerialOperator], serial, handler), name = escapePortString(port))
-          handler ! Opened(operator)
-        }
-        case Failure(t) => {
-          log.debug(s"failed to open low serial port at ${port}, baud ${baud}, reason: " + t.getMessage())
-          handler ! CommandFailed(command, t)
-        }
-      })
+    case Open(handler, port, baud) => Try { InternalSerial.open(port, baud) } match {
+      case Failure(t) => {
+        log.debug(s"failed to open low serial port at ${port}, baud ${baud}, reason: " + t.getMessage())
+        handler ! OpenFailed(port, t)
+      }
+
+      case Success(serial) => {
+        log.debug(s"opened low-level serial port at ${port}, baud ${baud}")
+        context.actorOf(Props(classOf[SerialOperator], handler, serial), name = escapePortString(port))
+      }
+
+    }
   }
 
 }
 
 object SerialManager {
-  
+
   private def escapePortString(port: String) = port collect {
     case '/' => '-'
     case c => c
   }
-  
+
 }

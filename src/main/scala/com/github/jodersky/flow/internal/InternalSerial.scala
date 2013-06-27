@@ -4,6 +4,7 @@ import java.io.IOException
 import com.github.jodersky.flow._
 import java.util.concurrent.atomic.AtomicBoolean
 
+/** Wraps NativeSerial in a more object-oriented style, still quite low level. */
 class InternalSerial private (val port: String, private val pointer: Long) {
   import InternalSerial._
 

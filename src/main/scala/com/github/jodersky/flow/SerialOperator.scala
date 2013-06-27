@@ -1,76 +1,84 @@
 package com.github.jodersky.flow
 
-import com.github.jodersky.flow.internalial.Close;
-import com.github.jodersky.flow.internalial.Closed;
-import com.github.jodersky.flow.internalial.CommandFailed;
-import com.github.jodersky.flow.internalial.Received;
-import com.github.jodersky.flow.internalial.Write;
-import com.github.jodersky.flow.internalial.Wrote;
-
 import scala.concurrent.future
 import scala.util.Failure
 import scala.util.Success
-
-import Serial.Close
-import Serial.Closed
-import Serial.CommandFailed
-import Serial.Received
-import Serial.Write
-import Serial.Wrote
+import Serial._
 import akka.actor.Actor
 import akka.actor.ActorLogging
 import akka.actor.ActorRef
-import akka.actor.actorRef2Scala
 import akka.util.ByteString
-import low.{Serial => LowSerial}
+import com.github.jodersky.flow.internal.InternalSerial
+import akka.actor.Terminated
+import scala.util.Try
 
-class SerialOperator(serial: LowSerial, handler: ActorRef) extends Actor with ActorLogging {
-import context._
+class SerialOperator(handler: ActorRef, serial: InternalSerial) extends Actor with ActorLogging {
+  import context._
+
+  case class ReadException(ex: Throwable)
 
   object Reader extends Thread {
-    private var continueReading = true
 
-    override def run() {
-      Thread.currentThread().setName("flow-reader " + serial.port)
-      log.debug("started read thread " + Thread.currentThread().getName())
+    def enterReadLoop() = {
+      var continueReading = true
       while (continueReading) {
         try {
-          log.debug("enter blocking read")
           val data = ByteString(serial.read())
-          log.debug("return from blocking read")
           handler ! Received(data)
         } catch {
+
+          //port is closing, stop thread gracefully
           case ex: PortInterruptedException => {
             continueReading = false
-            log.debug("interrupted from blocking read")
+          }
+
+          //something else went wrong stop and tell actor
+          case ex: Exception => {
+            continueReading = false
+            self ! ReadException(ex)
           }
         }
       }
-      log.debug("exit read thread normally " + Thread.currentThread().getName())
     }
+
+    def name = this.getName()
+    
+    override def run() {
+      this.setName("flow-reader " + serial.port)
+      log.debug(name + ": started reader thread")
+      enterReadLoop()
+      log.debug(name + ": exiting")
+    }
+    
   }
 
-  Reader.start()
+  override def preStart() = {
+    context watch handler
+    handler ! Opened(serial.port)
+    Reader.start()
+  }
 
-  context.watch(handler)
+  override def postStop = {
+    serial.close()
+  }
 
-  def receive = {
-    case c @ Write(data, ack) => {
-      val writer = sender
-      future { serial.write(data.toArray) }.onComplete {
-        case Success(data) => writer ! Wrote(ByteString(data))
-        case Failure(t) => writer ! CommandFailed(c, t)
-      }
+  def receive: Receive = {
+
+    case Write(data, ack) => {
+      serial.write(data.toArray) // no future needed as write is non-blocking
+      if (ack) sender ! Wrote(data)
     }
 
     case Close => {
       sender ! Closed
       context.stop(self)
     }
-  }
 
-  override def postStop = {
-    serial.close()
+    case Terminated(`handler`) => context.stop(self)
+
+    //go down with reader thread
+    case ReadException(ex) => throw ex
+
   }
 
 }

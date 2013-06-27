@@ -5,5 +5,5 @@ import akka.io.IO
 import akka.actor.Props
 
 class SerialExt(system: ExtendedActorSystem) extends IO.Extension {
-  lazy val manager = system.actorOf(Props[SerialManager], name = "IO-SERIAL")
+  lazy val manager = system.actorOf(Props(classOf[SerialManager]), name = "IO-SERIAL")
 }

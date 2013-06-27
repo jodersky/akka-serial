@@ -17,7 +17,7 @@ object FlowBuild extends Build {
     NativeDefault.defaultSettings ++
     Seq(
       libraryDependencies ++= Dependencies.all,
-      javahClasses := Seq("com.github.jodersky.flow.low.NativeSerial"),
+      javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial"),
       includeDirectories in Native += jdkHome.value / "include" / "linux",
       binaryType in Native := SharedLibrary,
       binaryName in Native := "flow",

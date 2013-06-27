@@ -1,43 +1,55 @@
 package com.github.jodersky.flow.example
 
 import com.github.jodersky.flow.Serial._
-import com.github.jodersky.flow.low.{ Serial => LowSerial }
 import akka.actor.Actor
 import akka.actor.ActorLogging
 import akka.actor.ActorRef
 import akka.util.ByteString
 import akka.io.IO
 import com.github.jodersky.flow.Serial
-
+import akka.actor.Terminated
 
 class SerialHandler(port: String, baud: Int) extends Actor with ActorLogging {
   import context._
-  
-  println(s"Requesting port open: ${port}, baud: ${baud}")
+
+  log.info(s"Requesting manager to open port: ${port}, baud: ${baud}")
   IO(Serial) ! Serial.Open(self, port, baud)
-  
 
   def receive = {
-    case CommandFailed(_: Open, reason) => {
-      println(s"connection failed, reason: ${reason}")
+
+    case OpenFailed(_, reason) => {
+      log.error(s"Connection failed, stopping handler. Reason: ${reason}")
       context stop self
     }
 
-    case Opened(operator) =>
-      println("Port opened.")
-      context become {
-        case Received(data) => {
-          println("received data: " + formatData(data))
-          println("as string: " + new String(data.toArray, "UTF-8"))
-        }
-        case Wrote(data) => println("wrote ACK: " + formatData(data))
-        case CommandFailed(_, _) => println("write failed")
-        case Closed => context stop self
-        case "close" => operator ! Close
-        case data: ByteString => operator ! Write(data) 
-      }
+    case Opened(port) => {
+      log.info(s"Port ${port} is now open.")
+      context watch sender
+      context become opened(sender)
+    }
   }
-  
+
+  def opened(operator: ActorRef): Receive = {
+    case Terminated(`operator`) => {
+      log.info("operator down, handler exiting")
+      context.stop(self)
+    }
+    case Received(data) => {
+      log.info("Received data: " + formatData(data))
+      log.info("As string: " + new String(data.toArray, "UTF-8"))
+    }
+    case Wrote(data) => log.info("Got ACK for writing data: " + formatData(data))
+    case Closed => {
+      log.info("Operator closed, exiting handler.")
+      context stop self
+    }
+    case "close" => {
+      log.info("Initiating close.")
+      operator ! Close
+    }
+    case data: ByteString => operator ! Write(data, true)
+  }
+
   private def formatData(data: ByteString) = data.mkString("[", ",", "]")
 
 }

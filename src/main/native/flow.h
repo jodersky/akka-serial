@@ -45,7 +45,7 @@ int serial_open(const char* port_name, int baud, struct serial_config** serial);
  * @return E_IO on error */
 int serial_close(struct serial_config* serial);
 
-/**Starts a blocking read from a previously opened serial port. The read is blocking, however it may be
+/**Starts a read from a previously opened serial port. The read is blocking, however it may be
  * interrupted by calling 'serial_interrupt' on the given serial port.
  * @param serial pointer to serial configuration from which to read
  * @param buffer buffer into which data is read
