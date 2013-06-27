@@ -8,13 +8,66 @@ import Jni._
 
 object FlowBuild extends Build {
   val Organization = "com.github.jodersky"
-  val Version = "1.0-SNAPSHOT"
+  val Version = "1.0-SNAPSHOT" //version of flow library
+  val BinaryMajorVersion = 1 //binary major (api-level) version used to select so's and dlls when publishing
   val ScalaVersion = "2.10.1"
+
+  lazy val commonSettings: Seq[Setting[_]] = Seq(
+    organization := Organization,
+    version := Version,
+    scalaVersion := ScalaVersion,
+    resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/",
+    scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"))
   
-  lazy val main: Project = Project("flow", file("."), settings = 
-    Defaults.defaultSettings ++
-    buildSettings ++ 
-    NativeDefault.defaultSettings ++
+  lazy val runSettings: Seq[Setting[_]] = Seq(
+    fork := true,
+    connectInput in run := true)
+
+  lazy val main: Project = (
+    Project("flow-main", file("flow-main"))
+    settings (commonSettings: _*)
+    settings (
+      libraryDependencies += Dependencies.akka,
+      compileOrder in Compile := CompileOrder.Mixed
+    )
+  )
+  
+  lazy val samples = (
+    Project("flow-samples-rwc", file("samples") / "rwc")
+    settings(commonSettings: _*)
+    settings(runSettings: _*)
+    dependsOn(main)
+  )
+
+  
+  //---native projects --------------------------------------------------
+
+  lazy val commonNativeSettings: Seq[Setting[_]] = Seq(
+    includeDirectories in Native += file("flow-native") / "include",
+    javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial")) ++ Jni.defaultSettings
+
+    
+  //---native unix like settings ----------------------------------------
+  
+  val UnixBinaryName = "flow"  
+  val UnixBinaryMinorVersion = 0 
+  
+  lazy val unixNativeSettings: Seq[Setting[_]] = commonNativeSettings ++ Seq(
+    flags in Native := Seq("-fPIC", "-O2"),
+    linkFlags in Native ++= Seq("-shared", s"-Wl,-soname,lib${UnixBinaryName}.so.${BinaryMajorVersion}"),
+    binaryName in Native := s"lib${UnixBinaryName}.so.${BinaryMajorVersion}.${UnixBinaryMinorVersion}")
+
+  lazy val nativeLinux = (
+    NativeProject("flow-native-linux", file("flow-native") / "unix")
+    settings (unixNativeSettings: _*)
+    settings (
+      nativeSource in Native := baseDirectory.value / "src",
+      includeDirectories in Native += jdkHome.value / "include" / "linux"
+    )
+    dependsOn (main)
+  )
+
+  /*
     Seq(
       libraryDependencies ++= Dependencies.all,
       javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial"),
@@ -28,33 +81,7 @@ object FlowBuild extends Build {
         IO.copyFile(binary, file)
         Seq(file)
       }
-    ) ++ Jni.defaultSettings)
-    
-  lazy val samples = Project(
-    id = "flow-rwc",
-    base = file("samples") / "rwc",
-    settings = buildSettings ++ runSettings ++ Seq(libraryDependencies ++= Dependencies.all)).dependsOn(main)
-
-  lazy val buildSettings = Defaults.defaultSettings ++ Seq(
-    organization := Organization,
-    version := Version,
-    scalaVersion := ScalaVersion,
-    resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/",
-    scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"),
-    compileOrder in Compile := CompileOrder.Mixed)
-
-  lazy val runSettings = Seq(
-    fork := true,
-    connectInput in run := true,
-    javaOptions in run += "-Djava.library.path=.")
-}
-
-object Dependencies {
-
-  lazy val io = "com.github.scala-incubator.io" %% "scala-io-core" % "0.4.2"
-  lazy val file = "com.github.scala-incubator.io" %% "scala-io-file" % "0.4.2"
-  lazy val akka = "com.typesafe.akka" %% "akka-actor" % "2.2-M3"
-  
-  lazy val all = Seq(akka)
-
+    ) ++ Jni.defaultSettings
+    * 
+    */
 }
