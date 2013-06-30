@@ -24,7 +24,7 @@ object FlowBuild extends Build {
     connectInput in run := true)
       
   lazy val main: Project = (
-    Project("flow-main", file("flow-main"))
+    Project("flow", file("flow-main"))
     settings (commonSettings: _*)
     settings (
       libraryDependencies ++= Seq(

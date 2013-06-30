@@ -9,7 +9,7 @@ Since hardware is involved in serial communication, a Scala-only solution is not
 
 ## Usage
 (this section will be updated as soon as a maven repository is available)
-Clone the repository and run `sbt flow-main/publish-local` to publish the library locally. From there on, you may use the library in any project simply by adding a library dependency to it.
+Clone the repository and run `sbt flow/publish-local` to publish the library locally. From there on, you may use the library in any project simply by adding a library dependency to it.
 
     libraryDependencies += "com.github.jodersky" % "flow" % "1.0-SNAPSHOT"
 
@@ -59,7 +59,7 @@ The directories of interest in a build are:
 
 With this structure in mind, building a complete distribution of flow involves (sbt commands are given in code tags):
 
- 1. compiling java/scala sources: `flow-main/compile`
+ 1. compiling java/scala sources: `flow/compile`
  This simply compiles any scala and java sources as with any standard sbt project.
  
  2. compiling and linking native sources for the current platform: `flow-native-<os>/native:link`
@@ -70,7 +70,7 @@ With this structure in mind, building a complete distribution of flow involves (
  3. locally publishing the native binary to include in final jar: `flow-native-<os>/publishNative`
  This copies the compiled binary (for the current platform) to the flow-binaries folder.
  
- 4. packaging the final jar: `flow-main/package`
+ 4. packaging the final jar: `flow/package`
  This copies the latest version-compatible shared libraries of flow-binaries to the final jar.
  
 The idea behind publishing to an intermediate location is to provide a central collection of binaries that may be created from different systems and included in one final jar (a nice corollary is that anyone can compile native sources on a platform, submit a pull request and have the binary included). As such, if you are only modifying java/scala sources, it is not necessary to compile any native sources and steps 2 and 3 from above may be omitted.
