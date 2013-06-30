@@ -14,6 +14,16 @@ To see an example, switch to project 'flow-rwc' and then type 'run'. Don't forge
 
 The build currently only works on Linux.
 
+### Project structure
+flow
+├── flow-main //main scala/java sources
+├── flow-native //native sources
+│   ├── include //general headers
+│   └── unix    //source code for unix-like systems
+├── flow-samples
+├── project
+└── README.md
+
 ## License
 Copyright (c) 2013 by Jakob Odersky
 
