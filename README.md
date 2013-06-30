@@ -19,9 +19,9 @@ As flow integrates into the Akka-IO framework, a good resource on its "spirit" i
         
 ### Currently supported platforms
 
-    | OS    | Architecture | Notes                                                              |
-    |-------|--------------|--------------------------------------------------------------------|
-    | Linux | amd64        | A user accessing a serial port needs to be in the 'dialout' group. |
+| OS    | Architecture | Notes                                                              |
+|-------|--------------|--------------------------------------------------------------------|
+| Linux | amd64        | A user accessing a serial port needs to be in the 'dialout' group. |
 
 
 ## Build
