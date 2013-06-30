@@ -15,7 +15,9 @@ project/plugins/project/
 .project
 .classpath
 .cache
+.history
 
 # Native
 *.o
 *.so
+!/flow-binaries/*.so
