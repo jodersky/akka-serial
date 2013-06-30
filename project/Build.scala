@@ -1,10 +1,9 @@
 import sbt._
 import Keys._
 
-import com.github.jodersky.build.NativeKeys._
-import com.github.jodersky.build.NativePlugin._
-import com.github.jodersky.build.NativeDefault
-import Jni._
+import NativeKeys._
+import NativeDefaults._
+import JniKeys._
 
 object FlowBuild extends Build {
   val Organization = "com.github.jodersky"
@@ -102,7 +101,7 @@ object FlowBuild extends Build {
     nativeCompile in Native := ((nativeCompile in Native) dependsOn (compile in Compile in main)).value,
     publishNative := publishNativeImpl.value,
     javahClasspath := Seq((classDirectory in Compile in main).value),
-    javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial")) ++ Jni.defaultSettings
+    javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial")) ++ JniDefaults.defaultSettings
 
     
   //--- native unix-like settings ----------------------------------------
