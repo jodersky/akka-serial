@@ -11,17 +11,8 @@
 #define E_INTERRUPT -5 // not really an error, function call aborted because port is closed
 #define E_NO_PORT -6
 
-//contains file descriptors used in managing a serial port
-struct serial_config {
-  
-  int port_fd; // file descriptor of serial port
-  
-  /* a pipe is used to abort a serial read by writing something into the
-   * write end of the pipe */
-  int pipe_read_fd; // file descriptor, read end of pipe
-  int pipe_write_fd; // file descriptor, write end of pipe
-  
-};
+/** Represents an open serial port. */
+struct serial_config;
 
 /**Opens a serial port and allocates memory for storing configuration. Note: if this function fails,
  * any internally allocated resources will be freed.

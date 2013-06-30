@@ -46,6 +46,18 @@ void serial_debug(bool value) {
   debug = value;
 }
 
+//contains file descriptors used in managing a serial port
+struct serial_config {
+  
+  int port_fd; // file descriptor of serial port
+  
+  /* a pipe is used to abort a serial read by writing something into the
+   * write end of the pipe */
+  int pipe_read_fd; // file descriptor, read end of pipe
+  int pipe_write_fd; // file descriptor, write end of pipe
+  
+};
+
 int serial_open(const char* port_name, int baud, struct serial_config** serial) {
   
   int fd = open(port_name, O_RDWR | O_NOCTTY | O_NONBLOCK);
