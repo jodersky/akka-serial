@@ -52,7 +52,7 @@ object FlowBuild extends Build {
   //--- native settings --------------------------------------------------
 
   lazy val commonNativeSettings: Seq[Setting[_]] = Seq(
-    includeDirectories in Native += file("flow-native") / "include",
+    includeDirectories in Native += file("flow-native") / "shared" / "include",
     nativeCompile in Native := ((nativeCompile in Native) dependsOn (compile in Compile in main)).value,
     javahClasspath := Seq((classDirectory in Compile in main).value),
     javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial")) ++ Jni.defaultSettings
