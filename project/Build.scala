@@ -79,18 +79,4 @@ object FlowBuild extends Build {
     dependsOn (main)
   )
   
-  
-  /*
-    Seq(
-      libraryDependencies ++= Dependencies.all,
-      javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial"),
-      includeDirectories in Native += jdkHome.value / "include" / "linux",
-      binaryType in Native := SharedLibrary,
-      binaryName in Native := "flow",
-      options in Native := Seq("-fPIC", "-O2"),
-      linkOptions in Native := Seq("-Wl,-soname,libflow.so.1"),
-      
-    ) ++ Jni.defaultSettings
-    * 
-    */
 }
