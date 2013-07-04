@@ -122,15 +122,15 @@ object FlowBuild extends Build {
     dependsOn(main)
   )
   
-  /* stub for native project on a mac, I don't know if this would actually work...
   lazy val nativeMacOSX = (
     NativeProject("flow-native-macosx", file("flow-native") / "unix")
     settings (unixNativeSettings: _*)
     settings (
-      includeDirectories in Native += jdkHome.value / "include" / "macosx"
+      includeDirectories in Native += file("/System/Library/Frameworks/JavaVM.framework/Headers/jni.h"),
+      includeDirectories in Native += file("/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers")
     )
     dependsOn (main)
-  )*/
+  )
   
   
   /* stub for native project on windows, I don't know if this would actually work...
