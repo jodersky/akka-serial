@@ -36,7 +36,8 @@ As any java project, the first part results in a platform independant artifact. 
     ├── flow-binaries
     ├── flow-main
     ├── flow-native
-    │   ├── include
+    │   ├── shared
+    │   │   └── include
     │   └── unix
     ├── flow-samples
     └── project
@@ -48,7 +49,7 @@ The directories of interest in a build are:
  
  - flow-native:
  Contains native sources used in combination with JNI to support interacting with serial hardware. The directory itself is subdivided into:
-   - include:
+   - shared/include:
    general headers describing the native side of the serial API
    - unix:
    source code implementing the native serial API for unix-like operating systems
@@ -64,14 +65,13 @@ With this structure in mind, building a complete distribution of flow involves (
  
  2. compiling and linking native sources for the current platform: `flow-native-<os>/native:link`
  This is the most complicated and error-prone step in the build. It involves running javah to generate JNI headers, compiling the native sources for the current platform and linking them.
- Note that for this step to work, a project for the current operating system has to be defined. Take a look at the build file to
- see how this is done.
+ Note that for this step to work, a project for the current operating system has to be defined. Take a look at the build file to see how this is done.
  
  3. locally publishing the native binary to include in final jar: `flow-native-<os>/publishNative`
  This copies the compiled binary (for the current platform) to the flow-binaries folder.
  
  4. packaging the final jar: `flow/package`
- This copies the latest version-compatible shared libraries of flow-binaries to the final jar.
+ This copies the latest major version-compatible shared libraries of flow-binaries to the final jar.
  
 The idea behind publishing to an intermediate location is to provide a central collection of binaries that may be created from different systems and included in one final jar (a nice corollary is that anyone can compile native sources on a platform, submit a pull request and have the binary included). As such, if you are only modifying java/scala sources, it is not necessary to compile any native sources and steps 2 and 3 from above may be omitted.
 
