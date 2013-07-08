@@ -117,8 +117,8 @@ object FlowBuild extends Build {
     settings (unixNativeSettings: _*)
     settings (
       includeDirectories in Native += jdkHome.value / "include" / "linux",
-linkFlags in Native ++= Seq("-shared", s"-Wl,-soname,libflow.so.${BinaryMajorVersion}"),
-    binaryName in Native := s"libflow.so.${BinaryMajorVersion}.${UnixBinaryMinorVersion}"
+      linkFlags in Native ++= Seq("-shared", s"-Wl,-soname,libflow.so.${BinaryMajorVersion}"),
+      binaryName in Native := s"libflow.so.${BinaryMajorVersion}.${UnixBinaryMinorVersion}"
     )
     dependsOn(main)
   )
@@ -129,8 +129,8 @@ linkFlags in Native ++= Seq("-shared", s"-Wl,-soname,libflow.so.${BinaryMajorVer
     settings (
       includeDirectories in Native += file("/System/Library/Frameworks/JavaVM.framework/Headers/jni.h"),
       includeDirectories in Native += file("/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers"),
-linkFlags in Native ++= Seq("-dynamiclib"),
-    binaryName in Native := s"libflow.jnilib.${BinaryMajorVersion}.${UnixBinaryMinorVersion}"
+      linkFlags in Native ++= Seq("-dynamiclib"),
+      binaryName in Native := s"libflow.jnilib.${BinaryMajorVersion}.${UnixBinaryMinorVersion}"
     )
     dependsOn (main)
   )
