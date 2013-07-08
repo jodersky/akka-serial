@@ -7,7 +7,7 @@ import JniKeys._
 
 object FlowBuild extends Build {
   val Organization = "com.github.jodersky"
-  val Version = "0.1-SNAPSHOT" //version of flow library
+  val Version = "1.0-SNAPSHOT" //version of flow library
   val BinaryMajorVersion = 1 //binary major version used to select so's and dlls when publishing (needs to be incremented if API changes are made to flow.h or NativeSerial.java)
   val ScalaVersion = "2.10.1"
   //see native settings down below
@@ -106,7 +106,7 @@ object FlowBuild extends Build {
     
   //--- native unix-like settings ----------------------------------------
   
-  val UnixBinaryMinorVersion = 0 
+  val UnixBinaryMinorVersion = 0
   
   lazy val unixNativeSettings: Seq[Setting[_]] = commonNativeSettings ++ Seq(
     flags in Native := Seq("-fPIC", "-O2"),
