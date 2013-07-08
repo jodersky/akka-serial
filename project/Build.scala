@@ -109,28 +109,31 @@ object FlowBuild extends Build {
   val UnixBinaryMinorVersion = 0
   
   lazy val unixNativeSettings: Seq[Setting[_]] = commonNativeSettings ++ Seq(
-    flags in Native := Seq("-fPIC", "-O2"),
-    linkFlags in Native ++= Seq("-shared", s"-Wl,-soname,libflow.so.${BinaryMajorVersion}"),
-    binaryName in Native := s"libflow.so.${BinaryMajorVersion}.${UnixBinaryMinorVersion}")
+    flags in Native := Seq("-fPIC", "-O2")
+    )
 
   lazy val nativeLinux = (
     NativeProject("flow-native-linux", file("flow-native") / "unix")
     settings (unixNativeSettings: _*)
     settings (
-      includeDirectories in Native += jdkHome.value / "include" / "linux"
+      includeDirectories in Native += jdkHome.value / "include" / "linux",
+linkFlags in Native ++= Seq("-shared", s"-Wl,-soname,libflow.so.${BinaryMajorVersion}"),
+    binaryName in Native := s"libflow.so.${BinaryMajorVersion}.${UnixBinaryMinorVersion}"
     )
     dependsOn(main)
   )
   
-  /* stub for native project on a mac, I don't know if this would actually work...
   lazy val nativeMacOSX = (
     NativeProject("flow-native-macosx", file("flow-native") / "unix")
     settings (unixNativeSettings: _*)
     settings (
-      includeDirectories in Native += jdkHome.value / "include" / "macosx"
+      includeDirectories in Native += file("/System/Library/Frameworks/JavaVM.framework/Headers/jni.h"),
+      includeDirectories in Native += file("/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers"),
+linkFlags in Native ++= Seq("-dynamiclib"),
+    binaryName in Native := s"libflow.jnilib.${BinaryMajorVersion}.${UnixBinaryMinorVersion}"
     )
     dependsOn (main)
-  )*/
+  )
   
   
   /* stub for native project on windows, I don't know if this would actually work...

@@ -134,7 +134,8 @@ int serial_open(const char* port_name, int baud, struct serial_config** serial) 
   }
   
   int pipe_fd[2];
-  if (pipe2(pipe_fd, O_NONBLOCK) < 0) {
+//TODO make pipe non-blocking
+  if (pipe(pipe_fd) < 0) {
     DEBUG(perror("open pipe"););
     close(fd);
     return E_IO;
