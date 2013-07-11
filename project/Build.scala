@@ -106,7 +106,7 @@ val binaries: Seq[(File, File)] = getLatestBinaries(binDir, BinaryMajorVersion)
     
   //--- native unix-like settings ----------------------------------------
   
-  val UnixBinaryMinorVersion = 0
+  val UnixBinaryMinorVersion = 1
   
   lazy val unixNativeSettings: Seq[Setting[_]] = commonNativeSettings ++ Seq(
     flags in Native := Seq("-fPIC", "-O2")
