@@ -35,7 +35,6 @@
 #include <errno.h>
 #include <termios.h>
 #include <fcntl.h>
-#include <poll.h>
 #include "com_github_jodersky_flow_internal_NativeSerial.h"
 #include "flow.h"
 
@@ -187,22 +186,25 @@ int serial_close(struct serial_config* serial) {
 }
 
 int serial_read(struct serial_config* serial, unsigned char* buffer, size_t size) {
+  int port = serial->port_fd;
+  int pipe = serial->pipe_read_fd;
   
-  struct pollfd polls[2];
-  polls[0].fd = serial->port_fd; // serial poll
-  polls[0].events = POLLIN;
+  fd_set rfds;
+  FD_ZERO(&rfds);
+  FD_SET(port, &rfds);
+  FD_SET(pipe, &rfds);
   
-  polls[1].fd = serial->pipe_read_fd; // pipe poll
-  polls[1].events = POLLIN;
+  int nfds = pipe + 1;
+  if (pipe < port) nfds = port + 1;
   
-  int n = poll(polls,2,-1);
+  int n = select(nfds, &rfds, NULL, NULL, NULL);
   if (n < 0) {
-    DEBUG(perror("poll"););
+    DEBUG(perror("select"););
     return E_IO;
   }
   
-  if ((polls[0].revents & POLLIN) != 0) {
-    int r = read(polls[0].fd, buffer, size);
+  if (FD_ISSET(port, &rfds)) {
+    int r = read(port, buffer, size);
     
     //treat 0 bytes read as an error to avoid problems on disconnect
     //anyway, after a poll there should be more than 0 bytes available to read
@@ -211,10 +213,10 @@ int serial_read(struct serial_config* serial, unsigned char* buffer, size_t size
       return E_IO;
     }
     return r;
-  } else if ((polls[1].revents & POLLIN) != 0) {
+  } else if (FD_ISSET(pipe, &rfds)) {
     return E_INTERRUPT;
   } else {
-    fprintf(stderr, "poll revents: unknown revents\nserial: %d\npipe: %d", polls[0].revents, polls[1].revents);
+    fputs("select: unknown read sets", stderr);
     return E_IO;
   }
 }
