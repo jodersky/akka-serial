@@ -55,7 +55,7 @@ The directories of interest in a build are:
    source code implementing the native serial API for unix-like operating systems
  
  - flow-binaries:
- Contains binaries produced by various native builds on different platforms. The format of binaries inside this directory is `<os>/<arch>/<libraryname>.<major>.<minor>`
+ Contains binaries produced by various native builds on different platforms. The format of binaries inside this directory is `<os>/<arch>/<libraryname>.<major>.<minor>`, where `<os>` and `<arch>` correspond to the values (without spaces) given by `System.properties` from the JVM.
  
 
 With this structure in mind, building a complete distribution of flow involves (sbt commands are given in code tags):
