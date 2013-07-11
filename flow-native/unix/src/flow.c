@@ -214,7 +214,7 @@ int serial_read(struct serial_config* serial, unsigned char* buffer, size_t size
   } else if ((polls[1].revents & POLLIN) != 0) {
     return E_INTERRUPT;
   } else {
-    fputs("poll revents: unknown revents\n", stderr);
+    fprintf(stderr, "poll revents: unknown revents\nserial: %d\npipe: %d", polls[0].revents, polls[1].revents);
     return E_IO;
   }
 }
