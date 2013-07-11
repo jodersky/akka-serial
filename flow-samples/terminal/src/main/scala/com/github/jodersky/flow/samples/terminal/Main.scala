@@ -24,23 +24,11 @@ object Main {
     val cs = ask("Char size", "8").toInt
     val tsb = ask("Use two stop bits", "false").toBoolean
     val parity = Parity(ask("Parity [0=None, 1=Odd, 2=Even]", "0").toInt)
-    println("Starting terminal, enter :q to exit.")
+    println("Starting terminal system, enter :q to exit.")
     
     internal.InternalSerial.debug(true)
     val system = ActorSystem("flow")
-    val serial = system.actorOf(Props(classOf[SerialHandler], port, baud, cs, tsb, parity), name = "serial-handler")
-
-    var continue = true
-    while (continue) {
-      val in = Console.readLine()
-      if (in == ":q") {
-        continue = false
-        serial ! "close"
-      } else {
-        serial ! ByteString(in.getBytes())
-      }
-    }
-    system.shutdown()
-    println("Stopped terminal.")
+    system.registerOnTermination(println("Stopped terminal system."))
+    val terminal = system.actorOf(Props(classOf[Terminal], port, baud, cs, tsb, parity), name = "terminal")
   }
 }
