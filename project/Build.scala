@@ -70,14 +70,6 @@ object FlowBuild extends Build {
     platforms.flatMap(latest(_))
   }
   
-  
-  lazy val rwc = (
-    Project("flow-samples-rwc", file("flow-samples") / "rwc")
-    settings(commonSettings: _*)
-    settings(runSettings: _*)
-    dependsOn(main)
-  )
-  
   lazy val terminal = (
     Project("flow-samples-terminal", file("flow-samples") / "terminal")
     settings(commonSettings: _*)
