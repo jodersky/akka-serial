@@ -6,7 +6,7 @@ import scalax.file.Path
 import scalax.io.Resource
 import scala.util.Try
 
-/**Loads the current system's native library for flow. */
+/** Handles loading of the current platform's native library for flow. */
 object NativeLoader {
 
   def extract(): Option[File] = {
@@ -24,7 +24,7 @@ object NativeLoader {
 
   def loadFromJar() = extract() match {
     case Some(file) => System.load(file.getAbsolutePath)
-    case None => throw new UnsatisfiedLinkError("cannot extract native library, the native library may not exist for your specific system/architecture combination")
+    case None => throw new UnsatisfiedLinkError("cannot extract native library, the native library may not exist for your specific os/architecture combination")
   }
 
   def load = {
