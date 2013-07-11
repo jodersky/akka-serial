@@ -9,7 +9,7 @@ object FlowBuild extends Build {
   val Organization = "com.github.jodersky"
   val Version = "1.0-SNAPSHOT" //version of flow library
   val BinaryMajorVersion = 2 //binary major version used to select so's and dlls when publishing (needs to be incremented if API changes are made to flow.h or NativeSerial.java)
-  val ScalaVersion = "2.10.1"
+  val ScalaVersion = "2.10.2"
   //see native settings down below
   
   lazy val commonSettings: Seq[Setting[_]] = Seq(
@@ -20,8 +20,9 @@ object FlowBuild extends Build {
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"))
   
   lazy val runSettings: Seq[Setting[_]] = Seq(
-    fork := true,
-    connectInput in run := true)
+    //fork := true,
+    //connectInput in run := true
+  )
       
   lazy val main: Project = (
     Project("flow", file("flow-main"))
@@ -33,7 +34,7 @@ object FlowBuild extends Build {
         Dependencies.ioFile), 
       compileOrder in Compile := CompileOrder.Mixed,
       resourceGenerators in Compile <+= (resourceManaged in Compile, binariesDirectory in ThisBuild) map { (resDir, binDir) =>
-val binaries: Seq[(File, File)] = getLatestBinaries(binDir, BinaryMajorVersion)
+        val binaries: Seq[(File, File)] = getLatestBinaries(binDir, BinaryMajorVersion)
         val resources = for (binary <- binaries) yield {
           val versionedBinary = binary._1
           val unversionedBinary = binary._2
@@ -75,7 +76,14 @@ val binaries: Seq[(File, File)] = getLatestBinaries(binDir, BinaryMajorVersion)
     settings(runSettings: _*)
     dependsOn(main)
   )
-
+  
+  lazy val terminal = (
+    Project("flow-samples-terminal", file("flow-samples") / "terminal")
+    settings(commonSettings: _*)
+    settings(runSettings: _*)
+    dependsOn(main)
+  )
+  
  
   //--- native settings --------------------------------------------------
   
@@ -116,6 +124,7 @@ val binaries: Seq[(File, File)] = getLatestBinaries(binDir, BinaryMajorVersion)
     NativeProject("flow-native-linux", file("flow-native") / "unix")
     settings (unixNativeSettings: _*)
     settings (
+      target := baseDirectory.value / "target" / "linux",
       includeDirectories in Native += jdkHome.value / "include" / "linux",
       linkFlags in Native ++= Seq("-shared", s"-Wl,-soname,libflow.so.${BinaryMajorVersion}"),
       binaryName in Native := s"libflow.so.${BinaryMajorVersion}.${UnixBinaryMinorVersion}"
@@ -127,6 +136,7 @@ val binaries: Seq[(File, File)] = getLatestBinaries(binDir, BinaryMajorVersion)
     NativeProject("flow-native-macosx", file("flow-native") / "unix")
     settings (unixNativeSettings: _*)
     settings (
+      target := baseDirectory.value / "target" / "macosx",
       includeDirectories in Native += file("/System/Library/Frameworks/JavaVM.framework/Headers/jni.h"),
       includeDirectories in Native += file("/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers"),
       linkFlags in Native ++= Seq("-dynamiclib"),
