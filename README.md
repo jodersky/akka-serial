@@ -22,7 +22,6 @@ Since flow integrates into the Akka-IO framework, a good resource on its general
 | OS (tested on)    | Architecture | Notes                                                              |
 |-------------------|--------------|--------------------------------------------------------------------|
 | Linux (3.2.0)     | x86_64       | A user accessing a serial port needs to be in the 'dialout' group. |
-|-------------------|--------------|--------------------------------------------------------------------|
 | Mac OS X (10.6.8) | x86_64       | -                                                                  |
 
 Note: flow may work on older versions of the tested OS kernels.
