@@ -3,13 +3,17 @@
 
 #include <stdbool.h>
 
-//general error codes that are meant to be communicated to user
+//general error codes that are returned by functions
 #define E_IO -1 //I/O error (port should be closed)
 #define E_ACCESS_DENIED -2 //access denied
 #define E_BUSY -3 // port is busy
-#define E_INVALID_BAUD -4 // baud rate is not valid
+#define E_INVALID_SETTINGS -4 // some port settings are invalid
 #define E_INTERRUPT -5 // not really an error, function call aborted because port is closed
-#define E_NO_PORT -6
+#define E_NO_PORT -6 //requested port does not exist
+
+#define PARITY_NONE 0
+#define PARITY_ODD 1
+#define PARITY_EVEN 2
 
 /** Represents an open serial port. */
 struct serial_config;
@@ -18,14 +22,23 @@ struct serial_config;
  * any internally allocated resources will be freed.
  * @param port_name name of port
  * @param baud baud rate
+ * @param char_size character size of data transmitted through serial device
+ * @param two_stop_bits set to use two stop bits instead of one
+ * @param parity kind of parity checking to use
  * @param serial pointer to memory that will be allocated with a serial structure
  * @return 0 on success
  * @return E_NO_PORT if the given port does not exist
  * @return E_ACCESS_DENIED if permissions are not sufficient to open port
  * @return E_BUSY if port is already in use
- * @return E_INVALID_BAUD if specified baudrate is non-standard
+ * @return E_INVALID_SETTINGS if any of the specified settings are not supported
  * @return E_IO on other error */
-int serial_open(const char* port_name, int baud, struct serial_config** serial);
+int serial_open(
+  const char* port_name,
+  int baud,
+  int char_size,
+  bool two_stop_bits,
+  int parity,
+  struct serial_config** serial);
 
 /**Closes a previously opened serial port and frees memory containing the configuration. Note: after a call to
  * this function, the 'serial' pointer will become invalid, make sure you only call it once. This function is NOT

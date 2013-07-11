@@ -57,7 +57,13 @@ struct serial_config {
   
 };
 
-int serial_open(const char* port_name, int baud, struct serial_config** serial) {
+int serial_open(
+  const char* port_name,
+  int baud,
+  int char_size,
+  bool two_stop_bits,
+  int parity,
+  struct serial_config** serial) {
   
   int fd = open(port_name, O_RDWR | O_NOCTTY | O_NONBLOCK);
   
@@ -75,6 +81,15 @@ int serial_open(const char* port_name, int baud, struct serial_config** serial) 
     return E_BUSY;
   }
   
+  /* configure new port settings */
+  struct termios newtio;
+  
+  newtio.c_cflag = 0;
+  newtio.c_oflag = 0;
+  newtio.c_iflag = 0;
+  newtio.c_lflag = 0;
+  
+  /* set speed */
   speed_t bd;
   switch (baud) {
     case 50: bd = B50; break;
@@ -97,29 +112,41 @@ int serial_open(const char* port_name, int baud, struct serial_config** serial) 
     case 230400: bd = B230400; break;
     default:
       close(fd);
-      return E_INVALID_BAUD;
-      break;
+      return E_INVALID_SETTINGS;
   }
-
-  /* configure new port settings */
-  struct termios newtio;
-  newtio.c_cflag &= ~(PARENB | CSTOPB | CSIZE | CRTSCTS); // 8N1
-  newtio.c_cflag |= CS8 | CREAD | CLOCAL;
-  newtio.c_iflag &= ~(IXON | IXOFF | IXANY); // turn off s/w flow ctrl
-  newtio.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG); // make raw
-  newtio.c_oflag &= ~OPOST; // make raw
-
-  //see: http://unixwiz.net/techtips/termios-vmin-vtime.html
-  //newtio.c_cc[VMIN] = 1;
-  //newtio.c_cc[VTIME] = 2*10/baud;
   
   if (cfsetspeed(&newtio, bd) < 0) {
     DEBUG(perror("set baud rate"););
     close(fd);
     return E_IO;
   }
+
+  /* set char size*/
+  switch (char_size) {
+    case 5: newtio.c_cflag |= CS5; break;
+    case 6: newtio.c_cflag |= CS6; break;
+    case 7: newtio.c_cflag |= CS7; break;
+    case 8: newtio.c_cflag |= CS8; break;
+    default:
+      close(fd);
+      return E_INVALID_SETTINGS;
+  }
   
-  /* load new settings to port */
+  /* use two stop bits */
+  if (two_stop_bits){
+    newtio.c_cflag |= CSTOPB;
+  }
+  
+  /* set parity */
+  switch (parity) {
+    case PARITY_NONE: break;
+    case PARITY_ODD: newtio.c_cflag |= (PARENB | PARODD); break;
+    case PARITY_EVEN: newtio.c_cflag |= PARENB; break;
+    default:
+      close(fd);
+      return E_INVALID_SETTINGS;
+  }
+  
   if (tcflush(fd, TCIOFLUSH) < 0) {
     DEBUG(perror("flush serial settings"););
     close(fd);
@@ -255,11 +282,11 @@ inline jlong s2j(struct serial_config* pointer) {
 }
 
 JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_internal_NativeSerial_open
-  (JNIEnv *env, jclass clazz, jstring port_name, jint baud, jlongArray jserialp)
+  (JNIEnv *env, jclass clazz, jstring port_name, jint baud, jint char_size, jboolean two_stop_bits, jint parity, jlongArray jserialp)
 { 
   const char *dev = (*env)->GetStringUTFChars(env, port_name, 0);
   struct serial_config* serial;
-  int r = serial_open(dev, baud, &serial);
+  int r = serial_open(dev, baud, char_size, two_stop_bits, parity, &serial);
   (*env)->ReleaseStringUTFChars(env, port_name, dev);
   
   long serialp = s2j(serial);

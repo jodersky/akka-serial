@@ -12,22 +12,29 @@ class NativeSerial {
 	final static int E_IO = -1;
 	final static int E_ACCESS_DENIED = -2;
 	final static int E_BUSY = -3;
-	final static int E_INVALID_BAUD = -4;
+	final static int E_INVALID_SETTINGS = -4;
 	final static int E_INTERRUPT = -5;
 	final static int E_NO_PORT = -6;
+	
+	final static int PARITY_NONE = 0;
+	final static int PARITY_ODD = 1;
+	final static int PARITY_EVEN = 2;
 
 	/**Opens a serial port and allocates memory for storing configuration. Note: if this function fails,
 	 * any internally allocated resources will be freed.
-	 * @param port_name name of port
+	 * @param device name of port
 	 * @param baud baud rate
+	 * @param characterSize character size of data transmitted through serial device
+	 * @param twoStopBits set to use two stop bits instead of one
+	 * @param parity kind of parity checking to use
 	 * @param serial pointer to memory that will be allocated with a serial structure
 	 * @return 0 on success
 	 * @return E_NO_PORT if the given port does not exist
 	 * @return E_ACCESS_DENIED if permissions are not sufficient to open port
 	 * @return E_BUSY if port is already in use
-	 * @return E_INVALID_BAUD if specified baudrate is non-standard
+	 * @return E_INVALID_SETTINGS if any of the specified settings are not supported
 	 * @return E_IO on other error */
-	native static int open(String device, int baud, long[] serial);
+	native static int open(String device, int baud, int characterSize, boolean twoStopBits, int parity, long[] serial);
 	
 	/**Starts a blocking read from a previously opened serial port. The read is blocking, however it may be
 	 * interrupted by calling 'serial_interrupt' on the given serial port.

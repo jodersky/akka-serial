@@ -68,7 +68,7 @@ object InternalSerial {
     case E_IO => throw new IOException(port)
     case E_ACCESS_DENIED => throw new AccessDeniedException(port)
     case E_BUSY => throw new PortInUseException(port)
-    case E_INVALID_BAUD => throw new IllegalBaudRateException("use standard baud rate")
+    case E_INVALID_SETTINGS => throw new InvalidSettingsException("the provided settings are invalid: be sure to use standard baud rate, character size and parity.")
     case E_INTERRUPT => throw new PortInterruptedException(port)
     case E_NO_PORT => throw new NoSuchPortException(port)
     case error if error < 0 => throw new IOException(s"unknown error code: ${error}")
@@ -76,9 +76,9 @@ object InternalSerial {
   }
 
   /** Open a new connection to a serial port. */
-  def open(port: String, baud: Int): InternalSerial = synchronized {
+  def open(port: String, baud: Int, characterSize: Int = 8, twoStopBits: Boolean = false, parity: Int = 0): InternalSerial = synchronized {
     val pointer = new Array[Long](1)
-    except(NativeSerial.open(port, baud, pointer), port)
+    except(NativeSerial.open(port, baud, characterSize, twoStopBits, parity, pointer), port)
     new InternalSerial(port, pointer(0))
   }
 
