@@ -5,13 +5,13 @@ import com.github.jodersky.flow._
 import java.util.concurrent.atomic.AtomicBoolean
 
 /** Wraps NativeSerial in a more object-oriented style, still quite low level. */
-class InternalSerial private (val port: String, private val pointer: Long) {
+class InternalSerial private (val port: String, val baud: Int, val characterSize: Int, val twoStopBits: Boolean, val parity: Int, private val pointer: Long) {
   import InternalSerial._
 
   private val reading = new AtomicBoolean(false)
   private val writing = new AtomicBoolean(false)
   private val closed = new AtomicBoolean(false)
-  
+
   /** Closes the underlying serial connection. Any threads blocking on read or write will return. */
   def close(): Unit = synchronized {
     if (!closed.get()) {
@@ -23,8 +23,10 @@ class InternalSerial private (val port: String, private val pointer: Long) {
     }
   }
 
-  /** Read data from underlying serial connection.
-   *  @throws PortInterruptedException if port is closed from another thread */
+  /**
+   * Read data from underlying serial connection.
+   * @throws PortInterruptedException if port is closed from another thread
+   */
   def read(): Array[Byte] = if (!closed.get) {
     reading.set(true)
     try {
@@ -41,8 +43,10 @@ class InternalSerial private (val port: String, private val pointer: Long) {
     throw new PortClosedException(s"port ${port} is already closed")
   }
 
-  /** Write data to underlying serial connection.
-   *  @throws PortInterruptedException if port is closed from another thread */
+  /**
+   * Write data to underlying serial connection.
+   * @throws PortInterruptedException if port is closed from another thread
+   */
   def write(data: Array[Byte]): Array[Byte] = if (!closed.get) {
     writing.set(true)
     try {
@@ -79,7 +83,7 @@ object InternalSerial {
   def open(port: String, baud: Int, characterSize: Int, twoStopBits: Boolean, parity: Int): InternalSerial = synchronized {
     val pointer = new Array[Long](1)
     except(NativeSerial.open(port, baud, characterSize, twoStopBits, parity, pointer), port)
-    new InternalSerial(port, pointer(0))
+    new InternalSerial(port, baud, characterSize, twoStopBits, parity, pointer(0))
   }
 
   /** Set debugging for all serial connections. Debugging results in printing extra messages (from the native library) in case of errors. */

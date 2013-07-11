@@ -50,16 +50,14 @@ class SerialOperator(handler: ActorRef, serial: InternalSerial) extends Actor wi
     
     override def run() {
       this.setName("flow-reader " + serial.port)
-      log.debug(name + ": started reader thread")
       enterReadLoop()
-      log.debug(name + ": exiting")
     }
     
   }
 
   override def preStart() = {
     context watch handler
-    handler ! Opened(serial.port)
+    handler ! Opened(serial.port, serial.baud, serial.characterSize, serial.twoStopBits, Parity(serial.parity))
     Reader.start()
   }
 

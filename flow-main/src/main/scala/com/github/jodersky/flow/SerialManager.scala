@@ -32,7 +32,7 @@ class SerialManager extends Actor with ActorLogging {
     case Open(handler, port, baud, cs, tsb, parity) => Try { InternalSerial.open(port, baud, cs, tsb, parity.id) } match {
       case Failure(t) => {
         log.debug(s"failed to open low serial port at ${port}, baud ${baud}, reason: " + t.getMessage())
-        handler ! OpenFailed(port, t)
+        handler ! OpenFailed(t, port, baud, cs, tsb, parity)
       }
 
       case Success(serial) => {
