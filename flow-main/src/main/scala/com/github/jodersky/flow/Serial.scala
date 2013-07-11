@@ -10,7 +10,7 @@ object Serial extends ExtensionKey[SerialExt] {
   trait Command
   trait Event
   
-  case class Open(handler: ActorRef, port: String, baud: Int) extends Command
+  case class Open(handler: ActorRef, port: String, baud: Int, characterSize: Int = 8, twoStopBits: Boolean = false, parity: Parity.Parity = Parity.None) extends Command
   case class Opened(port: String) extends Event
   case class OpenFailed(port: String, reason: Throwable) extends Event
   

@@ -76,7 +76,7 @@ object InternalSerial {
   }
 
   /** Open a new connection to a serial port. */
-  def open(port: String, baud: Int, characterSize: Int = 8, twoStopBits: Boolean = false, parity: Int = 0): InternalSerial = synchronized {
+  def open(port: String, baud: Int, characterSize: Int, twoStopBits: Boolean, parity: Int): InternalSerial = synchronized {
     val pointer = new Array[Long](1)
     except(NativeSerial.open(port, baud, characterSize, twoStopBits, parity, pointer), port)
     new InternalSerial(port, pointer(0))
