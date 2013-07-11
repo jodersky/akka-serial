@@ -20,10 +20,11 @@ object FlowBuild extends Build {
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"))
   
   lazy val runSettings: Seq[Setting[_]] = Seq(
-    //fork := true,
-    //connectInput in run := true
+    fork := true,
+    connectInput in run := true,
+    outputStrategy := Some(StdoutOutput)
   )
-      
+  
   lazy val main: Project = (
     Project("flow", file("flow-main"))
     settings (commonSettings: _*)

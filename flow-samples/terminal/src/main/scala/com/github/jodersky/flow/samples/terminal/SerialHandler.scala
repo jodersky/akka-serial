@@ -1,4 +1,4 @@
-package com.github.jodersky.flow.example
+package com.github.jodersky.flow.samples.terminal
 
 import com.github.jodersky.flow.Serial._
 import akka.actor.Actor
@@ -8,20 +8,20 @@ import akka.util.ByteString
 import akka.io.IO
 import com.github.jodersky.flow.Serial
 import akka.actor.Terminated
+import com.github.jodersky.flow.Parity
 
-class SerialHandler(port: String, baud: Int) extends Actor with ActorLogging {
+
+class SerialHandler(port: String, baud: Int, cs: Int, tsb: Boolean, parity: Parity.Parity) extends Actor with ActorLogging {
   import context._
 
   log.info(s"Requesting manager to open port: ${port}, baud: ${baud}")
   IO(Serial) ! Serial.Open(self, port, baud)
 
   def receive = {
-
     case OpenFailed(reason, _, _, _, _, _) => {
       log.error(s"Connection failed, stopping handler. Reason: ${reason}")
       context stop self
     }
-
     case Opened(port, _, _, _, _) => {
       log.info(s"Port ${port} is now open.")
       context become opened(sender)
@@ -29,18 +29,17 @@ class SerialHandler(port: String, baud: Int) extends Actor with ActorLogging {
   }
 
   def opened(operator: ActorRef): Receive = {
-   
+
     case Received(data) => {
-      log.info("Received data: " + formatData(data))
-      log.info("As string: " + new String(data.toArray, "UTF-8"))
+      log.info(s"Received data: ${formatData(data)} (${new String(data.toArray, "UTF-8")})")
     }
-    case Wrote(data) => log.info("Got ACK for writing data: " + formatData(data))
+    case Wrote(data) => log.info(s"Wrote data: ${formatData(data)} (${new String(data.toArray, "UTF-8")})")
     case Closed(None) => {
       log.info("Operator closed normally, exiting handler.")
       context stop self
     }
     case Closed(Some(ex)) => {
-      log.info("Operator crashed, exiting handler.")
+      log.error("Operator crashed, exiting handler.")
       context stop self
     }
     case "close" => {
