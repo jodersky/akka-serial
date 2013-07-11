@@ -10,7 +10,7 @@ import scala.util.Try
 object NativeLoader {
 
   def extract(): Option[File] = {
-    val os = System.getProperty("os.name").toLowerCase
+    val os = System.getProperty("os.name").toLowerCase.filter(_ != ' ')
     val arch = System.getProperty("os.arch").toLowerCase
     val fqlib = System.mapLibraryName("flow") //fully qualified library name
 

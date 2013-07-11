@@ -33,7 +33,7 @@ object FlowBuild extends Build {
         Dependencies.ioFile), 
       compileOrder in Compile := CompileOrder.Mixed,
       resourceGenerators in Compile <+= (resourceManaged in Compile, binariesDirectory in ThisBuild) map { (resDir, binDir) =>
-        val binaries: Seq[(File, File)] = getLatestBinaries(binDir, BinaryMajorVersion)
+val binaries: Seq[(File, File)] = getLatestBinaries(binDir, BinaryMajorVersion)
         val resources = for (binary <- binaries) yield {
           val versionedBinary = binary._1
           val unversionedBinary = binary._2
@@ -62,7 +62,7 @@ object FlowBuild extends Build {
       }
     }
     
-    val oSs = base.listFiles
+    val oSs = IO.listFiles(base).filter(file => !file.name.startsWith("."))
     val platforms = oSs.flatMap(_.listFiles)
     
     platforms.flatMap(latest(_))
@@ -85,7 +85,7 @@ object FlowBuild extends Build {
   )
     
   def canonicalBinaryPath(base: File, binaryName: String) = {
-	base / sys.props("os.name").toLowerCase / sys.props("os.arch").toLowerCase / binaryName    
+	base / sys.props("os.name").toLowerCase.filter(_ != ' ') / sys.props("os.arch").toLowerCase / binaryName    
   }
   val publishNative = taskKey[File]("Publish native binary compiled on current OS to flow-binaries project so that it may be packaged in a distribution of flow.")
   val publishNativeImpl = Def.task{
