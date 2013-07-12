@@ -118,7 +118,7 @@ object FlowBuild extends Build {
     settings (unixNativeSettings: _*)
     settings (
       target := baseDirectory.value / "target" / "linux",
-      includeDirectories in Native += jdkHome.value / "include" / "linux",
+      includeDirectories in Native ++= jdkHome.value.map(jdk => jdk / "include" / "linux").toSeq,
       linkFlags in Native ++= Seq("-shared", s"-Wl,-soname,libflow.so.${BinaryMajorVersion}"),
       binaryName in Native := s"libflow.so.${BinaryMajorVersion}.${UnixBinaryMinorVersion}"
     )
