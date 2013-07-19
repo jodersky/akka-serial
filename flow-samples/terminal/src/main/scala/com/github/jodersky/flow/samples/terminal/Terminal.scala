@@ -18,7 +18,7 @@ class Terminal(port: String, baud: Int, cs: Int, tsb: Boolean, parity: Parity.Pa
 
   override def preStart() = {
     log.info(s"Requesting manager to open port: ${port}, baud: ${baud}")
-    IO(Serial) ! Serial.Open(self, port, baud)
+    IO(Serial) ! Serial.Open(port, baud)
   }
   
   override def postStop() = {

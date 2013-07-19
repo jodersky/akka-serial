@@ -17,16 +17,15 @@ object Serial extends ExtensionKey[SerialExt] {
    * Open a new serial port. Send this command to the serial manager to request the opening of a serial port. The manager will
    * attempt to open a serial port with the specified parameters and, if successful, create a `SerialOperator` actor associated to the port.
    * The operator actor acts as an intermediate to the underlying native serial port, dealing with threading issues and the such. It will send any events
-   * to the given `handler` actorref.
+   * to the sender of this message.
    * The manager will respond with an `Opened` in case the port was successfully opened, or `OpenFailed` in case of failure.
-   * @param handler actor that will receive events from the specified serial port (via an operator)
    * @param port name of serial port
    * @param baud baud rate to use with serial port
    * @param characterSize size of a character of the data sent through the serial port
    * @param twoStopBits set to use two stop bits instead of one
    * @param parity type of parity to use with serial port
    */
-  case class Open(handler: ActorRef, port: String, baud: Int, characterSize: Int = 8, twoStopBits: Boolean = false, parity: Parity.Parity = Parity.None) extends Command
+  case class Open(port: String, baud: Int, characterSize: Int = 8, twoStopBits: Boolean = false, parity: Parity.Parity = Parity.None) extends Command
 
   /**
    * Event sent from a port operator, indicating that a serial port was successfully opened. The sender of this message is the operator associated to the given serial port.

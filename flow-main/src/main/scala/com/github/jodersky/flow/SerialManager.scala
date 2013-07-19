@@ -33,9 +33,9 @@ class SerialManager extends Actor with ActorLogging {
     }
 
   def receive = {
-    case Open(handler, port, baud, cs, tsb, parity) => Try { InternalSerial.open(port, baud, cs, tsb, parity.id) } match {
-      case Failure(t) => handler ! OpenFailed(t, port, baud, cs, tsb, parity)
-      case Success(serial) => context.actorOf(Props(classOf[SerialOperator], handler, serial), name = escapePortString(port))
+    case Open(port, baud, cs, tsb, parity) => Try { InternalSerial.open(port, baud, cs, tsb, parity.id) } match {
+      case Failure(t) => sender ! OpenFailed(t, port, baud, cs, tsb, parity)
+      case Success(serial) => context.actorOf(Props(classOf[SerialOperator], sender, serial), name = escapePortString(port))
     }
   }
 
