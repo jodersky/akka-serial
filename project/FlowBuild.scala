@@ -16,7 +16,7 @@ object FlowBuild extends Build {
     organization := Organization,
     version := Version,
     scalaVersion := ScalaVersion,
-    licenses in lsync := Seq(("Apache 2", url("http://www.apache.org/licenses/LICENSE-2.0.html"))),
+    licenses := Seq(("BSD-3-Clause", url("http://opensource.org/licenses/BSD-3-Clause"))),
     resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/",
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"))
   
