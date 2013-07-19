@@ -14,7 +14,7 @@ Clone the repository and run `sbt flow/publish-local` to publish the library loc
 
     libraryDependencies += "com.github.jodersky" % "flow" % "1.0-SNAPSHOT"
 
-Examples on flow's usage are located in the flow-samples directory. The examples may be run by switching to the corresponding project in sbt: `project flow-sample-<sample_name>` and typing `run`. Be sure to connect a serial device before running an example.
+Examples on flow's usage are located in the flow-samples directory. The examples may be run by switching to the corresponding project in sbt: `project flow-samples-<sample_name>` and typing `run`. Be sure to connect a serial device before running an example.
 
 Since flow integrates into the Akka-IO framework, a good resource on its general design is the framework's documentation at http://doc.akka.io/docs/akka/2.2.0/scala/io.html
         
