@@ -4,7 +4,7 @@ import java.io.IOException
 import com.github.jodersky.flow._
 import java.util.concurrent.atomic.AtomicBoolean
 
-/** Wraps NativeSerial in a more object-oriented style, still quite low level. */
+/** Wraps `NativeSerial` in a more object-oriented style, still quite low level. */
 class InternalSerial private (val port: String, val baud: Int, val characterSize: Int, val twoStopBits: Boolean, val parity: Int, private val pointer: Long) {
   import InternalSerial._
 
@@ -17,7 +17,7 @@ class InternalSerial private (val port: String, val baud: Int, val characterSize
     if (!closed.get()) {
       closed.set(true)
       except(NativeSerial.interrupt(pointer), port)
-      if (writing.get()) wait() // if reading, wait for read to finish
+      if (writing.get()) wait()
       if (reading.get()) wait()
       except(NativeSerial.close(pointer), port)
     }
@@ -36,7 +36,7 @@ class InternalSerial private (val port: String, val baud: Int, val characterSize
     } finally {
       synchronized {
         reading.set(false)
-        if (closed.get) notify(); //read was interrupted by close
+        if (closed.get) notify()
       }
     }
   } else {
@@ -86,7 +86,7 @@ object InternalSerial {
     new InternalSerial(port, baud, characterSize, twoStopBits, parity, pointer(0))
   }
 
-  /** Set debugging for all serial connections. Debugging results in printing extra messages (from the native library) in case of errors. */
+  /** Set debugging for all serial connections. Debugging results in printing extra messages from the native library in case of errors. */
   def debug(value: Boolean) = NativeSerial.debug(value)
 
 }

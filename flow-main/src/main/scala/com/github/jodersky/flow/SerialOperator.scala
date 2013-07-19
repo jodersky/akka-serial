@@ -17,12 +17,12 @@ import akka.actor.Terminated
 import akka.actor.actorRef2Scala
 import akka.util.ByteString
 
+/** Operator associated to an open serial port. All communication with a port is done via an operator. Operators are created though the serial manager. */
 class SerialOperator(handler: ActorRef, serial: InternalSerial) extends Actor with ActorLogging {
+  import SerialOperator._
   import context._
 
-  case class ReadException(ex: Exception)
-
-  object Reader extends Thread {
+  private object Reader extends Thread {
 
     def enterReadLoop() = {
       var continueReading = true
@@ -47,12 +47,12 @@ class SerialOperator(handler: ActorRef, serial: InternalSerial) extends Actor wi
     }
 
     def name = this.getName()
-    
+
     override def run() {
       this.setName("flow-reader " + serial.port)
       enterReadLoop()
     }
-    
+
   }
 
   override def preStart() = {
@@ -94,4 +94,8 @@ class SerialOperator(handler: ActorRef, serial: InternalSerial) extends Actor wi
 
   }
 
+}
+
+object SerialOperator {
+  private case class ReadException(ex: Exception)
 }

@@ -18,6 +18,10 @@ import akka.actor.SupervisorStrategy.Escalate
 import akka.actor.SupervisorStrategy.Stop
 import akka.actor.actorRef2Scala
 
+/**
+ * Actor that manages serial port creation. Once opened, a serial port is handed over to
+ * a dedicated operator actor that acts as an intermediate between client code and the native system serial port.
+ */
 class SerialManager extends Actor with ActorLogging {
   import SerialManager._
   import context._
@@ -30,16 +34,8 @@ class SerialManager extends Actor with ActorLogging {
 
   def receive = {
     case Open(handler, port, baud, cs, tsb, parity) => Try { InternalSerial.open(port, baud, cs, tsb, parity.id) } match {
-      case Failure(t) => {
-        log.debug(s"failed to open low serial port at ${port}, baud ${baud}, reason: " + t.getMessage())
-        handler ! OpenFailed(t, port, baud, cs, tsb, parity)
-      }
-
-      case Success(serial) => {
-        log.debug(s"opened low-level serial port at ${port}, baud ${baud}")
-        context.actorOf(Props(classOf[SerialOperator], handler, serial), name = escapePortString(port))
-      }
-
+      case Failure(t) => handler ! OpenFailed(t, port, baud, cs, tsb, parity)
+      case Success(serial) => context.actorOf(Props(classOf[SerialOperator], handler, serial), name = escapePortString(port))
     }
   }
 
