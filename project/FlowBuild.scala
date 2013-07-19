@@ -8,7 +8,7 @@ import JniKeys._
 object FlowBuild extends Build {
   val Organization = "com.github.jodersky"
   val Version = "1.0-SNAPSHOT" //version of flow library
-  val BinaryMajorVersion = 2 //binary major version used to select so's and dlls when publishing (needs to be incremented if API changes are made to flow.h or NativeSerial.java)
+  val BinaryMajorVersion = 2 //binary major version used to select shared libraries when publishing (needs to be incremented if API changes are made to flow.h or NativeSerial.java)
   val ScalaVersion = "2.10.2"
   //see native settings down below
   
@@ -16,6 +16,7 @@ object FlowBuild extends Build {
     organization := Organization,
     version := Version,
     scalaVersion := ScalaVersion,
+    licenses in lsync := Seq(("Apache 2", url("http://www.apache.org/licenses/LICENSE-2.0.html"))),
     resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/",
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"))
   
@@ -51,6 +52,8 @@ object FlowBuild extends Build {
     )
   )
   
+  //returns latest, major version-compatible binaries for every OS and architecture combination
+  //tuples returned (file with binary version appended, file without version string)
   def getLatestBinaries(base: File, majorVersion: Int): Seq[(File, File)] = {
     def latest(platform: File) = {
       val Pattern = "(.+)\\.(\\d+)\\.(\\d+)".r
@@ -70,7 +73,7 @@ object FlowBuild extends Build {
     platforms.flatMap(latest(_))
   }
   
-  lazy val terminal = (
+  lazy val samplesTerminal = (
     Project("flow-samples-terminal", file("flow-samples") / "terminal")
     settings(commonSettings: _*)
     settings(runSettings: _*)
@@ -78,7 +81,7 @@ object FlowBuild extends Build {
   )
   
  
-  //--- native settings --------------------------------------------------
+  //--- native settings and projects --------------------------------------------------
   
   val binariesDirectory = settingKey[File]("Directory containing published native binaries.")
   override lazy val settings = super.settings ++ Seq(
@@ -105,7 +108,7 @@ object FlowBuild extends Build {
     javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial")) ++ JniDefaults.defaultSettings
 
     
-  //--- native unix-like settings ----------------------------------------
+  //--- native unix-like settings and projects ----------------------------------------
   
   val UnixBinaryMinorVersion = 1
   
@@ -144,7 +147,7 @@ object FlowBuild extends Build {
    * val WindowsBinaryMinorVersion = 0
    * 
   lazy val nativeWindows = (
-    NativeProject("flow-native-windows", file("flow-native") / "windows") //note: change from unix to windows
+    NativeProject("flow-native-windows", file("flow-native") / "windows")
     settings (
       //windows is not a unix-like OS, several default settings need to be changed
       cCompiler in Native := "???",
