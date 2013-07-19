@@ -5,17 +5,18 @@ Serial communication library for Scala, designed to be reactive, lightweight and
 The main reason for yet another serial communication library for the JVM is that all other libraries I tested used blocking IO and/or consumed enormous amounts of CPU while being idle, between 2% and 15%. Flow's main goal is therefore to provide a lightweight library that only does work when communication is required. This reactive concept integrates well with the Akka IO layer therefore making flow an ideal library for extending it.
 
 ## Native side
-Since hardware is involved in serial communication, a Scala-only solution is not possible. Nevertherless, the native code is kept simple and minimalistic with the burden of dealing with threads left to Scala. Currently the native version has only been tested with Linux, however the code should be POSIX compliant and therefore easily portable.
+Since hardware is involved in serial communication, a Scala-only solution is not possible. Nevertherless, the native code is kept simple and minimalistic with the burden of dealing with threads left to Scala. The code aims to be POSIX compliant and therefore easily portable.
 
 ## Usage
 (this section will be updated as soon as a maven repository is available)
+
 Clone the repository and run `sbt flow/publish-local` to publish the library locally. From there on, you may use the library in any project simply by adding a library dependency to it.
 
     libraryDependencies += "com.github.jodersky" % "flow" % "1.0-SNAPSHOT"
 
 Examples on flow's usage are located in the flow-samples directory. The examples may be run by switching to the corresponding project in sbt: `project flow-sample-<sample_name>` and typing `run`. Be sure to connect a serial device before running an example.
 
-Since flow integrates into the Akka-IO framework, a good resource on its general "spirit" is the framework's documentation at http://doc.akka.io/docs/akka/2.2.0/scala/io.html
+Since flow integrates into the Akka-IO framework, a good resource on its general design is the framework's documentation at http://doc.akka.io/docs/akka/2.2.0/scala/io.html
         
 ### Currently supported platforms
 
