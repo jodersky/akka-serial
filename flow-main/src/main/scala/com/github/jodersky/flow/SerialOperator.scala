@@ -8,8 +8,8 @@ import Serial.Close
 import Serial.Closed
 import Serial.Opened
 import Serial.Received
+import Serial.NoAck
 import Serial.Write
-import Serial.Wrote
 import akka.actor.Actor
 import akka.actor.ActorLogging
 import akka.actor.ActorRef
@@ -70,7 +70,7 @@ class SerialOperator(handler: ActorRef, serial: InternalSerial) extends Actor wi
     case Write(data, ack) => {
       try {
         val sent = serial.write(data.toArray)
-        if (ack) sender ! Wrote(ByteString(sent))
+        if (ack != NoAck) sender ! ack
       } catch {
         case ex: IOException => {
           handler ! Closed(Some(ex))

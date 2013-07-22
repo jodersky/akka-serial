@@ -18,7 +18,7 @@ object Serial extends ExtensionKey[SerialExt] {
    * attempt to open a serial port with the specified parameters and, if successful, create a `SerialOperator` actor associated to the port.
    * The operator actor acts as an intermediate to the underlying native serial port, dealing with threading issues and the such. It will send any events
    * to the sender of this message.
-   * The manager will respond with an `Opened` in case the port was successfully opened, or `OpenFailed` in case of failure.
+   * The manager will respond with an `OpenFailed` in case the port could not be opened, or the operator will respond with `Opened`.
    * @param port name of serial port
    * @param baud baud rate to use with serial port
    * @param characterSize size of a character of the data sent through the serial port
@@ -57,17 +57,12 @@ object Serial extends ExtensionKey[SerialExt] {
   /**
    * Write data to serial port. Send this command to an operator to write the given data to its associated serial port.
    * @param data data to be written to port
-   * @param ack set to true to receive acknowledgment on successful write
-   * @see Wrote
+   * @param ack acknowledgment sent back to sender once data has been enqueued in kernel for sending
    */
-  case class Write(data: ByteString, ack: Boolean = false) extends Command
+  case class Write(data: ByteString, ack: Event = NoAck) extends Command
 
-  /**
-   * Event sent by operator, acknowledging that data was written to its serial port. Note that such an acknowledgment only guarantees that data has been written
-   * to the serial port's output buffer (managed by the operating system), the actual sending of the data to the remote device is not guaranteed.
-   * @param data the data that has been written
-   */
-  case class Wrote(data: ByteString) extends Event
+  /** Special type of acknowledgment that is not sent back. */
+  case object NoAck extends Event
 
   /** Request closing of port. Send this command to an operator to close its associated port. */
   case object Close extends Command
