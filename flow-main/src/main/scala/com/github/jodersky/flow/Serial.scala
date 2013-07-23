@@ -12,6 +12,8 @@ object Serial extends ExtensionKey[SerialExt] {
 
   /** A message extending this trait is to be viewed as an event, that is an in-bound message. */
   trait Event
+  
+  case class CommandFailed(command: Command, reason: Throwable) extends Event
 
   /**
    * Open a new serial port. Send this command to the serial manager to request the opening of a serial port. The manager will
@@ -36,17 +38,10 @@ object Serial extends ExtensionKey[SerialExt] {
    * @param parity type of parity to use with serial port
    */
   case class Opened(port: String, baud: Int, characterSize: Int, twoStopBits: Boolean, parity: Parity.Parity) extends Event
-
-  /**
-   * Event sent from the serial manager, indicating that a serial port could not be opened.
-   * @param reason throwable containing reason to why the requested port could not be opened
-   * @param port name of serial port
-   * @param baud baud rate to use with serial port
-   * @param characterSize size of a character of the data sent through the serial port
-   * @param twoStopBits set to use two stop bits instead of one
-   * @param parity type of parity to use with serial port
-   */
-  case class OpenFailed(reason: Throwable, port: String, baud: Int, characterSize: Int, twoStopBits: Boolean, parity: Parity.Parity) extends Event
+  
+  
+  case class Register(receiver: ActorRef) extends Command
+  case class Unregister(receiver: ActorRef) extends Command
 
   /**
    * Event sent by operator, indicating that data was received from the operator's serial port.
@@ -68,9 +63,8 @@ object Serial extends ExtensionKey[SerialExt] {
   case object Close extends Command
 
   /**
-   * Event sent from operator, indicating that its port has been closed. An optional reason explains the error (if any) that caused the closing of the port.
-   * @param reason Some(exception) explaining the exception that caused the closing, None if the port was closed by sending a `Close` message.
+   * Event sent from operator, indicating that its port has been closed.
    */
-  case class Closed(reason: Option[Exception]) extends Event
+  case object Closed extends Event
 
 }

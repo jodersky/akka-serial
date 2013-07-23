@@ -8,8 +8,7 @@ import scala.util.Try
 
 import com.github.jodersky.flow.internal.InternalSerial
 
-import Serial.Open
-import Serial.OpenFailed
+import Serial._
 import akka.actor.Actor
 import akka.actor.ActorLogging
 import akka.actor.OneForOneStrategy
@@ -33,9 +32,13 @@ class SerialManager extends Actor with ActorLogging {
     }
 
   def receive = {
-    case Open(port, baud, cs, tsb, parity) => Try { InternalSerial.open(port, baud, cs, tsb, parity.id) } match {
-      case Failure(t) => sender ! OpenFailed(t, port, baud, cs, tsb, parity)
-      case Success(serial) => context.actorOf(Props(classOf[SerialOperator], sender, serial), name = escapePortString(port))
+    case c @ Open(port, baud, cs, tsb, parity) => Try { InternalSerial.open(port, baud, cs, tsb, parity.id) } match {
+      case Failure(t) => sender ! CommandFailed(c, t)
+      case Success(serial) => {
+        val operator = context.actorOf(Props(classOf[SerialOperator], serial), name = escapePortString(port))
+        val opened = Opened(serial.port, serial.baud, serial.characterSize, serial.twoStopBits, Parity(serial.parity))
+        sender.tell(opened, operator)
+      }
     }
   }
 

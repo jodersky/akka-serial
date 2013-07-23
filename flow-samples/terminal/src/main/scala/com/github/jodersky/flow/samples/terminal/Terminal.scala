@@ -12,6 +12,7 @@ import com.github.jodersky.flow.Parity
 import akka.actor.Props
 
 class Terminal(port: String, baud: Int, cs: Int, tsb: Boolean, parity: Parity.Parity) extends Actor with ActorLogging {
+  import Terminal._
   import context._
 
   val reader = actorOf(Props[ConsoleReader])
@@ -26,28 +27,36 @@ class Terminal(port: String, baud: Int, cs: Int, tsb: Boolean, parity: Parity.Pa
   }
 
   def receive = {
-    case OpenFailed(reason, _, _, _, _, _) => {
+    case CommandFailed(cmd, reason) => {
       log.error(s"Connection failed, stopping terminal. Reason: ${reason}")
       context stop self
     }
     case Opened(port, _, _, _, _) => {
       log.info(s"Port ${port} is now open.")
-      context become opened(sender)
+      val operator = sender
+      context become opened(operator)
+      context watch operator 
+      operator ! Register(self)
       reader ! Read
     }
   }
 
   def opened(operator: ActorRef): Receive = {
+    
     case Received(data) => {
       log.info(s"Received data: ${formatData(data)} (${new String(data.toArray, "UTF-8")})")
     }
+    
     case Wrote(data) => log.info(s"Wrote data: ${formatData(data)} (${new String(data.toArray, "UTF-8")})")
 
-    case Closed(x) => {
-      x match {
-        case None => log.info("Operator closed normally, exiting terminal.")
-        case Some(ex) => log.error("Operator crashed, exiting terminal.")
-      }
+    case Closed => {
+      log.info("Operator closed normally, exiting terminal.")
+      context unwatch operator
+      context stop self
+    }
+    
+    case Terminated(`operator`) => {
+      log.error("Operator crashed, exiting terminal.")
       context stop self
     }
 
@@ -57,11 +66,16 @@ class Terminal(port: String, baud: Int, cs: Int, tsb: Boolean, parity: Parity.Pa
     }
 
     case ConsoleInput(input) => {
-      operator ! Write(ByteString(input.getBytes), true)
+      val data = ByteString(input.getBytes)
+      operator ! Write(data, Wrote(data))
       reader ! Read
     }
   }
 
   private def formatData(data: ByteString) = data.mkString("[", ",", "]")
 
+}
+
+object Terminal {
+  case class Wrote(data: ByteString) extends Event
 }
