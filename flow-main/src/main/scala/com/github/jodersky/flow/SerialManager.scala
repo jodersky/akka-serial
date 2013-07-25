@@ -36,7 +36,7 @@ class SerialManager extends Actor with ActorLogging {
       case Failure(t) => sender ! CommandFailed(c, t)
       case Success(serial) => {
         val operator = context.actorOf(Props(classOf[SerialOperator], serial), name = escapePortString(port))
-        val opened = Opened(serial.port, serial.baud, serial.characterSize, serial.twoStopBits, Parity(serial.parity))
+        val opened = Opened(serial.port, serial.baud, serial.characterSize, serial.twoStopBits, Parity(serial.parity), operator)
         sender.tell(opened, operator)
       }
     }

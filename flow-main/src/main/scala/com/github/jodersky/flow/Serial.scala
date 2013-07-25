@@ -37,7 +37,7 @@ object Serial extends ExtensionKey[SerialExt] {
    * @param twoStopBits set to use two stop bits instead of one
    * @param parity type of parity to use with serial port
    */
-  case class Opened(port: String, baud: Int, characterSize: Int, twoStopBits: Boolean, parity: Parity.Parity) extends Event
+  case class Opened(port: String, baud: Int, characterSize: Int, twoStopBits: Boolean, parity: Parity.Parity, operator: ActorRef) extends Event
   
   
   case class Register(receiver: ActorRef) extends Command
