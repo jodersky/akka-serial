@@ -69,7 +69,7 @@ class NativeSerial {
 	 * @return E_IO on error */
 	native static int close(long serial);
 	
-	/**Sets debugging option. If debugging is enabled, detailed error message are printed from method calls. */
+	/**Sets debugging option. If debugging is enabled, detailed error message are printed (to stderr) from method calls. */
 	native static void debug(boolean value);
 
 }

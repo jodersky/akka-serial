@@ -7,7 +7,7 @@ The main reason for yet another serial communication library for the JVM is that
 ## Native side
 Since hardware is involved in serial communication, a Scala-only solution is not possible. Nevertherless, the native code is kept simple and minimalistic with the burden of dealing with threads left to Scala. The code aims to be POSIX compliant and therefore easily portable.
 
-## Usage
+## Basic usage
 (this section will be updated as soon as a maven repository is available)
 
 Clone the repository and run `sbt flow/publish-local` to publish the library locally. From there on, you may use the library in any project simply by adding a library dependency to it.
@@ -18,7 +18,7 @@ Examples on flow's usage are located in the flow-samples directory. The examples
 
 Since flow integrates into the Akka-IO framework, a good resource on its general design is the framework's documentation at http://doc.akka.io/docs/akka/2.2.0/scala/io.html
         
-### Currently supported platforms
+## Currently supported platforms
 
 | OS (tested on)    | Architecture            | Notes                                                                 |
 |-------------------|-------------------------|-----------------------------------------------------------------------|

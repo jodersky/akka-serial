@@ -10,16 +10,17 @@ import com.github.jodersky.flow.Serial
 import akka.actor.Terminated
 import com.github.jodersky.flow.Parity
 import akka.actor.Props
+import com.github.jodersky.flow.SerialSettings
 
-class Terminal(port: String, baud: Int, cs: Int, tsb: Boolean, parity: Parity.Parity) extends Actor with ActorLogging {
+class Terminal(settings: SerialSettings) extends Actor with ActorLogging {
   import Terminal._
   import context._
 
   val reader = actorOf(Props[ConsoleReader])
 
   override def preStart() = {
-    log.info(s"Requesting manager to open port: ${port}, baud: ${baud}")
-    IO(Serial) ! Serial.Open(port, baud)
+    log.info(s"Requesting manager to open port: ${settings.port}, baud: ${settings.baud}")
+    IO(Serial) ! Serial.Open(settings)
   }
   
   override def postStop() = {
@@ -31,23 +32,23 @@ class Terminal(port: String, baud: Int, cs: Int, tsb: Boolean, parity: Parity.Pa
       log.error(s"Connection failed, stopping terminal. Reason: ${reason}")
       context stop self
     }
-    case Opened(port, _, _, _, _) => {
-      log.info(s"Port ${port} is now open.")
+    case Opened(s, _) => {
+      log.info(s"Port ${s.port} is now open.")
       val operator = sender
       context become opened(operator)
       context watch operator 
       operator ! Register(self)
-      reader ! Read
+      reader ! ConsoleReader.Read
     }
   }
 
   def opened(operator: ActorRef): Receive = {
     
     case Received(data) => {
-      log.info(s"Received data: ${formatData(data)} (${new String(data.toArray, "UTF-8")})")
+      log.info(s"Received data: ${formatData(data)}")
     }
     
-    case Wrote(data) => log.info(s"Wrote data: ${formatData(data)} (${new String(data.toArray, "UTF-8")})")
+    case Wrote(data) => log.info(s"Wrote data: ${formatData(data)}")
 
     case Closed => {
       log.info("Operator closed normally, exiting terminal.")
@@ -60,22 +61,27 @@ class Terminal(port: String, baud: Int, cs: Int, tsb: Boolean, parity: Parity.Pa
       context stop self
     }
 
-    case ConsoleInput(":q") => {
+    case ConsoleReader.EOT => {
       log.info("Initiating close.")
       operator ! Close
     }
 
-    case ConsoleInput(input) => {
+    case ConsoleReader.ConsoleInput(input) => {
       val data = ByteString(input.getBytes)
       operator ! Write(data, Wrote(data))
-      reader ! Read
+      reader ! ConsoleReader.Read
     }
   }
 
-  private def formatData(data: ByteString) = data.mkString("[", ",", "]")
+  
 
 }
 
 object Terminal {
   case class Wrote(data: ByteString) extends Event
+  
+  def apply(settings: SerialSettings) = Props(classOf[Terminal], settings)
+  
+  private def formatData(data: ByteString) = data.mkString("[", ",", "]") + " " + (new String(data.toArray, "UTF-8"))
+  
 }
