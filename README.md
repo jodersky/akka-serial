@@ -1,16 +1,13 @@
 # flow
-Serial communication library for Scala, designed to be reactive, lightweight and easily integrable with Akka-IO.
+Serial communication library for Scala, designed to be reactive, lightweight and easily integrable with Akka applications.
 
 ## Motivation
-The main reason for yet another serial communication library for the JVM is that all other libraries I tested used blocking IO and/or consumed enormous amounts of CPU while being idle, between 2% and 15%. Flow's main goal is therefore to provide a lightweight library that only does work when communication is required. This reactive concept integrates well with the Akka IO layer therefore making flow an ideal library for extending it.
-
-## Native side
-Since hardware is involved in serial communication, a Scala-only solution is not possible. Nevertherless, the native code is kept simple and minimalistic with the burden of dealing with threads left to Scala. The code aims to be POSIX compliant and therefore easily portable.
+The main reason for yet another serial communication library for the JVM is that all other libraries I tested used blocking IO and/or consumed enormous amounts of CPU while being idle, between 2% and 15%. Flow's main goal is therefore to provide a lightweight library that only does work when communication is required. Furthermore, this reactive concept integrates well with the Akka IO layer therefore making flow an ideal library for extending it.
 
 ## Basic usage
-(this section will be updated as soon as a maven repository is available)
+For a short guide on how to use flow see the file "documentation/basics.md", accessible on github [here](https://github.com/jodersky/flow/blob/master/documentation/basics.md).
 
-Clone the repository and run `sbt flow/publish-local` to publish the library locally. From there on, you may use the library in any project simply by adding a library dependency to it.
+Flow is built and its examples run with SBT. To get started, run `sbt flow/publish-local` to publish the library locally. From there on, you may use the library in any project simply by adding a library dependency to it.
 
     libraryDependencies += "com.github.jodersky" % "flow" % "1.0-SNAPSHOT"
 
@@ -27,6 +24,8 @@ Since flow integrates into the Akka-IO framework, a good resource on its general
 
 Note: flow may work on older versions of the tested OS kernels.
 
+## Native side
+Since hardware is involved in serial communication, a Scala-only solution is not possible. Nevertherless, the native code is kept simple and minimalistic with the burden of dealing with threads left to Scala. The code aims to be POSIX compliant and therefore easily portable.
 
 ## Build
 A complete build of flow involves two parts
@@ -34,9 +33,10 @@ A complete build of flow involves two parts
  1. compiling scala sources (as in a regular project)
  2. compiling native sources
  
-As any java project, the first part results in a platform independant artifact. However, the second part yields a binary that may only be used on systems resembling the platform for which it was compiled. Nevertheless, to provide multiplatform support, flow produces a "fat executable", a jar containing native binaries compiled for different flavours of operating system and architecture combinations. During runtime, a matching native binary is selected and loaded. To understand how flow can achieve such a mix, it is helpful to look at the project's directory layout.
+As any java or scala project, the first part results in a platform independant artifact. However, the second part yields a binary that may only be used on systems resembling the platform for which it was compiled. Nevertheless, to provide multiplatform support, flow produces a "fat executable", a jar containing native binaries compiled for different flavours of operating system and architecture combinations. During runtime, a matching native binary is selected and loaded. To understand how flow can achieve such a mix, it is helpful to look at the project's directory layout.
 
     flow
+    ├── documentation
     ├── flow-binaries
     ├── flow-main
     ├── flow-native
