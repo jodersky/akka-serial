@@ -9,7 +9,7 @@ For a short guide on how to use flow see the file "documentation/basics.md", acc
 
 Flow is built and its examples run with SBT. To get started, run `sbt flow/publish-local` to publish the library locally. From there on, you may use the library in any project simply by adding a library dependency to it.
 
-    libraryDependencies += "com.github.jodersky" % "flow" % "1.0-SNAPSHOT"
+    libraryDependencies += "com.github.jodersky" % "flow" % "1.1-SNAPSHOT"
 
 Examples on flow's usage are located in the flow-samples directory. The examples may be run by switching to the corresponding project in sbt: `project flow-samples-<sample_name>` and typing `run`. Be sure to connect a serial device before running an example.
 
