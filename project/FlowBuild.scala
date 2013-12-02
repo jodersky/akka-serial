@@ -7,7 +7,7 @@ import JniKeys._
 
 object FlowBuild extends Build {
   val Organization = "com.github.jodersky"
-  val Version = "1.0.1-SNAPSHOT" //version of flow library
+  val Version = "1.0.1" //version of flow library
   val BinaryMajorVersion = 2 //binary major version used to select shared libraries when publishing (needs to be incremented if API changes are made to flow.h or NativeSerial.java)
   val ScalaVersion = "2.10.3"
   //see native settings down below
