@@ -14,7 +14,7 @@ object NativeLoader {
     val arch = System.getProperty("os.arch").toLowerCase
     val fqlib = System.mapLibraryName("flow") //fully qualified library name
 
-    val in = NativeLoader.getClass().getResourceAsStream(s"/native/${os}/${arch}/${fqlib}")
+    val in = NativeLoader.getClass().getResourceAsStream(s"/native/${arch}-${os}/${fqlib}")
     if (in == null) return None
 
     val temp = Path.createTempFile()

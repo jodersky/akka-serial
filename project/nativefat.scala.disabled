@@ -1,0 +1,47 @@
+import sbt._
+import Keys._
+import NativeKeys._
+import java.io.File
+import scala.collection.mutable.HashSet
+
+object NativeFatKeys {
+
+  val NativeFat = config("nativeFat")
+
+
+}
+
+object NativeFatDefaults {
+  import NativeFatKeys._
+
+  def highest(files: Seq[File], separator: String) = {
+    files.sortBy{f =>
+      f.getName.split(separator) match {
+        case Array(name, version) => version
+        case _ => throw new RuntimeException("Error parsing file version string: " + f.getName)
+      }
+    }.last
+  }
+
+  val gen =  taskKey[Seq[File]]("")
+
+  val genImpl = Def.task {
+    val resDir = (resourceManaged).value
+    val binDir = nativeTargetDirectory.value
+    val binarises = nativeLink.value
+
+    val resources = for ((_, binary) <- binarises) yield {
+      val relative = (binary relativeTo binDir).get.getPath
+      val resource = resDir / "native" / relative
+      IO.copyFile(binary, resource)
+      resource
+   }
+   resources.toSeq
+  }
+
+  val settings = Seq(
+    gen := genImpl.value,
+    resourceGenerators in NativeFat := Seq(genImpl)
+  )
+
+}
