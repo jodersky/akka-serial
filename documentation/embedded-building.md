@@ -3,14 +3,14 @@ Setting up cross-compilation on your host machine can be quite a daunting task, 
 
 ## Requirements
 - a target platform that has enough resources for compiling native programs
-- a platform that can run SBT (referred to as the host)
+- a host platform that can run SBT
 
 ## Overview of required steps
 1. Compile native sources on target platform to a library
 2. Compile scala/java sources on host
 3. Use the compiled library with the scala/java application
 
-## Detailed procdure
+## Detailed procedure
 This section details the procedure for linux-based target platforms.
 
 1. Compilation of native sources [on the target platform]
