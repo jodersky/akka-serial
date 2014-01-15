@@ -14,7 +14,7 @@ object NativeFatDefaults {
   import NativeFatKeys._
 
   val mappingsImpl = Def.task {
-    val links = nativeLink.value
+    val links = nativeLink.value //nativeLink produces native shared libraries for different platforms
     val unamanagedDir = packageFatUnmanaged.value
 
     val managed: Seq[(File, String)] = for ( (build, binary) <-  links.toSeq) yield {
@@ -37,7 +37,8 @@ object NativeFatDefaults {
         val prev = (artifact in packageBin).value 
         prev.copy(name = prev.name + packageFatSuffix.value)
       },
-      mappings in packageFat ++= mappingsImpl.value
-    )
+      mappings in packageFat ++= mappingsImpl.value,
+      publishArtifact in packageFat := true
+    ) ++ addArtifact(artifact in packageFat, packageFat)
 
 }
