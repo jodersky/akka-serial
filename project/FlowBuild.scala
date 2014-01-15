@@ -37,12 +37,14 @@ object FlowBuild extends Build {
       publishLocal := ()
     )
   )
+
   
   lazy val flow: Project = (
     Project("flow", file("flow"))
     settings (commonSettings: _*)
     settings (JniDefaults.settings: _*)
     settings (NativeDefaults.settings: _*)
+    settings (NativeFatDefaults.settings: _*)
     settings (selectHost().settings: _*)
     settings(
       nativeIncludeDirectories += (sourceDirectory in Compile).value / "native" / "include",
@@ -56,14 +58,6 @@ object FlowBuild extends Build {
         Dependencies.ioFile)
     )
   )
-  
-  lazy val samplesTerminal = (
-    Project("flow-samples-terminal", file("flow-samples") / "flow-samples-terminal")
-    settings(commonSettings: _*)
-    settings(runSettings: _*)
-    dependsOn(flow)
-  )
-
 
   //the current operating system used to run the native compile
   trait Host{ def settings: Seq[Setting[_]] }
@@ -73,6 +67,7 @@ object FlowBuild extends Build {
     val compiler = "gcc"
     val linker = compiler
     val cFlags = Seq("-O2", "-fPIC")
+
     val linkerFlags = Seq("-shared", s"-Wl,-soname,libflow.so.${NativeMajorVersion}")
     val binary = s"libflow.so"
 
@@ -130,5 +125,15 @@ object FlowBuild extends Build {
         nativeLink := osError
       ) 
     }
-  }  
+  }
+
+
+  lazy val samplesTerminal = (
+    Project("flow-samples-terminal", file("flow-samples") / "flow-samples-terminal")
+    settings(commonSettings: _*)
+    settings(runSettings: _*)
+    dependsOn(flow)
+  )
+
+
 }

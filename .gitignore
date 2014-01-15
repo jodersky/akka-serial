@@ -20,4 +20,4 @@ project/plugins/project/
 # Native
 *.o
 *.so
-!/flow-binaries/*.so
+*.jnilib
