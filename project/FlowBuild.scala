@@ -60,6 +60,18 @@ object FlowBuild extends Build {
           Some("releases"  at nexus + "service/local/staging/deploy/maven2")
       },
       pomIncludeRepository := { _ => false },
+      pomExtra := {
+        <scm>
+          <url>git@github.com:jodersky/flow.git</url>
+          <connection>scm:git:git@github.com:jodersky/flow.git</connection>
+        </scm>
+        <developers>
+          <developer>
+            <id>jodersky</id>
+            <name>Jakob Odersky</name>
+          </developer>
+        </developers>
+      },
       libraryDependencies ++= Seq(
         Dependencies.akkaActor,
         Dependencies.ioCore,
