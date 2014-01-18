@@ -19,10 +19,10 @@ ATTENTION: flow uses native libraries to back serial communication, therefore be
         
     This will add a jar to your classpath containing native libraries for various platforms. At run time, the correct library for the current platform is selected, extracted and loaded. This solution enables running applications seamlessly, as if they were pure JVM applications. However, since the JVM does not enable full determination of the current platform (only OS and rough architecture are known), only a couple of platforms are supported through this solution. Currently, these are given in the table below.
 
-    | OS (tested on)    | Architecture         | Notes                                                                  |
+    | OS                | Architecture         | Notes                                                                  |
     |-------------------|----------------------|------------------------------------------------------------------------|
-    | Linux (3.2.0)     | x86<br>x86_64<br>ARM | ARM specification: v7, hard float ABI (may work on other versions too, any feedback is welcome!)<br>A user accessing a serial port may need to be in the dialout group|
-    | Mac OS X (10.6.8) | x86_64               | Use /dev/cu* device instead of /dev/tty*.                              |
+    | Linux | x86<br>x86_64<br>ARM (v7, hardfloat, glibc 2.13) | A user accessing a serial port may need to be in the dialout group <br> ARM may work on other versions too, any feedback is welcome!<br>|
+    | Mac OS X | x86_64               | Use /dev/cu* device instead of /dev/tty*.                              |
 
 
 2.  Maximum scalability: do not include the second dependency above. Instead, for every end-user application that relies on flow, manually add the native library for the current platform to the JVM's library path. This can be achieved through various ways, notably:
