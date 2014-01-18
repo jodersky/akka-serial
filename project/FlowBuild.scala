@@ -17,7 +17,7 @@ object FlowBuild extends Build {
   lazy val commonSettings: Seq[Setting[_]] = Seq(
     organization := Organization,
     scalaVersion := ScalaVersion,
-    release in ThisBuild := sys.props("release") == true,
+    release in ThisBuild := sys.props("release") == "true",
     gitHeadCommitSha in ThisBuild := Process("git rev-parse HEAD").lines.head,
     version in ThisBuild:= { if (release.value ) Version else Version + "-" + gitHeadCommitSha.value },
     licenses := Seq(("BSD-3-Clause", url("http://opensource.org/licenses/BSD-3-Clause"))),
@@ -44,7 +44,6 @@ object FlowBuild extends Build {
     settings (commonSettings: _*)
     settings (JniDefaults.settings: _*)
     settings (NativeDefaults.settings: _*)
-    settings (NativeFatDefaults.settings: _*)
     settings (selectHost().settings: _*)
     settings(
       nativeIncludeDirectories += (sourceDirectory in Compile).value / "native" / "include",
@@ -52,6 +51,8 @@ object FlowBuild extends Build {
       javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial"),
       javahHeaderDirectory := (sourceDirectory in Compile).value / "native" / "include",
       compileOrder in Compile := CompileOrder.Mixed,
+      publishTo := Some("Sonatype Snapshots Nexus" at "https://oss.sonatype.org/content/repositories/snapshots"),
+      credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
       libraryDependencies ++= Seq(
         Dependencies.akkaActor,
         Dependencies.ioCore,
@@ -74,7 +75,7 @@ object FlowBuild extends Build {
     val builds = List(
       NativeBuild("amd64-linux", "gcc", cFlags :+ "-m64", "gcc", linkerFlags :+ "-m64", binary),
       NativeBuild("x86-linux", "gcc", cFlags :+ "-m32", "gcc", linkerFlags :+ "-m32", binary),
-      NativeBuild("arm-linux", "arm-linux-gnueabi-gcc", cFlags, "arm-linux-gnueabi-gcc", linkerFlags, binary)
+      NativeBuild("arm-linux", "arm-linux-gnueabihf-gcc", cFlags, "arm-linux-gnueabihf-gcc", linkerFlags, binary)
       //add other build configurations here or adapt existing ones to your needs
     )
 

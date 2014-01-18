@@ -24,14 +24,16 @@ object NativeLoader {
 
   def loadFromJar() = extract() match {
     case Some(file) => System.load(file.getAbsolutePath)
-    case None => throw new UnsatisfiedLinkError("cannot extract native library, the native library may not exist for your specific os/architecture combination")
+    case None => throw new UnsatisfiedLinkError("Cannot extract native library, the native library may not exist for your specific os/architecture combination.")
   }
 
   def load = {
     try {
       System.loadLibrary("flow")
     } catch {
-      case ex: UnsatisfiedLinkError => loadFromJar()
+      case ex: UnsatisfiedLinkError => {
+        loadFromJar()
+      }
     }
   }
 

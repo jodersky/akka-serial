@@ -17,7 +17,7 @@ object NativeFatDefaults {
     val links = nativeLink.value //nativeLink produces native shared libraries for different platforms
     val unamanagedDir = packageFatUnmanaged.value
 
-    val managed: Seq[(File, String)] = for ( (build, binary) <-  links.toSeq) yield {
+    val managed: Seq[(File, String)] = for ( (build, binary) <- links.toSeq) yield {
       binary -> ("native/" + build.name + "/" + binary.name)
     }
 
@@ -28,7 +28,7 @@ object NativeFatDefaults {
     managed ++ unmanaged
   }
 
-  def settings = sbt.Defaults.packageTaskSettings(packageFat,  sbt.Defaults.packageBinMappings) ++ 
+  def settings = sbt.Defaults.packageTaskSettings(packageFat, sbt.Defaults.packageBinMappings) ++ 
     Seq(
       packageFatSuffix := "-fat",
       packageFatUnmanaged := baseDirectory.value / "lib_native",
