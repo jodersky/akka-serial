@@ -42,4 +42,4 @@ This section details the procedure for linux-based target platforms.
         - Run your program by prepending LD_LIBRARY_PATH=<folder containing libflow.so> to the command. E.g ```LD_LIBRARY_PATH=<folder containing libflow.so> java -jar your-app.jar```
 
     - System- or user-wide:
-        - Copy libflow.so to a place that is on the default java library path and run your application normally. Such places usually include /usr/lib and /usr/local/lib
+        - Copy libflow.so to a place that is on the default java library path and run your application normally. Such places usually include /usr/lib.
