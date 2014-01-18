@@ -162,9 +162,9 @@ object FlowBuild extends Build {
         for ((build, binary) <- ls; n <- linkMappings.get(build.name)) yield {
           (build.copy(name = n), binary)
         }
-      }
+      },
+      exportJars := true
     )
-    //settings(NativeFatDefaults.settings: _*)
     dependsOn(flow)
   )
 
