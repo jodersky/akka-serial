@@ -21,7 +21,7 @@ ATTENTION: flow uses native libraries to back serial communication, therefore be
 
     | OS                | Architecture         | Notes                                                                  |
     |-------------------|----------------------|------------------------------------------------------------------------|
-    | Linux | x86<br>x86_64<br>ARM (v7, hardfloat, glibc 2.13) | A user accessing a serial port may need to be in the dialout group <br> ARM may work on other versions too, any feedback is welcome!<br>|
+    | Linux | x86<br>x86_64<br>ARM (v7, hardfloat, glibc 2.15) | A user accessing a serial port may need to be in the dialout group <br> ARM may work on other versions too, any feedback is welcome!<br>|
     | Mac OS X | x86_64               | Use /dev/cu* device instead of /dev/tty*.                              |
 
 
