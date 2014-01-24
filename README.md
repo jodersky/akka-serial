@@ -13,7 +13,7 @@ Flow is built and its examples run with SBT. To get started, include a dependenc
 
 ATTENTION: flow uses native libraries to back serial communication, therefore before you can run any application depending on flow you must include flow's native library! To do so, you have two options.
 
-1.  The easy way: add a second dependency to your project: (this dependency is not yet available on maven, please run ```flow-pack/publishLocal``` before)
+1.  The easy way: add a second dependency to your project: (this dependency is not available on maven, please run ```flow-pack/publishLocal``` before)
         
         libraryDependencies += "com.github.jodersky" %% "flow-pack" % "1.1.0"
         
