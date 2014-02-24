@@ -38,7 +38,7 @@ This section details the procedure for linux-based target platforms.
     In your scala/java application, treat flow as if it were a pure scala/java library and build your application with flow as a usual dependency. However, when running your application or any other application that relies on it, the native library must be included in java's library path. To do so, you have several options:
 
     - Per application:
-        - Run java with the command-line option -Djava.library.path=".:/home/<folder containing libflow.so>". E.g. ```java -Djava.library.path=".:/home/<folder containing libflow.so>" -jar your-app.jar```
+        - Run java with the command-line option -Djava.library.path="\<folder containing libflow.so\>". For example, if the native library is in the current directory, ```java -Djava.library.path="." -jar your-app.jar```
         - Run your program by prepending LD_LIBRARY_PATH=<folder containing libflow.so> to the command. E.g ```LD_LIBRARY_PATH=<folder containing libflow.so> java -jar your-app.jar```
 
     - System- or user-wide:
