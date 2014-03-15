@@ -7,11 +7,13 @@ import akka.util.ByteString
 /** Defines messages used by flow's serial IO layer. */
 object Serial extends ExtensionKey[SerialExt] {
 
+  sealed trait Message
+  
   /** A message extending this trait is to be viewed as a command, an out-bound message issued by the client to flow's API. */
-  trait Command
+  trait Command extends Message
 
   /** A message extending this trait is to be viewed as an event, an in-bound message issued by flow to the client. */
-  trait Event
+  trait Event extends Message
 
   /** A command has failed. */
   case class CommandFailed(command: Command, reason: Throwable) extends Event
@@ -26,40 +28,23 @@ object Serial extends ExtensionKey[SerialExt] {
    * In case the port is successfully opened, the operator will respond with an `Opened` message.
    * In case the port cannot be opened, the manager will respond with a `CommandFailed` message.
    *
-   * @param settings settings of serial port to open
+   * @param port name of serial port
+   * @param baud baud rate to use with serial port
+   * @param characterSize size of a character of the data sent through the serial port
+   * @param twoStopBits set to use two stop bits instead of one
+   * @param parity type of parity to use with serial port
    */
-  case class Open(settings: SerialSettings) extends Command
+  case class Open(port: String, baud: Int, characterSize: Int, twoStopBits: Boolean, parity: Parity.Parity) extends Command
 
   /**
    * A port has been successfully opened.
    *
    * Event sent by a port operator, indicating that a serial port was successfully opened. The sender
-   * of this message is the operator associated to the given serial port. Furthermore, an additional reference
-   * to the operator is provided in this class' `operator` field.
+   * of this message is the operator associated to the given serial port.
    *
-   * @param settings settings of port that was opened
-   * @param operator operator associated with the serial port
+   * @param port name of opened serial port
    */
-  case class Opened(settings: SerialSettings, operator: ActorRef) extends Event
-
-  /**
-   * Register an actor to receive events.
-   *
-   * Send this command to a serial operator to register an actor for notification on the reception of data on the operator's associated port.
-   * Upon reception, data will be sent by the operator to registered actors in form of `Received` events.
-   *
-   * @param receiver actor to register
-   */
-  case class Register(receiver: ActorRef) extends Command
-
-  /**
-   * Unregister an actor from receiving events.
-   *
-   * Send this command to a serial operator to unregister an actor for notification on the reception of data on the operator's associated port.
-   *
-   * @param receiver actor to unregister
-   */
-  case class Unregister(receiver: ActorRef) extends Command
+  case class Opened(port: String) extends Event
 
   /**
    * Data has been received.

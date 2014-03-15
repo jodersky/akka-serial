@@ -1,20 +1,15 @@
 package com.github.jodersky.flow
 
-import java.io.IOException
-
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
 
 import com.github.jodersky.flow.internal.InternalSerial
 
-import Serial._
+import Serial.CommandFailed
+import Serial.Open
 import akka.actor.Actor
 import akka.actor.ActorLogging
-import akka.actor.OneForOneStrategy
-import akka.actor.Props
-import akka.actor.SupervisorStrategy.Escalate
-import akka.actor.SupervisorStrategy.Stop
 import akka.actor.actorRef2Scala
 
 /**
@@ -26,20 +21,12 @@ class SerialManager extends Actor with ActorLogging {
   import SerialManager._
   import context._
 
-  override val supervisorStrategy =
-    OneForOneStrategy() {
-      case _: IOException => Stop
-      case _: Exception => Escalate
-    }
-
   def receive = {
-    case c @ Open(s) => Try { InternalSerial.open(s.port, s.baud, s.characterSize, s.twoStopBits, s.parity.id) } match {
-      case Failure(t) => sender ! CommandFailed(c, t)
-      case Success(serial) => {
-        val operator = context.actorOf(SerialOperator(serial), name = escapePortString(s.port))
-        val settings = SerialSettings(serial.port, serial.baud, serial.characterSize, serial.twoStopBits, Parity(serial.parity)) 
-        sender.tell(Opened(settings, operator), operator)
-      }
+    case open @ Open(port, baud, characterSize, twoStopBits, parity) => Try {
+      InternalSerial.open(port, baud, characterSize, twoStopBits, parity.id)
+    } match {
+      case Success(internal) => context.actorOf(SerialOperator(internal, sender), name = escapePortString(internal.port))
+      case Failure(err) => sender ! CommandFailed(open, err)
     }
   }
 
