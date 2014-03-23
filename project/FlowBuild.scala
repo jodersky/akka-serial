@@ -7,7 +7,7 @@ import NativePackKeys._
 object FlowBuild extends Build {
   val Organization = "com.github.jodersky"
   val ScalaVersion = "2.10.3"
-  val Version = "1.1.0" //version of flow library
+  val Version = "1.2.0" //version of flow library
   val NativeMajorVersion = 2 //major version of native API
   val NativeMinorVersionPosix = 0 //minor version of native posix implementation
   val NativeVersionPosix = NativeMajorVersion + "." + NativeMinorVersionPosix
