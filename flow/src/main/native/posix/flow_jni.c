@@ -1,70 +1,144 @@
 #include "flow.h"
 #include "com_github_jodersky_flow_internal_NativeSerial.h"
 
-inline struct serial_config* j2s(jlong pointer) {
-    return (struct serial_config*) pointer;
+
+static inline void throwException(JNIEnv* env, const char* const exception, const char * const message) {
+  (*env)->ThrowNew(env, (*env)->FindClass(env, exception), message); 
 }
 
-inline jlong s2j(struct serial_config* pointer) {
-    return (jlong) pointer;
+static inline void check(JNIEnv* env, int id) {
+  switch (id) {
+    case E_IO: throwException(env, "java/io/IOException", ""); break;
+    case E_BUSY: throwException(env, "com/github/jodersky/flow/PortInUseException", ""); break;
+    case E_ACCESS_DENIED: throwException(env, "com/github/jodersky/flow/AccessDeniedException", ""); break;
+    case E_INVALID_SETTINGS: throwException(env, "com/github/jodersky/flow/InvalidSettingsException", ""); break;
+    case E_INTERRUPT: throwException(env, "com/github/jodersky/flow/PortInterruptedException", ""); break;
+    case E_NO_PORT: throwException(env, "com/github/jodersky/flow/NoSuchPortException", ""); break;
+    default: return;
+  }
 }
+ 
 
-JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_internal_NativeSerial_open
-(JNIEnv *env, jclass clazz, jstring port_name, jint baud, jint char_size, jboolean two_stop_bits, jint parity, jlongArray jserialp)
-{ 
-  const char *dev = (*env)->GetStringUTFChars(env, port_name, 0);
-  struct serial_config* serial;
-  int r = serial_open(dev, baud, char_size, two_stop_bits, parity, &serial);
-  (*env)->ReleaseStringUTFChars(env, port_name, dev);
+/*
+ * Class:     com_github_jodersky_flow_internal_NativeSerial
+ * Method:    open
+ * Signature: (Ljava/lang/String;IIZI)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_jodersky_flow_internal_NativeSerial_open
+  (JNIEnv *env, jclass clazz, jstring port_name, jint baud, jint char_size, jboolean two_stop_bits, jint parity) { 
+
+    const char *dev = (*env)->GetStringUTFChars(env, port_name, 0);
+    struct serial_config* config;
+    int r = serial_open(dev, baud, char_size, two_stop_bits, parity, &config);
+    (*env)->ReleaseStringUTFChars(env, port_name, dev);
+
   
-  long serialp = s2j(serial);
-  (*env)->SetLongArrayRegion(env, jserialp, 0, 1, &serialp);
+    if (r < 0) {
+      check(env, r);
+      return 0;
+    }
   
-  return r;
+    long jpointer = (long) config;
+    return jpointer;
+
 }
 
-JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_internal_NativeSerial_close
-(JNIEnv * env, jclass clazz, jlong serial)
-{
-  serial_close(j2s(serial));
+/*
+ * Class:     com_github_jodersky_flow_internal_NativeSerial
+ * Method:    readDirect
+ * Signature: (JLjava/nio/ByteBuffer;)I
+ */
+JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_internal_NativeSerial_readDirect
+  (JNIEnv *env, jclass clazz, jlong config, jobject buffer) {
+    return 0;
 }
 
+/*
+ * Class:     com_github_jodersky_flow_internal_NativeSerial
+ * Method:    read
+ * Signature: (J[B)I
+ */
 JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_internal_NativeSerial_read
-(JNIEnv * env, jclass clazz, jlong serial, jbyteArray jbuffer)
-{
+  (JNIEnv *env, jclass clazz, jlong config, jbyteArray buffer) {
 
-  jsize size = (*env)->GetArrayLength(env, jbuffer);
-  
-  unsigned char buffer[size];
-  int n = serial_read(j2s(serial), buffer, size);
-  if (n < 0) {
-    return n;
+    jsize size = (*env)->GetArrayLength(env, buffer);
+    char local_buffer[size];
+    int r = serial_read((struct serial_config*) config, local_buffer, size);
+    if (r < 0) {
+      check(env, r);
+      return -1;
+    }
+
+    (*env)->SetByteArrayRegion(env, buffer, 0, r, (signed char *) local_buffer);
+    return r;
+
 }
 
-(*env)->SetByteArrayRegion(env, jbuffer, 0, n, (signed char *) buffer);
-return n;
+/*
+ * Class:     com_github_jodersky_flow_internal_NativeSerial
+ * Method:    cancelRead
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_github_jodersky_flow_internal_NativeSerial_cancelRead
+  (JNIEnv *env, jclass clazz, jlong config) {
+
+  int r = serial_cancel_read((struct serial_config*) config);
+  if (r < 0) {
+    check(env, r);
+  }
+    
 }
 
+/*
+ * Class:     com_github_jodersky_flow_internal_NativeSerial
+ * Method:    writeDirect
+ * Signature: (JLjava/nio/ByteBuffer;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_internal_NativeSerial_writeDirect
+  (JNIEnv *env, jclass clazz, jlong config, jobject buffer, jint size) {
+
+    return 0;
+    
+}
+
+/*
+ * Class:     com_github_jodersky_flow_internal_NativeSerial
+ * Method:    write
+ * Signature: (J[BI)I
+ */
 JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_internal_NativeSerial_write
-(JNIEnv * env, jclass clazz, jlong serial, jbyteArray jbuffer)
-{
-  unsigned char * buffer = (*env)->GetByteArrayElements(env, jbuffer, NULL);
-  int size = (*env)->GetArrayLength(env, jbuffer);
-  int r = serial_write(j2s(serial), buffer, size);
-  
-  (*env)->ReleaseByteArrayElements(env, jbuffer, buffer, JNI_ABORT);
-  
-  return r;
+  (JNIEnv *env, jclass clazz, jlong config, jbyteArray buffer, jint size) {
+    
+    char* local_buffer = (char*) (*env)->GetByteArrayElements(env, buffer, NULL);
+    int r = serial_write((struct serial_config*) config, local_buffer, size);
+    (*env)->ReleaseByteArrayElements(env, buffer, (signed char*) local_buffer, JNI_ABORT);
+    if (r < 0) {
+      check(env, r);
+      return -1;
+    }
+    return r;
+
 }
 
-JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_internal_NativeSerial_interrupt
-(JNIEnv * env, jclass clazz, jlong serial)
-{
-  return serial_interrupt(j2s(serial));
+/*
+ * Class:     com_github_jodersky_flow_internal_NativeSerial
+ * Method:    close
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_github_jodersky_flow_internal_NativeSerial_close
+  (JNIEnv *env, jclass clazz, jlong config) {
+    int r = serial_close((struct serial_config*) config);
+    if (r < 0) {
+      check(env, r);
+    }
 }
 
+/*
+ * Class:     com_github_jodersky_flow_internal_NativeSerial
+ * Method:    debug
+ * Signature: (Z)V
+ */
 JNIEXPORT void JNICALL Java_com_github_jodersky_flow_internal_NativeSerial_debug
-(JNIEnv *env, jclass clazz, jboolean value)
-{
-  serial_debug((bool) value);
+  (JNIEnv *env, jclass clazz, jboolean value) {
+    serial_debug((bool) value);
 }

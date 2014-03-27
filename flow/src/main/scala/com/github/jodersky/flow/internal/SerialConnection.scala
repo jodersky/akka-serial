@@ -3,8 +3,7 @@ package com.github.jodersky.flow.internal
 import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicBoolean
 
-import com.github.jodersky.flow.PortClosedException
-import com.github.jodersky.flow.SerialSettings
+import com.github.jodersky.flow._
 
 /**
  * Represents a serial connection in a more secure and object-oriented style than `NativeSerial`. In contrast
@@ -43,10 +42,10 @@ class SerialConnection private (
       closed.set(true)
       NativeSerial.cancelRead(pointer)
       readLock.synchronized {
-        while (reading) wait()
+        while (reading) this.wait()
       }
       writeLock.synchronized {
-        while (writing) wait()
+        while (writing) this.wait()
       }
       NativeSerial.close(pointer)
     }
@@ -77,7 +76,7 @@ class SerialConnection private (
           b => NativeSerial.read(pointer, b.array()))(buffer)
       } finally {
         reading = false
-        if (closed.get) notify()
+        if (closed.get) readLock.notify()
       }
     } else {
       throw new PortClosedException(s"port ${port} is closed")
@@ -108,7 +107,7 @@ class SerialConnection private (
           b => NativeSerial.write(pointer, b.array(), b.remaining()))(buffer)
       } finally {
         writing = false
-        if (closed.get) notify()
+        if (closed.get) writeLock.notify()
       }
     } else {
       throw new PortClosedException(s"port ${port} is closed")

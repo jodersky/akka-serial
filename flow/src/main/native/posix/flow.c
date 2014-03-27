@@ -4,7 +4,9 @@
 #include <errno.h>
 #include <termios.h>
 #include <fcntl.h>
+#include <sys/file.h>
 #include "flow.h"
+
 
 #define DATA_CANCEL 0xffffffff
 
@@ -186,7 +188,7 @@ int serial_close(struct serial_config* const serial) {
     return 0;
 }
 
-int serial_read(struct serial_config* const serial, unsigned char* const buffer, size_t size) {
+int serial_read(struct serial_config* const serial, char* const buffer, size_t size) {
     int port = serial->port_fd;
     int pipe = serial->pipe_read_fd;
 
@@ -234,7 +236,7 @@ int serial_cancel_read(struct serial_config* const serial) {
     return 0;
 }
 
-int serial_write(struct serial_config* const serial, unsigned char* const data, size_t size) {
+int serial_write(struct serial_config* const serial, char* const data, size_t size) {
     int r = write(serial->port_fd, data, size);
     if (r < 0) {
         DEBUG(perror("error writing to port"););

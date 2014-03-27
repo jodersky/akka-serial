@@ -7,8 +7,8 @@ import NativePackKeys._
 object FlowBuild extends Build {
   val Organization = "com.github.jodersky"
   val ScalaVersion = "2.10.3"
-  val Version = "1.2.0" //version of flow library
-  val NativeMajorVersion = 2 //major version of native API
+  val Version = "2.0.0" //version of flow library
+  val NativeMajorVersion = 3 //major version of native API
   val NativeMinorVersionPosix = 0 //minor version of native posix implementation
   val NativeVersionPosix = NativeMajorVersion + "." + NativeMinorVersionPosix
   
@@ -86,15 +86,15 @@ object FlowBuild extends Build {
 
     val compiler = "gcc"
     val linker = compiler
-    val cFlags = List("-O2", "-fPIC")
+    val cFlags = List("-O2", "-fPIC", "-Wall")
     val linkerFlags = List("-shared", s"-Wl,-soname,libflow.so.${NativeMajorVersion}")
     val binary = "libflow.so"
 
     val builds = List(
-      NativeBuild("x86_64-linux-gnu", "gcc", "-m64" :: cFlags, "gcc", "-m64" :: linkerFlags, binary),
-      NativeBuild("x86-linux-gnu", "gcc", "-m32" :: cFlags, "gcc", "-m32" :: linkerFlags, binary),
-      NativeBuild("arm-linux-gnueabihf", "arm-linux-gnueabihf-gcc", cFlags, "arm-linux-gnueabihf-gcc", linkerFlags, binary),
-      NativeBuild("arm-linux-gnueabi", "arm-linux-gnueabi-gcc", cFlags, "arm-linux-gnueabi-gcc", linkerFlags, binary)
+      NativeBuild("x86_64-linux-gnu", "gcc", "-m64" :: cFlags, "gcc", "-m64" :: linkerFlags, binary)
+      //NativeBuild("x86-linux-gnu", "gcc", "-m32" :: cFlags, "gcc", "-m32" :: linkerFlags, binary),
+      //NativeBuild("arm-linux-gnueabihf", "arm-linux-gnueabihf-gcc", cFlags, "arm-linux-gnueabihf-gcc", linkerFlags, binary),
+      //NativeBuild("arm-linux-gnueabi", "arm-linux-gnueabi-gcc", cFlags, "arm-linux-gnueabi-gcc", linkerFlags, binary)
       //add other build configurations here or adapt existing ones to your needs
     )
 
@@ -173,6 +173,15 @@ object FlowBuild extends Build {
     settings(commonSettings: _*)
     settings(runSettings: _*)
     dependsOn(flowPack)
+    dependsOn(flow)
+  )
+
+  lazy val samplesBroadcast = (
+    Project("flow-samples-broadcast", file("flow-samples") / "flow-samples-broadcast")
+    settings(commonSettings: _*)
+    settings(runSettings: _*)
+    dependsOn(flowPack)
+    dependsOn(flow)
   )
 
 

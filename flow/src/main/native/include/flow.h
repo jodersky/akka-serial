@@ -62,7 +62,7 @@ int serial_close(struct serial_config* const serial);
  * @return n>0 the number of bytes read into buffer
  * @return E_INTERRUPT if the call to this function was interrupted
  * @return E_IO on IO error */
-int serial_read(struct serial_config* const serial, unsigned char* const buffer, size_t size);
+int serial_read(struct serial_config* const serial, char* const buffer, size_t size);
 
 /**Cancels a blocked read call. This function is thread safe, i.e. it may be called from a thread even
  * while another thread is blocked in a read call.
@@ -77,7 +77,7 @@ int serial_cancel_read(struct serial_config* const serial);
  * @param size number of bytes to write from data
  * @return n>0 the number of bytes written
  * @return E_IO on IO error */
-int serial_write(struct serial_config* const serial, unsigned char* const data, size_t size);
+int serial_write(struct serial_config* const serial, char* const data, size_t size);
 
 /**Sets debugging option. If debugging is enabled, detailed error message are printed from method calls. */
 void serial_debug(bool value);

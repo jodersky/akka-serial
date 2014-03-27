@@ -5,7 +5,7 @@ import com.github.jodersky.flow._
 import akka.actor.ActorSystem
 import akka.actor.Props
 import akka.actor.actorRef2Scala
-import akka.util.ByteString
+import com.github.jodersky.flow.internal.SerialConnection
 
 object Main {
  
@@ -23,10 +23,10 @@ object Main {
     val tsb = ask("Use two stop bits", "false").toBoolean
     val parity = Parity(ask("Parity (0=None, 1=Odd, 2=Even)", "0").toInt)
 
-    val settings = SerialSettings(port, baud, cs, tsb, parity)
+    val settings = SerialSettings(baud, cs, tsb, parity)
 
     println("Starting terminal system, enter :q to exit.")
-    internal.InternalSerial.debug(true)
+    SerialConnection.debug(true)
     val system = ActorSystem("flow")
     val terminal = system.actorOf(Terminal(settings), name = "terminal")
     system.registerOnTermination(println("Stopped terminal system."))

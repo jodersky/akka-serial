@@ -32,7 +32,7 @@ class Terminal(settings: SerialSettings) extends Actor with ActorLogging {
       log.error(s"Connection failed, stopping terminal. Reason: ${reason}")
       context stop self
     }
-    case Opened(s, _) => {
+    case Opened(s) => {
       log.info(s"Port ${s.port} is now open.")
       val operator = sender
       context become opened(operator)
