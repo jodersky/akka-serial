@@ -1,75 +1,145 @@
 package com.github.jodersky.flow.internal;
 
-import com.github.jodersky.flow.internal.NativeLoader;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
-/** Thin layer on top of native code. */
-class NativeSerial {
+import com.github.jodersky.flow.AccessDeniedException;
+import com.github.jodersky.flow.InvalidSettingsException;
+import com.github.jodersky.flow.NoSuchPortException;
+import com.github.jodersky.flow.PortInUseException;
+import com.github.jodersky.flow.PortInterruptedException;
+
+/**
+ * Low-level wrapper on top of native serial backend. 
+ * 
+ * WARNING: Methods in this class allocate native structures and deal with pointers.
+ * These pointers are handled as longs by java and are NOT checked for correctness,
+ * therefore passing invalid pointers may have unexpected results, including but not
+ * limited to crashing the VM.
+ * 
+ * See SerialConnection for a higher level, more secured wrapper
+ * of serial communication.
+ * 
+ * @see com.github.jodersky.flow.internal.SerialConnection
+ */
+final class NativeSerial {
 	
 	static {
 		NativeLoader.load();
 	}
 	
-	final static int E_IO = -1;
-	final static int E_ACCESS_DENIED = -2;
-	final static int E_BUSY = -3;
-	final static int E_INVALID_SETTINGS = -4;
-	final static int E_INTERRUPT = -5;
-	final static int E_NO_PORT = -6;
-	
 	final static int PARITY_NONE = 0;
 	final static int PARITY_ODD = 1;
 	final static int PARITY_EVEN = 2;
-
-	/**Opens a serial port and allocates memory for storing configuration. Note: if this function fails,
-	 * any internally allocated resources will be freed.
-	 * @param device name of port
-	 * @param baud baud rate
-	 * @param characterSize character size of data transmitted through serial device
+	
+	/**
+	 * Opens a serial port.
+	 * 
+	 * @param port name of serial port to open
+	 * @param characterSize size of a character of the data sent through the serial port
 	 * @param twoStopBits set to use two stop bits instead of one
-	 * @param parity kind of parity checking to use
-	 * @param serial pointer to memory that will be allocated with a serial structure
-	 * @return 0 on success
-	 * @return E_NO_PORT if the given port does not exist
-	 * @return E_ACCESS_DENIED if permissions are not sufficient to open port
-	 * @return E_BUSY if port is already in use
-	 * @return E_INVALID_SETTINGS if any of the specified settings are not supported
-	 * @return E_IO on other error */
-	native static int open(String device, int baud, int characterSize, boolean twoStopBits, int parity, long[] serial);
+	 * @param parity type of parity to use with serial port
+	 * @return address of natively allocated serial configuration structure
+	 * @throws NoSuchPortException if the given port does not exist
+	 * @throws AccessDeniedException if permissions of the current user are not sufficient to open port 
+	 * @throws PortInUseException if port is already in use
+	 * @throws InvalidSettingsException if any of the specified settings are invalid
+	 * @throws IOException on IO error
+	 */
+	native static long open(String port, int baud, int characterSize, boolean twoStopBits, int parity)
+	throws NoSuchPortException, AccessDeniedException, PortInUseException, InvalidSettingsException, IOException;
 	
-	/**Starts a blocking read from a previously opened serial port. The read is blocking, however it may be
-	 * interrupted by calling 'serial_interrupt' on the given serial port.
-	 * @param serial pointer to serial configuration from which to read
-	 * @param buffer buffer into which data is read
-	 * @param size maximum buffer size
-	 * @return n>0 the number of bytes read into buffer
-	 * @return E_INTERRUPT if the call to this function was interrupted
-	 * @return E_IO on IO error */
-	native static int read(long serial, byte[] buffer);
+	/**
+	 * Reads from a previously opened serial port into a direct ByteBuffer. Note that data is only read into the
+	 * buffer's allocated memory, its position or limit are not changed. 
+	 *  
+	 * The read is blocking, however it may be interrupted by calling cancelRead() on the given serial port.
+	 * 
+	 * @param serial address of natively allocated serial configuration structure
+	 * @param buffer direct ByteBuffer to read into
+	 * @return number of bytes actually read
+	 * @throws IllegalArgumentException if the ByteBuffer is not direct
+	 * @throws PortInterruptedException if the call to this function was interrupted
+	 * @throws IOException on IO error
+	 */
+	native static int readDirect(long serial, ByteBuffer buffer)
+	throws IllegalArgumentException, PortInterruptedException, IOException;
+
+	/**
+	 * Reads data from a previously opened serial port into an array.
+	 * 
+	 * The read is blocking, however it may be interrupted by calling cancelRead() on the given serial port.
+	 * 
+	 * @param serial address of natively allocated serial configuration structure
+	 * @param buffer array to read data into
+	 * @return number of bytes actually read
+	 * @throws PortInterruptedException if the call to this function was interrupted
+	 * @throws IOException on IO error
+	 */
+	native static int read(long serial, byte[] buffer)
+	throws PortInterruptedException, IOException;
 	
-	/**Writes data to a previously opened serial port.
-	 * @param serial pointer to serial configuration to which to write
-	 * @param data data to write
-	 * @param size number of bytes to write from data
-	 * @return n>0 the number of bytes written
-	 * @return E_IO on IO error */
-	native static int write(long serial, byte[] buffer);
+	/**
+	 * Cancels a read (any caller to read or readDirect will return with a PortInterruptedException). This function may be called from any thread.
+	 * 
+	 * @param serial address of natively allocated serial configuration structure
+	 * @throws IOException on IO error
+	 */
+	native static void cancelRead(long serial)
+	throws IOException;
+
+	/**
+	 * Writes data from a direct ByteBuffer to a previously opened serial port. Note that data is only taken from
+	 * the buffer's allocated memory, its position or limit are not changed.
+	 *  
+	 * The write is non-blocking, this function returns as soon as the data is copied into the kernel's
+	 * transmission buffer.
+	 * 
+	 * @param serial address of natively allocated serial configuration structure
+	 * @param buffer direct ByteBuffer from which data is taken
+	 * @param length actual amount of data that should be taken from the buffer (this is needed since the native
+	 * backend does not provide a way to query the buffer's current limit)
+	 * @return number of bytes actually written   
+	 * @throws IllegalArgumentException if the ByteBuffer is not direct
+	 * @throws IOException on IO error
+	 */
+	native static int writeDirect(long serial, ByteBuffer buffer, int length)
+	throws IllegalArgumentException, IOException;
 	
-	/**Interrupts a blocked read call.
-	 * @param serial_config the serial port to interrupt
-	 * @return 0 on success
-	 * @return E_IO on error */
-	native static int interrupt(long serial);
+	/**
+	 * Writes data from an array to a previously opened serial port.
+	 *  
+	 * The write is non-blocking, this function returns as soon as the data is copied into the kernel's
+	 * transmission buffer.
+	 * 
+	 * @param serial address of natively allocated serial configuration structure
+	 * @param buffer array from which data is taken
+	 * @param length actual amount of data that should be taken from the buffer
+	 * @return number of bytes actually written
+	 * @throws IOException on IO error
+	 */
+	native static int write(long serial, byte[] buffer, int length)
+	throws IOException;
 	
-	/**Closes a previously opened serial port and frees memory containing the configuration. Note: after a call to
-	 * this function, the 'serial' pointer will become invalid, make sure you only call it once. This function is NOT
-	 * thread safe, make sure no read or write is in prgress when this function is called (the reason is that per 
-	 * close manual page, close should not be called on a file descriptor that is in use by another thread). 
-	 * @param serial pointer to serial configuration that is to be closed (and freed)
-	 * @return 0 on success
-	 * @return E_IO on error */
-	native static int close(long serial);
+	/**
+	 * Closes an previously open serial port. Natively allocated resources are freed and the serial pointer becomes invalid,
+	 * therefore this function should only be called ONCE per open serial port.
+	 * 
+	 * A port should not be closed while it is used (by a read or write) as this
+	 * results in undefined behaviour.
+	 * 
+	 * @param serial address of natively allocated serial configuration structure
+	 * @throws IOException on IO error
+	 */
+	native static void close(long serial)
+	throws IOException;
 	
-	/**Sets debugging option. If debugging is enabled, detailed error message are printed (to stderr) from method calls. */
+	/**
+	 * Sets native debugging mode. If debugging is enabled, detailed error messages
+	 * are printed (to stderr) from native method calls.
+	 * 
+	 * @param value set to enable debugging
+	 */
 	native static void debug(boolean value);
 
 }

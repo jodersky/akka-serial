@@ -28,13 +28,9 @@ object Serial extends ExtensionKey[SerialExt] {
    * In case the port is successfully opened, the operator will respond with an `Opened` message.
    * In case the port cannot be opened, the manager will respond with a `CommandFailed` message.
    *
-   * @param port name of serial port
-   * @param baud baud rate to use with serial port
-   * @param characterSize size of a character of the data sent through the serial port
-   * @param twoStopBits set to use two stop bits instead of one
-   * @param parity type of parity to use with serial port
+   * @param settings settings of serial port to open
    */
-  case class Open(port: String, baud: Int, characterSize: Int, twoStopBits: Boolean, parity: Parity.Parity) extends Command
+  case class Open(port: String, settings: SerialSettings, bufferSize: Int = 1024) extends Command
 
   /**
    * A port has been successfully opened.
@@ -68,12 +64,14 @@ object Serial extends ExtensionKey[SerialExt] {
    * @param data data to be written to port
    * @param ack acknowledgment sent back to sender once data has been enqueued in kernel for sending
    */
-  case class Write(data: ByteString, ack: Event = NoAck) extends Command
+  case class Write(data: ByteString, ack: Int => Event = NoAck) extends Command
 
   /**
    *  Special type of acknowledgment that is not sent back.
    */
-  case object NoAck extends Event
+  case object NoAck extends Function1[Int, Event] {
+    def apply(length: Int) = sys.error("cannot apply NoAck")
+  }
 
   /**
    *  Request closing of port.
