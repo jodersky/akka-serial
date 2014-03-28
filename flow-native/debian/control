@@ -1,0 +1,16 @@
+Source: flow
+Priority: extra
+Maintainer: Jakob Odersky <jodersky@gmail.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.3
+Section: libs
+Homepage: https://github.com/jodersky/flow
+Vcs-Git: git://github.com/jodersky/flow.git
+
+Package: libflow3
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Provides the native backend and JNI bindings for flow.
+ This package contains a native library to fully enable flow, a
+ serial communication library for Scala.
