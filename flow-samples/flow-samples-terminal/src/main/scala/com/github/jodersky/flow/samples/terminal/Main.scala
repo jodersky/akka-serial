@@ -28,7 +28,7 @@ object Main {
     println("Starting terminal system, enter :q to exit.")
     SerialConnection.debug(true)
     val system = ActorSystem("flow")
-    val terminal = system.actorOf(Terminal(settings), name = "terminal")
+    val terminal = system.actorOf(Terminal(port, settings), name = "terminal")
     system.registerOnTermination(println("Stopped terminal system."))
   }
 }

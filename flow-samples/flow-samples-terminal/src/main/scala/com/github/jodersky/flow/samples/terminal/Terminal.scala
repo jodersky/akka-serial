@@ -12,16 +12,14 @@ import com.github.jodersky.flow.Parity
 import akka.actor.Props
 import com.github.jodersky.flow.SerialSettings
 
-class Terminal(settings: SerialSettings) extends Actor with ActorLogging {
+class Terminal(port: String, settings: SerialSettings) extends Actor with ActorLogging {
   import Terminal._
   import context._
 
   val reader = actorOf(Props[ConsoleReader])
-
-  override def preStart() = {
-    log.info(s"Requesting manager to open port: ${settings.port}, baud: ${settings.baud}")
-    IO(Serial) ! Serial.Open(settings)
-  }
+  
+  log.info(s"Requesting manager to open port: ${port}, baud: ${settings.baud}")
+  IO(Serial) ! Serial.Open(port, settings)
   
   override def postStop() = {
     system.shutdown()
@@ -32,12 +30,11 @@ class Terminal(settings: SerialSettings) extends Actor with ActorLogging {
       log.error(s"Connection failed, stopping terminal. Reason: ${reason}")
       context stop self
     }
-    case Opened(s) => {
-      log.info(s"Port ${s.port} is now open.")
+    case Opened(port) => {
+      log.info(s"Port ${port} is now open.")
       val operator = sender
       context become opened(operator)
-      context watch operator 
-      operator ! Register(self)
+      context watch operator
       reader ! ConsoleReader.Read
     }
   }
@@ -68,7 +65,7 @@ class Terminal(settings: SerialSettings) extends Actor with ActorLogging {
 
     case ConsoleReader.ConsoleInput(input) => {
       val data = ByteString(input.getBytes)
-      operator ! Write(data, Wrote(data))
+      operator ! Write(data, length => Wrote(data.take(length)))
       reader ! ConsoleReader.Read
     }
   }
@@ -80,7 +77,7 @@ class Terminal(settings: SerialSettings) extends Actor with ActorLogging {
 object Terminal {
   case class Wrote(data: ByteString) extends Event
   
-  def apply(settings: SerialSettings) = Props(classOf[Terminal], settings)
+  def apply(port: String, settings: SerialSettings) = Props(classOf[Terminal], port, settings)
   
   private def formatData(data: ByteString) = data.mkString("[", ",", "]") + " " + (new String(data.toArray, "UTF-8"))
   
