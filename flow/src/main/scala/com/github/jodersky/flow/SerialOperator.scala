@@ -48,6 +48,10 @@ class SerialOperator(connection: SerialConnection, bufferSize: Int, client: Acto
       client ! Closed
       context stop self
     }
+    
+    case Terminated(`client`) => {
+      context stop self
+    }
 
     //go down with reader thread
     case ReaderDied(ex) => throw ex

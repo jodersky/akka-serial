@@ -38,9 +38,10 @@ int serial_open(
     int fd = open(port_name, O_RDWR | O_NOCTTY | O_NONBLOCK);
   
     if (fd < 0) {
+        int en = errno;
         DEBUG(perror("error obtaining port file descriptor"););
-        if (errno == EACCES) return E_ACCESS_DENIED;
-        if (errno == ENOENT) return E_NO_PORT;
+        if (en == EACCES) return E_ACCESS_DENIED;
+        if (en == ENOENT) return E_NO_PORT;
         return E_IO;
     }
   
@@ -214,7 +215,7 @@ int serial_read(struct serial_config* const serial, char* const buffer, size_t s
         //treat 0 bytes read as an error to avoid problems on disconnect
         //anyway, after a poll there should be more than 0 bytes available to read
         if (r <= 0) {
-            DEBUG(perror("read"););
+            DEBUG(perror("error data not available after select"););
             return E_IO;
         }
         return r;

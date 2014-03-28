@@ -50,7 +50,21 @@ JNIEXPORT jlong JNICALL Java_com_github_jodersky_flow_internal_NativeSerial_open
  */
 JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_internal_NativeSerial_readDirect
   (JNIEnv *env, jclass clazz, jlong config, jobject buffer) {
-    return 0;
+
+    char* local_buffer = (char*) (*env)->GetDirectBufferAddress(env, buffer);
+    if (local_buffer == NULL) {
+        throwException(env, "java/lang/IllegalArgumentException", "ByteBuffer not direct");
+        return -1;
+    }
+    jlong size = (*env)->GetDirectBufferCapacity(env, buffer);
+
+    int r = serial_read((struct serial_config*) config, local_buffer, (size_t) size);
+    if (r < 0) {
+      check(env, r);
+      return -1;
+    }
+    return r;
+
 }
 
 /*
@@ -97,7 +111,18 @@ JNIEXPORT void JNICALL Java_com_github_jodersky_flow_internal_NativeSerial_cance
 JNIEXPORT jint JNICALL Java_com_github_jodersky_flow_internal_NativeSerial_writeDirect
   (JNIEnv *env, jclass clazz, jlong config, jobject buffer, jint size) {
 
-    return 0;
+    char* local_buffer = (char *) (*env)->GetDirectBufferAddress(env, buffer);
+    if (local_buffer == NULL) {
+        throwException(env, "java/lang/IllegalArgumentException", "ByteBuffer not direct");
+        return -1;
+    }
+
+    int r = serial_write((struct serial_config*) config, local_buffer, (size_t) size);
+    if (r < 0) {
+      check(env, r);
+      return -1;
+    }
+    return r;
     
 }
 
