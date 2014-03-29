@@ -7,6 +7,7 @@ import akka.util.ByteString
 /** Defines messages used by flow's serial IO layer. */
 object Serial extends ExtensionKey[SerialExt] {
 
+  /** Base trait for any flow-related messages. */
   sealed trait Message
   
   /** A message extending this trait is to be viewed as a command, an out-bound message issued by the client to flow's API. */
@@ -28,7 +29,9 @@ object Serial extends ExtensionKey[SerialExt] {
    * In case the port is successfully opened, the operator will respond with an `Opened` message.
    * In case the port cannot be opened, the manager will respond with a `CommandFailed` message.
    *
+   * @param port name of serial port to open
    * @param settings settings of serial port to open
+   * @param bufferSize maximum read and write buffer sizes
    */
   case class Open(port: String, settings: SerialSettings, bufferSize: Int = 1024) extends Command
 
@@ -46,7 +49,6 @@ object Serial extends ExtensionKey[SerialExt] {
    * Data has been received.
    *
    * Event sent by an operator, indicating that data was received on the operator's serial port.
-   * Clients must register (see `Register`) with a serial operator to receive these events.
    *
    * @param data data received on the port
    */
@@ -59,10 +61,11 @@ object Serial extends ExtensionKey[SerialExt] {
    * An acknowledgment may be set, in which case it is sent back to the sender on a successful write.
    * Note that a successful write does not guarantee the actual transmission of data through the serial port,
    * it merely guarantees that the data has been stored in the operating system's kernel buffer, ready to
-   * be written.
+   * be transmitted.
    *
    * @param data data to be written to port
-   * @param ack acknowledgment sent back to sender once data has been enqueued in kernel for sending
+   * @param ack acknowledgment sent back to sender once data has been enqueued in kernel for sending (the acknowledgment
+   * is a function 'number of bytes written => event')
    */
   case class Write(data: ByteString, ack: Int => Event = NoAck) extends Command
 

@@ -17,7 +17,7 @@ import com.github.jodersky.flow.internal.ReaderDied
 
 /**
  * Operator associated to an open serial port. All communication with a port is done via an operator. Operators are created though the serial manager.
- *  @see SerialManager
+ * @see SerialManager
  */
 class SerialOperator(connection: SerialConnection, bufferSize: Int, client: ActorRef) extends Actor with ActorLogging {
   import SerialOperator._
