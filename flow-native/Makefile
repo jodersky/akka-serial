@@ -1,56 +1,58 @@
 # Build native binaries for flow.
 # ===============================
+# This makefile is intended for linux based systems.
 
-# name of the library to produce
-NAME=flow
-MAJOR=3
-MINOR=0
-MICRO=0
+# Include common settings
+include common.mk
 
-SONAME=lib$(NAME).so.$(MAJOR)
+# Name of library to build
+LIB=lib$(NAME).so
+
+# soname of library
+SONAME=$(LIB).$(MAJOR)
+
+# Actual file name of library
 TARGET=$(SONAME).$(MINOR).$(MICRO)
 
-JAVA_HOME=/usr/lib/jvm/java-7-oracle
-
-# where the library should be installed
-PREFIX?=usr/lib
-
-# compiler and linker settings
-CC=$(CROSS_COMPILE)gcc
-LD=$(CROSS_COMPILE)ld
-CFLAGS= -O2 -fPIC -Wall
-
-# since java connot easily load a library with a specific
-# major version, the vesion is included in the library's name
-
+# Linux-specific linker flags
 LDFLAGS+=-shared -Wl,-soname,$(SONAME)
-INCLUDES=./include/ $(JAVA_HOME)/include/ $(JAVA_HOME)/include/linux/
 
-OBJECTS=flow_jni.o posix/flow.o
+# All final products that should be installed
+PRODUCTS=$(TARGET) $(SONAME) $(LIB)
 
-# rules
-all: $(TARGET) $(SONAME)
 
+# Build library and all appropriate links
+all: $(PRODUCTS)
+
+# Build actual library
 $(TARGET): $(OBJECTS)
 	$(CC) $(LDFLAGS) -o $@ $^
-	
-$(SONAME): $(TARGET)
-	ln -s $(TARGET) $(SONAME)
 
+# Create soname link
+$(SONAME): $(TARGET)
+	ln -s $< $@
+
+# Create dev link
+$(LIB): $(SONAME)
+	ln -s $< $@
+
+# Compile objects
 %.o: %.c
 	$(CC) $(CFLAGS) $(addprefix -I, $(INCLUDES)) -o $@ -c $<
 
-install:
-	cp -P -t $(DESTDIR)/$(PREFIX)/ $(TARGET) $(SONAME)
+# Install resulting artifacts
+install: all
+	@for product in $(PRODUCTS); do cp -P -t $(DESTDIR)/$(PREFIX)/lib $${product}; done
 
+# Uninstall resulting artifacts
 uninstall:
-	rm $(DESTDIR)/$(PREFIX)/$(TARGET)
-	rm $(DESTDIR)/$(PREFIX)/$(SONAME)
-	
+	@for product in $(PRODUCTS); do rm $(DESTDIR)/$(PREFIX)/lib/$${product}; done
+
+# Clean build
 clean:
 	rm -f posix/*.o
 	rm -f posix/*.so
-	rm -f $(TARGET)
-	rm -f $(SONAME)
+	rm -f *.o
+	$(foreach product, $(PRODUCTS), rm -f $(product);)
 
-.PHONY: clean install
+.PHONY: clean install uninstall

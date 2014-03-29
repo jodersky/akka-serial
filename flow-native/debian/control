@@ -7,7 +7,7 @@ Section: libs
 Homepage: https://github.com/jodersky/flow
 Vcs-Git: git://github.com/jodersky/flow.git
 
-Package: libflow3
+Package: libflow3-0
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
