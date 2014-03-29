@@ -25,7 +25,7 @@ import com.github.jodersky.flow.PortInterruptedException;
 final class NativeSerial {
 	
 	static {
-		NativeLoader.load();
+		System.loadLibrary("flow3");
 	}
 	
 	final static int PARITY_NONE = 0;
