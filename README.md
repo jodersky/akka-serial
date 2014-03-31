@@ -45,7 +45,7 @@ Since flow integrates into the Akka-IO framework, a good resource on its general
 Since hardware is involved in serial communication, a Scala-only solution is not possible. Nevertherless, the native code is kept simple and minimalistic with the burden of dealing with threads left to Scala. The code aims to be POSIX compliant and therefore easily portable.
 
 ## Build
-See detailed documentation in [documentation/build.md](documentation/building.md) on how to build flow. Note that flow can also be built on devices with sparse resources not able to run SBT (such as the Raspberry Pi), see [documentation/embedded-building.md](documentation/embedded-building.md).
+See detailed documentation in [documentation/building.md](documentation/building.md) on how to build flow. Note that flow can also be built on devices with sparse resources not able to run SBT (such as the Raspberry Pi), see [documentation/embedded-building.md](documentation/embedded-building.md).
 
 ## License
 flow is released under the terms of the 3-clause BSD license. See LICENSE for details.
