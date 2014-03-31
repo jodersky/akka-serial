@@ -14,8 +14,9 @@ SONAME=$(LIB).$(MAJOR)
 # Actual file name of library
 TARGET=$(SONAME).$(MINOR).$(MICRO)
 
-# Linux-specific linker flags
+# Linux-specific flags
 LDFLAGS+=-shared -Wl,-soname,$(SONAME)
+INCLUDES+=$(JAVA_HOME)/include/ $(JAVA_HOME)/include/linux/
 
 # All final products that should be installed
 PRODUCTS=$(TARGET) $(SONAME) $(LIB)

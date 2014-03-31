@@ -8,7 +8,7 @@ NAME=flow3
 
 # Library versions
 #
-# Note that MAJOR should always be set tozero
+# Note that MAJOR should always be set to zero
 # since java does not allow loading semantically
 # versioned libraries, include the major version
 # in the name instead.
@@ -18,7 +18,7 @@ MINOR=0# backwards-compatible changes
 MICRO=0# bugfixes
 
 
-# Directory where the library will be installed
+# Directory where the library will be installed (without /lib)
 #
 PREFIX?=/usr
 
@@ -41,7 +41,7 @@ JAVA_HOME?=/usr/lib/jvm/java-7-oracle
 
 # Include directories
 #
-INCLUDES=./include/ $(JAVA_HOME)/include/ $(JAVA_HOME)/include/linux/
+INCLUDES=./include
 
 
 # Objects that will be compiled from respective .c files
