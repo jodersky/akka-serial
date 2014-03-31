@@ -5,7 +5,7 @@ Serial communication library for Scala, designed to be reactive, lightweight and
 The main reason for yet another serial communication library for the JVM is that all other libraries tested used blocking IO and/or consumed enormous amounts of CPU while being idle. Flow's main goal is therefore to provide a lightweight library that only does work when communication is required. This reactive concept integrates well with the Akka IO layer therefore making flow an ideal library for extending it.
 
 ## Basic usage
-For a short guide on how to use flow see the file "documentation/basics.md", accessible on github [here](https://github.com/jodersky/flow/blob/master/documentation/basics.md).
+For a short guide on how to use flow see the file [documentation/basics.md](documentation/basics.md).
 
 Flow is built and its examples run with SBT. To get started, include a dependency to flow in your project:
 
@@ -45,7 +45,7 @@ Since flow integrates into the Akka-IO framework, a good resource on its general
 Since hardware is involved in serial communication, a Scala-only solution is not possible. Nevertherless, the native code is kept simple and minimalistic with the burden of dealing with threads left to Scala. The code aims to be POSIX compliant and therefore easily portable.
 
 ## Build
-See detailed documentation in documentation/build.md (at github [here](https://github.com/jodersky/flow/blob/master/documentation/building.md)) on how to build flow. Note that flow can also be built on devices with sparse resources not able to run SBT (such as the Raspberry Pi), see documentation/embedded-building.md [here](https://github.com/jodersky/flow/blob/master/documentation/embedded-building.md).
+See detailed documentation in [documentation/build.md](documentation/building.md) on how to build flow. Note that flow can also be built on devices with sparse resources not able to run SBT (such as the Raspberry Pi), see [documentation/embedded-building.md](documentation/embedded-building.md).
 
 ## License
 flow is released under the terms of the 3-clause BSD license. See LICENSE for details.
