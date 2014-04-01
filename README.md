@@ -9,13 +9,13 @@ For a short guide on how to use flow see the file [documentation/basics.md](docu
 
 Flow is built and its examples run with SBT. To get started, include a dependency to flow in your project:
 
-    libraryDependencies += "com.github.jodersky" %% "flow" % "1.2.0"
+    libraryDependencies += "com.github.jodersky" %% "flow" % "1.2.1"
 
 ATTENTION: flow uses native libraries to back serial communication, therefore before you can run any application depending on flow you must include flow's native library! To do so, you have two options.
 
 1.  The easy way: add a second dependency to your project: (this dependency is not available on maven, please run ```flow-pack/publishLocal``` before)
         
-        libraryDependencies += "com.github.jodersky" %% "flow-pack" % "1.2.0"
+        libraryDependencies += "com.github.jodersky" %% "flow-pack" % "1.2.1"
         
     This will add a jar to your classpath containing native libraries for various platforms. At run time, the correct library for the current platform is selected, extracted and loaded. This solution enables running applications seamlessly, as if they were pure JVM applications. However, since the JVM does not enable full determination of the current platform (only OS and rough architecture are known), only a couple of platforms are supported through this solution. Currently, these are given in the table below.
 
