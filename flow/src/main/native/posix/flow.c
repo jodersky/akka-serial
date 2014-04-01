@@ -58,7 +58,7 @@ int serial_open(
   newtio.c_oflag &= ~OPOST;
   newtio.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
   newtio.c_cflag &= ~(CSIZE | PARENB);
-  newtio.c_clag |= CREAD
+  newtio.c_cflag |= CREAD
   
   /* set speed */
   speed_t bd;
