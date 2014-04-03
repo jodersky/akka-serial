@@ -103,8 +103,8 @@ class SerialConnection private (
       writing = true
       try {
         transfer(
-          b => NativeSerial.writeDirect(pointer, b, b.remaining()),
-          b => NativeSerial.write(pointer, b.array(), b.remaining()))(buffer)
+          b => NativeSerial.writeDirect(pointer, b, b.position()),
+          b => NativeSerial.write(pointer, b.array(), b.position()))(buffer)
       } finally {
         writing = false
         if (closed.get) writeLock.notify()
