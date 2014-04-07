@@ -20,7 +20,7 @@ MICRO=0# bugfixes
 
 # Directory where the library will be installed (without /lib)
 #
-PREFIX?=/usr
+PREFIX?=/usr/lib/jni
 
 
 # Compiler and linker settings
@@ -34,9 +34,9 @@ CFLAGS= -O2 -fPIC -Wall
 LDFLAGS=
 
 
-# JDK base directory
+# JNI include directory
 #
-JAVA_HOME?=/usr/lib/jvm/java-7-oracle
+JNI_INCLUDE?=$(JAVA_HOME)/include
 
 
 # Include directories

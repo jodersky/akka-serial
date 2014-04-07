@@ -1,15 +1,16 @@
 Source: flow
-Priority: extra
 Maintainer: Jakob Odersky <jodersky@gmail.com>
-Build-Depends: debhelper (>= 8.0.0)
+Section: java
+Priority: optional
+Build-Depends: debhelper (>= 8.0.0), openjdk-7-jre-headless
 Standards-Version: 3.9.3
-Section: libs
 Homepage: https://github.com/jodersky/flow
 Vcs-Git: git://github.com/jodersky/flow.git
 
-Package: libflow3-0
-Section: libs
+Package: libflow3-jni
 Architecture: any
+Section: java
+Priority: optional
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Provides the native backend and JNI bindings for flow.
  This package contains a native library to fully enable flow, a

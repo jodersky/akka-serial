@@ -18,7 +18,7 @@ All files related to the back-end are contained in `flow-native` and are managed
 3.  Debian package build
     A debian binary package can be built the standard way by navigating to the build directory and running `debuild` or `dpkg-buildpackage`. The resulting packages are created in this project's root directory and can be installed with `sudo dpkg -i *.deb`.
 
-Note that for compiling, the JAVA_HOME environment variable must be set. Furthermore, the JNI include directories are currently set in the makefile to point to the default location of a Java 7 Oracle installation on Debian.
+Note that for compiling, a JNI_INCLUDE environment variable should be set, pointing to any directories containing JNI headers. If this variable is not set, the default is to use the JNI include directories of an OpenJDK 7 installation on Debian.
 
 # Using flow
 As is with the build, using flow in a project can also be divided into two parts.

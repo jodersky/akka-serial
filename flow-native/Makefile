@@ -16,7 +16,7 @@ TARGET=$(SONAME).$(MINOR).$(MICRO)
 
 # Linux-specific flags
 LDFLAGS+=-shared -Wl,-soname,$(SONAME)
-INCLUDES+=$(JAVA_HOME)/include/ $(JAVA_HOME)/include/linux/
+INCLUDES+=$(JNI_INCLUDE)
 
 # All final products that should be installed
 PRODUCTS=$(TARGET) $(SONAME) $(LIB)
@@ -43,11 +43,11 @@ $(LIB): $(SONAME)
 
 # Install resulting artifacts
 install: all
-	@for product in $(PRODUCTS); do cp -P -t $(DESTDIR)/$(PREFIX)/lib $${product}; done
+	@for product in $(PRODUCTS); do cp -P -t $(DESTDIR)/$(PREFIX) $${product}; done
 
 # Uninstall resulting artifacts
 uninstall:
-	@for product in $(PRODUCTS); do rm $(DESTDIR)/$(PREFIX)/lib/$${product}; done
+	@for product in $(PRODUCTS); do rm $(DESTDIR)/$(PREFIX)/$${product}; done
 
 # Clean build
 clean:

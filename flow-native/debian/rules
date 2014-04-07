@@ -9,5 +9,9 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+export JNI_INCLUDE?=/usr/lib/jvm/java-7-openjdk-$(DEB_BUILD_ARCH)/include
+
 %:
 	dh $@ 
+
+
