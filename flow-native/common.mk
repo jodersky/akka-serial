@@ -23,10 +23,9 @@ PREFIX?=/usr/lib/jni
 # Set CROSS_COMPILE to a gcc triplet
 # when cross-compiling
 #
-CC=$(CROSS_COMPILE)gcc
-LD=$(CROSS_COMPILE)ld
-CFLAGS= -O2 -fPIC -Wall
-LDFLAGS=
+CC?=$(CROSS_COMPILE)gcc
+LD?=$(CROSS_COMPILE)ld
+CFLAGS+= -O2 -fPIC -Wall
 
 
 # JNI include directory
