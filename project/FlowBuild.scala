@@ -5,7 +5,7 @@ import JniKeys._
 object FlowBuild extends Build {
   val Organization = "com.github.jodersky"
   val ScalaVersion = "2.10.3"
-  val Version = "2.0.0-RC1" //version of flow library
+  val Version = "2.0.0-RC2" //version of flow library
   
   val gitHeadCommitSha = settingKey[String]("Current commit sha.")
   
