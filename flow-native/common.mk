@@ -3,17 +3,12 @@
 
 # Name of the library to produce
 #
-NAME=flow3
+NAME=flow
 
 
 # Library versions
 #
-# Note that MAJOR should always be set to zero
-# since java does not allow loading semantically
-# versioned libraries, include the major version
-# in the name instead.
-#
-MAJOR=0# always zero
+MAJOR=3# public API changes
 MINOR=0# backwards-compatible changes
 MICRO=0# bugfixes
 

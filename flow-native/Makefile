@@ -5,11 +5,15 @@
 # Include common settings
 include common.mk
 
-# Name of library to build
-LIB=lib$(NAME).so
+# Canonical name of library
+CNAME=lib$(NAME).so
+
+# Java library link, used to enable loading of
+# semanticaly versioned librraies from java
+JAVALIB=lib$(NAME)$(MAJOR).so
 
 # soname of library
-SONAME=$(LIB).$(MAJOR)
+SONAME=$(CNAME).$(MAJOR)
 
 # Actual file name of library
 TARGET=$(SONAME).$(MINOR).$(MICRO)
@@ -19,8 +23,7 @@ LDFLAGS+=-shared -Wl,-soname,$(SONAME)
 INCLUDES+=$(JNI_INCLUDE)
 
 # All final products that should be installed
-PRODUCTS=$(TARGET) $(SONAME) $(LIB)
-
+PRODUCTS=$(TARGET) $(SONAME) $(JAVALIB)
 
 # Build library and all appropriate links
 all: $(PRODUCTS)
@@ -34,7 +37,7 @@ $(SONAME): $(TARGET)
 	ln -s $< $@
 
 # Create dev link
-$(LIB): $(SONAME)
+$(JAVALIB): $(SONAME)
 	ln -s $< $@
 
 # Compile objects
