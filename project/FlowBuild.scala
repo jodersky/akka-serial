@@ -127,8 +127,7 @@ object FlowBuild extends Build {
 
     lazy val settings = Seq(
       nativeVersion := NativeVersionPosix,
-      nativeIncludeDirectories += file("/System/Library/Frameworks/JavaVM.framework/Headers/jni.h"),
-      nativeIncludeDirectories += file("/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers"),
+      nativeIncludeDirectories ++= jdkHome.value.map(jdk => jdk / "include" / "darwin").toSeq,
       nativeSource := nativeSource.value / "posix",
       nativeBuilds := Seq(localBuild)
     )
@@ -139,6 +138,7 @@ object FlowBuild extends Build {
   def selectHost() = System.getProperty("os.name").toLowerCase match {
     case "linux" => Linux
     case "macosx" => MacOSX
+    case "mac os x" => MacOSX
     case _ => new Host{
       val settings = Seq(
         nativeCompile := osError,
