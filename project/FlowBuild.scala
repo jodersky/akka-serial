@@ -114,7 +114,7 @@ object FlowBuild extends Build {
     val linker = compiler
     val cFlags = Seq("-O2", "-fPIC")
     val linkerFlags = Seq("-dynamiclib")
-    val binary = s"libflow.jnilib"
+    val binary = s"libflow.dylib"
 
     val localBuild = NativeBuild(
       "amd64-macosx",
@@ -127,8 +127,7 @@ object FlowBuild extends Build {
 
     lazy val settings = Seq(
       nativeVersion := NativeVersionPosix,
-      nativeIncludeDirectories += file("/System/Library/Frameworks/JavaVM.framework/Headers/jni.h"),
-      nativeIncludeDirectories += file("/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers"),
+      nativeIncludeDirectories ++= jdkHome.value.map(jdk => jdk / "include" / "darwin").toSeq,
       nativeSource := nativeSource.value / "posix",
       nativeBuilds := Seq(localBuild)
     )
@@ -139,6 +138,7 @@ object FlowBuild extends Build {
   def selectHost() = System.getProperty("os.name").toLowerCase match {
     case "linux" => Linux
     case "macosx" => MacOSX
+    case "mac os x" => MacOSX
     case _ => new Host{
       val settings = Seq(
         nativeCompile := osError,
@@ -156,7 +156,8 @@ object FlowBuild extends Build {
         val linkMappings = Map(
           "x86_64-linux-gnu" -> "amd64-linux",
           "x86-linux-gnu" -> "x86-linux",
-          "arm-linux-gnueabihf" -> "arm-linux"
+          "arm-linux-gnueabihf" -> "arm-linux",
+          "amd64-macosx" -> "x86_64-macosx"
         )
         val ls: Seq[(NativeBuild, File)] = (nativeLink in flow).value.toSeq
         for ((build, binary) <- ls; n <- linkMappings.get(build.name)) yield {
