@@ -38,3 +38,6 @@ With this structure in mind, building a complete distribution of flow involves (
  This is the most complicated and error-prone step in the build. It involves compiling and cross-compiling the native sources for various platforms and linking them.
  Note that for this step to work, native builds for the current operating system have to be defined. Take a look at the build file to see how this is done (below ```trait Host``` in the file).
  After completing this step, native libraries for the different platforms are available to be copied and included in end-user applications.
+
+ Note about versioning: when building and locally publishing projects, the usual convention is to append "-SNAPSHOT" to the version string. This practive however breaks version identification and badly hurts git (bisecting becomes a nightmare). Therefore, to identify a build artifact with a specific commit in the repository, a sha1 hash is appended to the version instead.
+ When publishing a new release, this hash may be ommited by setting the java system property "release=true", simply by running `sbt -Drelease=true`.
