@@ -114,7 +114,7 @@ object FlowBuild extends Build {
     val linker = compiler
     val cFlags = Seq("-O2", "-fPIC")
     val linkerFlags = Seq("-dynamiclib")
-    val binary = s"libflow.jnilib"
+    val binary = s"libflow.dylib"
 
     val localBuild = NativeBuild(
       "amd64-macosx",
@@ -156,7 +156,8 @@ object FlowBuild extends Build {
         val linkMappings = Map(
           "x86_64-linux-gnu" -> "amd64-linux",
           "x86-linux-gnu" -> "x86-linux",
-          "arm-linux-gnueabihf" -> "arm-linux"
+          "arm-linux-gnueabihf" -> "arm-linux",
+          "amd64-macosx" -> "x86_64-macosx"
         )
         val ls: Seq[(NativeBuild, File)] = (nativeLink in flow).value.toSeq
         for ((build, binary) <- ls; n <- linkMappings.get(build.name)) yield {
