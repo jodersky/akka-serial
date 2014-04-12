@@ -9,7 +9,7 @@ For a short guide on how to use flow see the file [documentation/basics.md](docu
 
 Flow is built and its examples run with SBT. To get started, include a dependency to flow in your project:
 
-    libraryDependencies += "com.github.jodersky" %% "flow" % "2.0.0" (will be available when merged into master)
+    libraryDependencies += "com.github.jodersky" %% "flow" % "2.0.0-RC2"
 
 ATTENTION: flow uses native libraries to back serial communication, therefore before you can run any application depending on flow you must include flow's native library in the JVM library path. Check out section 'build' on how this may be done.
 
