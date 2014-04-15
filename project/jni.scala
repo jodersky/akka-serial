@@ -3,7 +3,6 @@ import Keys._
 import scala.util.Try
 
 object JniKeys {
-  val jdkHome = settingKey[Option[File]]("Home of JDK.")
   val javahHeaderDirectory = settingKey[File]("Directory where generated javah header files are placed.")
   val javahClasses = settingKey[Seq[String]]("Fully qualified names of classes containing native declarations.")
   val javahClasspath = taskKey[Seq[File]]("Classpath to use in javah.")
@@ -14,7 +13,6 @@ object JniDefaults {
   import JniKeys._
 
   val settings: Seq[Setting[_]] = Seq(
-    jdkHome := Try(file(sys.env("JAVA_HOME"))).toOption,
     javahHeaderDirectory := baseDirectory.value,
     javahClasspath := Seq((classDirectory in Compile).value),
     javah := javahImpl.value
@@ -22,7 +20,7 @@ object JniDefaults {
     
   def javahImpl = Def.task {
     val jcp = javahClasspath.value
-    val cp = jcp.mkString(":")
+    val cp = jcp.mkString(sys.props("path.separator"))
     for (clazz <- javahClasses.value) {
       val parts = Seq(
         "javah",

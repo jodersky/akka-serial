@@ -1,2 +1,0 @@
-You should be able to build on OSX by just running make in this directory.
-The libFlow3.dylib file produced will have to be copied manually into the classpath of your project

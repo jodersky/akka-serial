@@ -1,0 +1,12 @@
+# Include common settings
+include ../common.mk
+
+JAVALIB=lib$(NAME)$(MAJOR).dylib
+
+all: $(JAVALIB)
+
+$(JAVALIB): 
+    gcc -dynamiclib -I$(JAVA_HOME)/include/darwin -I$(JAVA_HOME)/include -I../include ../flow_jni.c ../posix/flow.c -o $(JAVALIB) -m64
+
+clean: 
+    -del $(JAVALIB)
