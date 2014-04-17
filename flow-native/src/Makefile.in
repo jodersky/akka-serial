@@ -79,6 +79,9 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 libflow_la_LIBADD =
 am_libflow_la_OBJECTS = flow_jni.lo flow.lo
 libflow_la_OBJECTS = $(am_libflow_la_OBJECTS)
+libflow_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(libflow_la_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -213,6 +216,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 lib_LTLIBRARIES = libflow.la
 libflow_la_SOURCES = flow_jni.c platform/posix/flow.c flow.h com_github_jodersky_flow_internal_NativeSerial.h
+libflow_la_LDFLAGS = -version-info 3:0:0
 all: all-am
 
 .SUFFIXES:
@@ -279,7 +283,7 @@ clean-libLTLIBRARIES:
 	  rm -f "$${dir}/so_locations"; \
 	done
 libflow.la: $(libflow_la_OBJECTS) $(libflow_la_DEPENDENCIES) $(EXTRA_libflow_la_DEPENDENCIES) 
-	$(LINK) -rpath $(libdir) $(libflow_la_OBJECTS) $(libflow_la_LIBADD) $(LIBS)
+	$(libflow_la_LINK) -rpath $(libdir) $(libflow_la_OBJECTS) $(libflow_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
