@@ -17,9 +17,9 @@ AC_PROG_CC
 
 # Checks for header files.
 AC_CHECK_HEADERS([fcntl.h stddef.h stdlib.h sys/file.h termios.h unistd.h])
-AC_CHECK_HEADERS([jni.h],,AC_MSG_WARN(No jni.h found. Is a JDK installed?))
+#AC_CHECK_HEADERS([jni.h],,AC_MSG_WARN(No jni.h found. Is a JDK installed?))
 
-LT_INIT([shared])
+LT_INIT([disable-static])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
@@ -29,6 +29,12 @@ AC_TYPE_SIZE_T
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([select])
+
+AX_JNI_INCLUDE_DIR
+for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
+do
+    CPPFLAGS="$CPPFLAGS -I$JNI_INCLUDE_DIR"
+done
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([src/Makefile])
