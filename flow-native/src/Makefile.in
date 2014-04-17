@@ -76,12 +76,12 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libflow_la_LIBADD =
-am_libflow_la_OBJECTS = flow_jni.lo flow.lo
-libflow_la_OBJECTS = $(am_libflow_la_OBJECTS)
-libflow_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+libflow3_la_LIBADD =
+am_libflow3_la_OBJECTS = flow_jni.lo flow.lo
+libflow3_la_OBJECTS = $(am_libflow3_la_OBJECTS)
+libflow3_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(libflow_la_LDFLAGS) $(LDFLAGS) -o $@
+	$(libflow3_la_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -95,8 +95,8 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libflow_la_SOURCES)
-DIST_SOURCES = $(libflow_la_SOURCES)
+SOURCES = $(libflow3_la_SOURCES)
+DIST_SOURCES = $(libflow3_la_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -214,9 +214,9 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-lib_LTLIBRARIES = libflow.la
-libflow_la_SOURCES = flow_jni.c platform/posix/flow.c flow.h com_github_jodersky_flow_internal_NativeSerial.h
-libflow_la_LDFLAGS = -version-info 3:0:0
+lib_LTLIBRARIES = libflow3.la
+libflow3_la_SOURCES = flow_jni.c platform/posix/flow.c flow.h com_github_jodersky_flow_internal_NativeSerial.h
+libflow3_la_LDFLAGS = -version-info 0:0:0
 all: all-am
 
 .SUFFIXES:
@@ -282,8 +282,8 @@ clean-libLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-libflow.la: $(libflow_la_OBJECTS) $(libflow_la_DEPENDENCIES) $(EXTRA_libflow_la_DEPENDENCIES) 
-	$(libflow_la_LINK) -rpath $(libdir) $(libflow_la_OBJECTS) $(libflow_la_LIBADD) $(LIBS)
+libflow3.la: $(libflow3_la_OBJECTS) $(libflow3_la_DEPENDENCIES) $(EXTRA_libflow3_la_DEPENDENCIES) 
+	$(libflow3_la_LINK) -rpath $(libdir) $(libflow3_la_OBJECTS) $(libflow3_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
