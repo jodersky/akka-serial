@@ -2,6 +2,7 @@ import sbt._
 import Keys._
 import JniKeys._
 import UniqueVersionKeys._
+import NativeKeys._
 
 
 object FlowBuild extends Build {
@@ -69,6 +70,10 @@ object FlowBuild extends Build {
       javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial"),
       compileOrder in Compile := CompileOrder.Mixed,
       libraryDependencies += Dependencies.akkaActor
+    )
+    settings(NativeDefaults.settings: _*)
+    settings(
+      nativeBuildDirectory := (baseDirectory in ThisBuild).value / "flow-native"
     )
   )
 
