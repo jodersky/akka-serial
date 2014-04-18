@@ -65,15 +65,15 @@ object FlowBuild extends Build {
     settings (commonSettings: _*)
     settings (publishSettings: _*)
     settings (JniDefaults.settings: _*)
-    settings(
-      javahHeaderDirectory := (baseDirectory in ThisBuild).value / "flow-native" / "include",
-      javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial"),
-      compileOrder in Compile := CompileOrder.Mixed,
-      libraryDependencies += Dependencies.akkaActor
-    )
     settings(NativeDefaults.settings: _*)
     settings(
-      nativeBuildDirectory := (baseDirectory in ThisBuild).value / "flow-native"
+      nativeBuildDirectory := (baseDirectory in ThisBuild).value / "flow-native",
+      javahHeaderDirectory := nativeBuildDirectory.value / "src",
+      javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial"),
+      compileOrder in Compile := CompileOrder.Mixed,
+      libraryDependencies += Dependencies.akkaActor,
+      libraryDependencies += Dependencies.ioCore,
+      libraryDependencies += Dependencies.ioFile
     )
   )
 
@@ -81,7 +81,9 @@ object FlowBuild extends Build {
     Project("flow-samples-terminal", file("flow-samples") / "flow-samples-terminal")
     settings(commonSettings: _*)
     settings(runSettings: _*)
-    //dependsOn(flowPack)
+    settings(
+      unmanagedJars in Compile += (nativePackage in flow).value
+    )
     dependsOn(flow)
   )
 
