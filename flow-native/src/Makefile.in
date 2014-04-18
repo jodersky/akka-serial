@@ -216,7 +216,8 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 lib_LTLIBRARIES = libflow3.la
 libflow3_la_SOURCES = flow_jni.c platform/posix/flow.c flow.h com_github_jodersky_flow_internal_NativeSerial.h
-libflow3_la_LDFLAGS = -version-info 0:0:0
+@ENABLE_VERSIONED_LIB_FALSE@libflow3_la_LDFLAGS = -avoid-version
+@ENABLE_VERSIONED_LIB_TRUE@libflow3_la_LDFLAGS = -version-info 0:0:0
 all: all-am
 
 .SUFFIXES:

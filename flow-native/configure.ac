@@ -36,6 +36,13 @@ do
     CPPFLAGS="$CPPFLAGS -I$JNI_INCLUDE_DIR"
 done
 
+AC_ARG_ENABLE([versioned-lib],
+  [AS_HELP_STRING([--disable-versioned-lib], [Disable producing versioned library files.])],
+  [:],
+  [enable_versioned_lib=yes])
+
+AM_CONDITIONAL([ENABLE_VERSIONED_LIB], [test "$enable_versioned_lib" = "yes"])
+
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([src/Makefile])
 AC_OUTPUT

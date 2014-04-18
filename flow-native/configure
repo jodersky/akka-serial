@@ -615,6 +615,8 @@ ac_includes_default="\
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
+ENABLE_VERSIONED_LIB_FALSE
+ENABLE_VERSIONED_LIB_TRUE
 _ACJNI_JAVAC
 LIBOBJS
 OTOOL64
@@ -736,6 +738,7 @@ enable_fast_install
 with_gnu_ld
 with_sysroot
 enable_libtool_lock
+enable_versioned_lib
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1373,6 +1376,7 @@ Optional Features:
   --enable-fast-install[=PKGS]
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
+  --disable-versioned-lib Disable producing versioned library files.
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -11728,6 +11732,23 @@ do
     CPPFLAGS="$CPPFLAGS -I$JNI_INCLUDE_DIR"
 done
 
+# Check whether --enable-versioned-lib was given.
+if test "${enable_versioned_lib+set}" = set; then :
+  enableval=$enable_versioned_lib; :
+else
+  enable_versioned_lib=yes
+fi
+
+
+ if test "$enable_versioned_lib" = "yes"; then
+  ENABLE_VERSIONED_LIB_TRUE=
+  ENABLE_VERSIONED_LIB_FALSE='#'
+else
+  ENABLE_VERSIONED_LIB_TRUE='#'
+  ENABLE_VERSIONED_LIB_FALSE=
+fi
+
+
 ac_config_files="$ac_config_files Makefile"
 
 ac_config_files="$ac_config_files src/Makefile"
@@ -11855,6 +11876,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${ENABLE_VERSIONED_LIB_TRUE}" && test -z "${ENABLE_VERSIONED_LIB_FALSE}"; then
+  as_fn_error $? "conditional \"ENABLE_VERSIONED_LIB\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
