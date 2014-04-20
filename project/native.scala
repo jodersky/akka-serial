@@ -9,16 +9,20 @@ object NativeKeys {
     val nativeTargetDirectory = settingKey[File]("Base directory to store native products.")
     val nativeOutputDirectory = settingKey[File]("Actual directory where native products are stored.")
     val nativePackageUnmanagedDirectory = settingKey[File]("Directory containing external products that will be copied to the native jar.")
-    val nativePackageArtifact = settingKey[Artifact]("Native artifact.")
 
-    
+    val nativeClean = taskKey[Unit]("Clean native build.")
     val nativeBuild = taskKey[File]("Invoke native build.")
-    val nativePackage = taskKey[File]("Package native products into a jar.")
-    
 }
 
 object NativeDefaults {
     import NativeKeys._
+
+    val autoClean = Def.task {
+        val log = streams.value.log
+        val build = nativeBuildDirectory.value
+
+        Process("make distclean", build) #|| Process("clean", build) ! log
+    }
 
     val autoLib = Def.task {
         val log = streams.value.log
@@ -45,14 +49,12 @@ object NativeDefaults {
         out
     }
 
-    val nativePackageImpl = Def.task {
+    val nativePackageMappings = Def.task {
         val managedDir = nativeTargetDirectory.value
         val unmanagedDir = nativePackageUnmanagedDirectory.value
 
         val managed = (nativeBuild.value ** "*").get
         val unmanaged = (unmanagedDir ** "*").get
-
-        val jarFile = nativeTargetDirectory.value / (name.value + "-" + version.value + "-native.jar")
 
         val managedMappings: Seq[(File, String)] = for (file <- managed; if file.isFile) yield {
             file -> ("native/" + (file relativeTo managedDir).get.getPath)
@@ -62,8 +64,7 @@ object NativeDefaults {
             file -> ("native/" + (file relativeTo unmanagedDir).get.getPath)
         }
 
-        IO.jar(managedMappings ++ unmanagedMappings, jarFile, new Manifest())
-        jarFile
+        managedMappings ++ unmanagedMappings
     }
 
     def os = System.getProperty("os.name").toLowerCase.filter(_ != ' ')
@@ -72,11 +73,11 @@ object NativeDefaults {
     val settings: Seq[Setting[_]] = Seq(
         nativeTargetDirectory := target.value / "native",
         nativeOutputDirectory := nativeTargetDirectory.value / (os + "-" + arch),
+        nativeClean := autoClean.value,
         nativeBuild := autoLib.value,
-        nativePackage := nativePackageImpl.value,
-        nativePackageArtifact := Artifact(name.value, "native"),
-        nativePackageUnmanagedDirectory := baseDirectory.value / "lib_native"
-    ) ++ addArtifact(nativePackageArtifact, nativePackage).settings
+        nativePackageUnmanagedDirectory := baseDirectory.value / "lib_native",
+        mappings in (Compile, packageBin) ++= nativePackageMappings.value
+    )
 
 }
 

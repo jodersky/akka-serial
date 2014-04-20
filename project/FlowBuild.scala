@@ -8,7 +8,7 @@ import NativeKeys._
 object FlowBuild extends Build {
   val Organization = "com.github.jodersky"
   val ScalaVersion = "2.10.3"
-  val Version = "2.0.0-RC2"
+  val Version = "2.0.0-RC3"
   
   
   lazy val commonSettings: Seq[Setting[_]] =
@@ -53,7 +53,7 @@ object FlowBuild extends Build {
   )
 
   lazy val root: Project = (
-    Project("root", file(".")).aggregate(flow)
+    Project("root", file(".")).aggregate(flow, flowNative)
     settings(
       publish := (),
       publishLocal := ()
@@ -62,13 +62,11 @@ object FlowBuild extends Build {
   
   lazy val flow: Project = (
     Project("flow", file("flow"))
-    settings (commonSettings: _*)
-    settings (publishSettings: _*)
-    settings (JniDefaults.settings: _*)
-    settings(NativeDefaults.settings: _*)
+    settings(commonSettings: _*)
+    settings(publishSettings: _*)
+    settings(JniDefaults.settings: _*)
     settings(
-      nativeBuildDirectory := (baseDirectory in ThisBuild).value / "flow-native",
-      javahHeaderDirectory := nativeBuildDirectory.value / "src",
+      javahHeaderDirectory := (baseDirectory in ThisBuild).value / "flow-native" / "src",
       javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial"),
       compileOrder in Compile := CompileOrder.Mixed,
       libraryDependencies += Dependencies.akkaActor,
@@ -77,13 +75,20 @@ object FlowBuild extends Build {
     )
   )
 
+  lazy val flowNative: Project = (
+    Project("flow-native", file("flow-native"))
+    settings(publishSettings: _*)
+    settings(commonSettings: _*)
+    settings(NativeDefaults.settings: _*)
+    settings(
+      nativeBuildDirectory := (baseDirectory in ThisBuild).value / "flow-native"
+    )
+  )
+
   lazy val samplesTerminal = (
     Project("flow-samples-terminal", file("flow-samples") / "flow-samples-terminal")
     settings(commonSettings: _*)
     settings(runSettings: _*)
-    settings(
-      unmanagedJars in Compile += (nativePackage in flow).value
-    )
     dependsOn(flow)
   )
 

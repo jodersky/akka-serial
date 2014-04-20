@@ -21,6 +21,7 @@ project/plugins/project/
 *.o
 *.so*
 *.jnilib
+*.dylib
 
 # Temporary files
 *~
