@@ -77,8 +77,8 @@ object FlowBuild extends Build {
 
   lazy val flowNative: Project = (
     Project("flow-native", file("flow-native"))
-    settings(publishSettings: _*)
     settings(commonSettings: _*)
+    settings(publishSettings: _*)
     settings(NativeDefaults.settings: _*)
     settings(
       nativeBuildDirectory := (baseDirectory in ThisBuild).value / "flow-native"
