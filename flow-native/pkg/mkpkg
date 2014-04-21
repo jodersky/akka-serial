@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# This script produces a .pkg installable package on a mac.
+
+# Name of the package
+PACKAGE=flow3
+
+# Place to install libraries (should be on java.library.path)
+LIBDIR=/Library/Java/Extensions 
+
+cd .. && \
+./configure --libdir=${LIBDIR} && \
+make && \
+DESTDIR=pkg make install && \
+productbuild --root=pkg ${PACKAGE}.pkg
+
