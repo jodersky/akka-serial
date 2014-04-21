@@ -11,6 +11,6 @@ LIBDIR=/Library/Java/Extensions
 cd .. && \
 ./configure --libdir=${LIBDIR} && \
 make && \
-DESTDIR=pkg make install && \
+DESTDIR=`pwd`/pkg make install && \
 productbuild --root=pkg ${PACKAGE}.pkg
 
