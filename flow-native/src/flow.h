@@ -1,12 +1,12 @@
 #ifndef FLOW_H
 #define FLOW_H
 
-#include <stdbool.h>
-#include <stddef.h>
-
 #ifdef _cplusplus
 extern "C" {
 #endif
+
+#include <stdbool.h>
+#include <stddef.h>
 
 //general error codes that are returned by functions
 #define E_IO -1 //IO error
