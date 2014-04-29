@@ -8,9 +8,13 @@ PACKAGE=flow3
 # Place to install libraries (should be on java.library.path)
 LIBDIR=/Library/Java/Extensions 
 
+# Temporary directory to install libraries
+TEMPDIR=`pwd`/out
+
+mkdir ${TEMPDIR} && \
 cd .. && \
 ./configure --libdir=${LIBDIR} && \
 make && \
-DESTDIR=`pwd`/pkg make install && \
+DESTDIR=${TEMPDIR} make install && \
 productbuild --root=pkg ${PACKAGE}.pkg
 

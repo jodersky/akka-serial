@@ -76,7 +76,7 @@ object FlowBuild extends Build {
   )
 
   lazy val flowNative: Project = (
-    Project("flow-native", file("flow-native"))
+    Project("flow-native", file("flow-native-scala"))
     settings(commonSettings: _*)
     settings(publishSettings: _*)
     settings(NativeDefaults.settings: _*)
