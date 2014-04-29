@@ -3,7 +3,8 @@ Version 2.0
 -  Remove need to register to receive incoming data from an operator. A port is now opened by a client who will be the sole actor to receive messages from the operator.
 -  Migrate native build to Autotools (C compiler is not called through sbt anymore).
 -  Add debian packaging.
--  Downgrade Akka dependency to 2.2.0, for use with Play! projects.
+-  Add mac packaging.
+-  Upgrade Akka dependency to 2.3.2.
 
 Version 1.2
 -  Upgrade Akka dependency to 2.3.0. (merge #3)
