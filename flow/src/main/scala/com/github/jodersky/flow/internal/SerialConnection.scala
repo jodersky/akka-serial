@@ -3,7 +3,8 @@ package com.github.jodersky.flow.internal
 import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicBoolean
 
-import com.github.jodersky.flow._
+import com.github.jodersky.flow.PortClosedException
+import com.github.jodersky.flow.SerialSettings
 
 /**
  * Represents a serial connection in a more secure and object-oriented style than `NativeSerial`. In contrast

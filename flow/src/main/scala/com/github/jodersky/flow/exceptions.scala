@@ -1,7 +1,5 @@
 package com.github.jodersky.flow
 
-import java.io.IOException
-
 /** The requested port could not be found. */
 class NoSuchPortException(message: String) extends Exception(message)
 

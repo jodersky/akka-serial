@@ -1,12 +1,9 @@
 package com.github.jodersky.flow.internal
 
 import java.io.File
+
 import scalax.file.Path
 import scalax.io.Resource
-import java.security.CodeSource
-import java.util.zip.ZipEntry
-import java.util.zip.ZipInputStream
-import java.net.URL
 
 /** Handles loading of the current platform's native library for flow. */
 object NativeLoader {

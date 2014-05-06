@@ -3,16 +3,16 @@ package com.github.jodersky.flow
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
+
 import com.github.jodersky.flow.internal.SerialConnection
+
 import Serial.CommandFailed
 import Serial.Open
 import akka.actor.Actor
 import akka.actor.ActorLogging
+import akka.actor.OneForOneStrategy
+import akka.actor.SupervisorStrategy.Stop
 import akka.actor.actorRef2Scala
-import akka.actor.OneForOneStrategy
-import akka.actor.OneForOneStrategy
-import akka.actor.SupervisorStrategy._
-import scala.concurrent.duration._
 
 /**
  * Entry point to the serial API. Actor that manages serial port creation. Once opened, a serial port is handed over to

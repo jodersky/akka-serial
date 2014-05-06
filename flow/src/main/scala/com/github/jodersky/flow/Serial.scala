@@ -1,6 +1,5 @@
 package com.github.jodersky.flow
 
-import akka.actor.ActorRef
 import akka.actor.ExtensionKey
 import akka.util.ByteString
 
