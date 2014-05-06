@@ -21,7 +21,7 @@ object NativeDefaults {
         val log = streams.value.log
         val build = nativeBuildDirectory.value
 
-        Process("make distclean", build) #|| Process("clean", build) ! log
+        Process("make distclean", build) #|| Process("make clean", build) ! log
     }
 
     val autoLib = Def.task {

@@ -76,7 +76,7 @@ object FlowBuild extends Build {
   )
 
   lazy val flowNative: Project = (
-    Project("flow-native", file("flow-native-scala"))
+    Project("flow-native", file("flow-native-sbt"))
     settings(commonSettings: _*)
     settings(publishSettings: _*)
     settings(NativeDefaults.settings: _*)
@@ -86,10 +86,16 @@ object FlowBuild extends Build {
   )
 
   lazy val samplesTerminal = (
-    Project("flow-samples-terminal", file("flow-samples") / "flow-samples-terminal")
+    Project("flow-samples-terminal", file("flow-samples") / "terminal")
     settings(commonSettings: _*)
     settings(runSettings: _*)
     dependsOn(flow)
+
+    //kind of dirty, but it gets the sample to run without installing native libraries
+    settings(
+      (run in Compile) <<= (run in Compile).dependsOn(nativeBuild in flowNative),
+      javaOptions += "-Djava.library.path=" + (nativeOutputDirectory in flowNative).value.getAbsolutePath()
+    )    
   )
 
 }
