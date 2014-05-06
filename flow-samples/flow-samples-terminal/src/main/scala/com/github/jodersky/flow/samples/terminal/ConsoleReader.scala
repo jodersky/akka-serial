@@ -1,24 +1,18 @@
 package com.github.jodersky.flow.samples.terminal
 
-import akka.actor._
-import java.io.BufferedReader
-import java.io.InputStreamReader
+import akka.actor.Actor
+import akka.actor.actorRef2Scala
 
 class ConsoleReader extends Actor {
   import context._
   import ConsoleReader._
 
   def receive = {
-    case Read => read() match {
-      case Some(input) => parent ! ConsoleInput(input)
-      case None => parent ! EOT
-    }
-  }
-
-  def read(): Option[String] = {
-    val eot = 4
-    val line = Console.readLine
-    if (line == ":q") None else Some(line)
+    case Read =>
+      Console.readLine() match {
+        case ":q" => parent ! EOT
+        case s => parent ! ConsoleInput(s)
+      }
   }
 
 }
@@ -26,7 +20,6 @@ class ConsoleReader extends Actor {
 object ConsoleReader {
 
   case object Read
-
   case object EOT
   case class ConsoleInput(in: String)
 

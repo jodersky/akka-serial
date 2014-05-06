@@ -1,16 +1,23 @@
 package com.github.jodersky.flow.samples.terminal
 
-import com.github.jodersky.flow.Serial._
+import com.github.jodersky.flow.Serial
+import com.github.jodersky.flow.Serial.Close
+import com.github.jodersky.flow.Serial.Closed
+import com.github.jodersky.flow.Serial.CommandFailed
+import com.github.jodersky.flow.Serial.Event
+import com.github.jodersky.flow.Serial.Opened
+import com.github.jodersky.flow.Serial.Received
+import com.github.jodersky.flow.Serial.Write
+import com.github.jodersky.flow.SerialSettings
+
 import akka.actor.Actor
 import akka.actor.ActorLogging
 import akka.actor.ActorRef
-import akka.util.ByteString
-import akka.io.IO
-import com.github.jodersky.flow.Serial
-import akka.actor.Terminated
-import com.github.jodersky.flow.Parity
 import akka.actor.Props
-import com.github.jodersky.flow.SerialSettings
+import akka.actor.Terminated
+import akka.actor.actorRef2Scala
+import akka.io.IO
+import akka.util.ByteString
 
 class Terminal(port: String, settings: SerialSettings) extends Actor with ActorLogging {
   import Terminal._

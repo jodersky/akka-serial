@@ -1,16 +1,16 @@
 package com.github.jodersky.flow
 package samples.terminal
 
-import com.github.jodersky.flow._
-import akka.actor.ActorSystem
-import akka.actor.Props
-import akka.actor.actorRef2Scala
+import com.github.jodersky.flow.Parity
+import com.github.jodersky.flow.SerialSettings
 import com.github.jodersky.flow.internal.SerialConnection
+
+import akka.actor.ActorSystem
 
 object Main {
  
   def ask(label: String, default: String) = {
-    print(s"${label} [${default}]: ")
+    print(label + " [" + default.toString + "]: ")
     val in = Console.readLine()
     println("")
     if (in.isEmpty) default else in
@@ -22,7 +22,6 @@ object Main {
     val cs = ask("Char size", "8").toInt
     val tsb = ask("Use two stop bits", "false").toBoolean
     val parity = Parity(ask("Parity (0=None, 1=Odd, 2=Even)", "0").toInt)
-
     val settings = SerialSettings(baud, cs, tsb, parity)
 
     println("Starting terminal system, enter :q to exit.")
