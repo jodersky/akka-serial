@@ -10,10 +10,10 @@ As any java or scala project, the first part results in a platform independent a
 Run `sbt flow/packageBin` in the base directory. This simply compiles any scala and java sources as with any standard sbt project and produces a jar ready for being used.
 
 ## Compiling and linking native sources
-The back-end is managed by GNU Autotools and all releveant files are contained in 'flow-native'. The first time, run `./bootstrap`, then `./configure && make` to compile the back-end. After completing this step, native libraries for the different platforms are available to be copied and included in end-user applications or installed on the system. To copy the binaries to a local directory, run ```DESTDIR=`pwd`/<directory> make install```. To install them system-wide, simply run `make install` as an administrator.
+The back-end is managed by GNU Autotools and all relevant files are contained in 'flow-native'. The first time, run `./bootstrap`, then `./configure && make` to compile the back-end. After completing this step, native libraries for the different platforms are available to be copied and included in end-user applications or installed on the system. To copy the binaries to a local directory, run ```DESTDIR=`pwd`/<directory> make install```. To install them system-wide, simply run `make install` as an administrator.
 
 ## Creating a fat jar
-The native binaries produced in the previous step may be bundled in a "fat" jar so that they can be included in sbt projects through its regular dependency mechanisms. In this process, sbt basically acts as a wrapper script around autotools, calling the native build process and packaging generated binaries. Running `sbt flow-native-scala/packageBin` in the base directory produces the fat jar in 'flow-native-scala/target'.
+The native binaries produced in the previous step may be bundled in a "fat" jar so that they can be included in sbt projects through its regular dependency mechanisms. In this process, sbt basically acts as a wrapper script around autotools, calling the native build process and packaging generated binaries. Running `sbt flow-native-scala/packageBin` in the base directory produces the fat jar in 'flow-native-sbt/target'.
 
 Note: an important feature of fat jars is to include binaries for several platforms. To copy binaries compiled on other platforms to the fat jar, place them in a subfolder of 'flow-native/lib_native'. The subfolder should have the name `$(os.name)-$(os.arch)`, where `os.name` and `os.arch` are the java system properties of the respective platforms.
 
