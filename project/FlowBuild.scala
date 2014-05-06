@@ -8,7 +8,7 @@ import NativeKeys._
 object FlowBuild extends Build {
   val Organization = "com.github.jodersky"
   val ScalaVersion = "2.10.4"
-  val Version = "2.0.0"
+  val Version = "2.0.1"
   
   
   lazy val commonSettings: Seq[Setting[_]] =
