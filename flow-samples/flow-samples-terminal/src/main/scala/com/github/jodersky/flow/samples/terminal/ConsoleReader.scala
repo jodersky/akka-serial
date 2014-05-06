@@ -10,8 +10,10 @@ class ConsoleReader extends Actor {
   def receive = {
     case Read =>
       Console.readLine() match {
-        case ":q" => parent ! EOT
-        case s => parent ! ConsoleInput(s)
+        case ":q" | null => parent ! EOT
+        case s => {
+          parent ! ConsoleInput(s)
+        }
       }
   }
 
