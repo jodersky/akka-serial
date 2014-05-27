@@ -7,7 +7,7 @@ import NativeKeys._
 
 object FlowBuild extends Build {
   val Organization = "com.github.jodersky"
-  val ScalaVersion = "2.10.4"
+  val ScalaVersion = "2.11.1"
   val Version = "2.0.1"
   
   
@@ -70,6 +70,7 @@ object FlowBuild extends Build {
       javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial"),
       compileOrder in Compile := CompileOrder.Mixed,
       libraryDependencies += Dependencies.akkaActor,
+      libraryDependencies += Dependencies.parserCombinators,
       libraryDependencies += Dependencies.ioCore,
       libraryDependencies += Dependencies.ioFile
     )
