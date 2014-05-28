@@ -1,3 +1,11 @@
+Version 2.0.2
+-  Upgrade to Akka dependency 2.3.3 (merge #10)
+-  Add support for Scala 2.11 (merge #10)
+-  Remove Scala version from native fat jar.
+
+Version 2.0.1
+-  Use system actor for manager.
+
 Version 2.0
 -  Use of direct buffers to increase performance when receiving and transmititng data.
 -  Remove need to register to receive incoming data from an operator. A port is now opened by a client who will be the sole actor to receive messages from the operator.

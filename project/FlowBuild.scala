@@ -8,14 +8,15 @@ import NativeKeys._
 object FlowBuild extends Build {
   val Organization = "com.github.jodersky"
   val ScalaVersion = "2.11.1"
-  val Version = "2.0.1"
+  val Version = "2.0.2"
   
   
   lazy val commonSettings: Seq[Setting[_]] =
     UniqueVersionDefaults.settings ++
     Seq(
       organization := Organization,
-      scalaVersion := ScalaVersion,
+      scalaVersion in ThisBuild := ScalaVersion,
+      crossScalaVersions in ThisBuild := Seq("2.10.4", ScalaVersion),
       baseVersion := Version,
       licenses := Seq(("BSD-3-Clause", url("http://opensource.org/licenses/BSD-3-Clause"))),
       homepage := Some(url("http://github.com/jodersky/flow")),
@@ -81,6 +82,7 @@ object FlowBuild extends Build {
     settings(publishSettings: _*)
     settings(NativeDefaults.settings: _*)
     settings(
+      crossPaths := false,
       nativeBuildDirectory := (baseDirectory in ThisBuild).value / "flow-native"
     )
   )
