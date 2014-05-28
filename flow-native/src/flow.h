@@ -1,7 +1,7 @@
 #ifndef FLOW_H
 #define FLOW_H
 
-#ifdef _cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
