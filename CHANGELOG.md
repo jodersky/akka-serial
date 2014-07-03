@@ -1,3 +1,6 @@
+Version 2.0.3
+-  Upgrade to Akka dependency 2.3.4
+
 Version 2.0.2
 -  Upgrade to Akka dependency 2.3.3 (merge #10)
 -  Add support for Scala 2.11 (merge #10)
