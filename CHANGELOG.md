@@ -1,3 +1,6 @@
+Version 2.0.5
+-  Upgrade to Akka dependency 2.3.6
+
 Version 2.0.4
 -  Upgrade to Akka dependency 2.3.5
 
