@@ -1,3 +1,6 @@
+Version 2.0.6
+- Fix version incoherency problem.
+
 Version 2.0.5
 -  Upgrade to Akka dependency 2.3.6
 
