@@ -1,3 +1,8 @@
+Version 2.0.8
+- Upgrade to Akka dependency 2.3.8 (version 2.3.7 is skipped)
+- Upgrade to Scala 2.11.4
+- Upgrade sbt version to 0.13.7
+
 Version 2.0.6
 - Fix version incoherency problem.
 
