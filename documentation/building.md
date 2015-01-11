@@ -18,4 +18,10 @@ The native binaries produced in the previous step may be bundled in a "fat" jar 
 Note: an important feature of fat jars is to include binaries for several platforms. To copy binaries compiled on other platforms to the fat jar, place them in a subfolder of 'flow-native-sbt/lib_native'. The subfolder should have the name `$(os.name)-$(os.arch)`, where `os.name` and `os.arch` are the java system properties of the respective platforms.
 
 # Note about versioning
-When building and locally publishing projects, the usual convention is to append "-SNAPSHOT" to the version string. This practice however breaks version identification and badly hurts git (bisecting becomes a nightmare). Therefore, to identify a build artifact with a specific commit in the repository, a sha1 hash is appended to the version instead. When publishing a new release, this hash may be ommited by setting the java system property "release=true", simply by running sbt -Drelease=true.
+When building and locally publishing projects, the usual convention is to append "-SNAPSHOT" to the version string. This practice however breaks version identification and badly hurts git (bisecting becomes a nightmare). Therefore, to identify a build artifact with a specific commit in the repository, a sha1 hash is appended to the version instead. When publishing a new release, this hash may be ommited by setting the java system property "release=true", simply by running `sbt -Drelease=true`.
+
+A second versioning quirk to be aware of is when building native sources. In this case, the project and package versions follow a sematic pattern: `M.m.p`, where
+ - `M` is the major version, representing backwards incompatible changes
+ - `m` is the minor version, indicating backwards compatible changes such as new feature additions
+ - `p` is the patch number, representing internal modifications such as bug-fixes
+Usually (following most linux distribution's conventions), shared libraries produced by a project `name` of version `M.m.p` are named `libname.M.m.p`. However, since when accessing shared libraries through the JVM, only the `name` can be specified and no particular version, the convention adopted by flow is to append `M` to the library name and always keep the major version at zero. E.g. `libflow.3.1.2` becomes `libflow3.0.1.2`.

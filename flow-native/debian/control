@@ -3,7 +3,7 @@ Maintainer: Jakob Odersky <jodersky@gmail.com>
 Section: java
 Priority: optional
 Build-Depends: debhelper (>= 8.0.0), openjdk-7-jdk
-Standards-Version: 3.9.3
+Standards-Version: 3.9.6
 Homepage: https://github.com/jodersky/flow
 Vcs-Git: git://github.com/jodersky/flow.git
 

@@ -12,5 +12,10 @@
 %:
 	dh $@ 
 
+# override library install directory
 override_dh_auto_configure:
 	dh_auto_configure -- --libdir=/usr/lib/jni
+
+# used to suppress ldconfig warnings in preinst and postrm
+override_dh_makeshlibs:
+	dh_makeshlibs -X/usr/lib/jni
