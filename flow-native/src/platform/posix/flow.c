@@ -54,12 +54,11 @@ int serial_open(
     /* configure new port settings */
     struct termios newtio;
   
-    /* following calls correspond to makeraw() */
-    newtio.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
-    newtio.c_oflag &= ~OPOST;
-    newtio.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
-    newtio.c_cflag &= ~(CSIZE | PARENB);
-    newtio.c_cflag |= CREAD;
+    /* initialize serial interface */
+    newtio.c_iflag = 0;
+    newtio.c_oflag = 0;
+    newtio.c_lflag = 0;
+    newtio.c_cflag = CREAD;
   
     /* set speed */
     speed_t bd;
