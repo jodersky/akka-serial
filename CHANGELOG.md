@@ -1,3 +1,6 @@
+Version 2.0.9
+- Fix termios initialization issues (#12)
+
 Version 2.0.8
 - Upgrade to Akka dependency 2.3.8 (version 2.3.7 is skipped)
 - Upgrade to Scala 2.11.4
