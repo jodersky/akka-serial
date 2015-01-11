@@ -24,4 +24,5 @@ A second versioning quirk to be aware of is when building native sources. In thi
  - `M` is the major version, representing backwards incompatible changes
  - `m` is the minor version, indicating backwards compatible changes such as new feature additions
  - `p` is the patch number, representing internal modifications such as bug-fixes
+ 
 Usually (following most linux distribution's conventions), shared libraries produced by a project `name` of version `M.m.p` are named `libname.M.m.p`. However, since when accessing shared libraries through the JVM, only the `name` can be specified and no particular version, the convention adopted by flow is to append `M` to the library name and always keep the major version at zero. E.g. `libflow.3.1.2` becomes `libflow3.0.1.2`.
