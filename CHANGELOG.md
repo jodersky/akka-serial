@@ -1,3 +1,6 @@
+Version 2.0.10
+- Remove dependencies on scala-io
+
 Version 2.0.9
 - Fix termios initialization issues (#12)
 
