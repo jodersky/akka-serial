@@ -36,7 +36,65 @@ Flow is built and its examples run with SBT. To get started, include a dependenc
 It is recomended that you use the first option only for testing purposes or end-user applications. The second option is recomended for libraries, since it leaves more choice to the end-user.
 
 ## Basic usage
-See [Documentation/basics.md](Documentation/basics.md) for a short guide on using flow.
+See [Documentation/basics.md](Documentation/basics.md) for a short guide on using flow. For the impatient, here is a quick example.
+
+```scala
+import akka.actor.{Actor, ActorLogging, ActorRef, Props, Terminated}
+import akka.io.IO
+import akka.util.ByteString
+import com.github.jodersky.flow.{Serial, SerialSettings}
+
+/**
+ *  Sample actor representing a simple terminal.
+ */
+class Terminal(port: String, settings: SerialSettings) extends Actor with ActorLogging {
+  import context._
+
+  override def preStart() = {
+    log.info(s"Requesting manager to open port: ${port}, baud: ${settings.baud}")
+    IO(Serial) ! Serial.Open(port, settings)
+  }
+
+  def receive: Receive = {
+
+    case Serial.CommandFailed(cmd, reason) =>
+      log.error(s"Connection failed, stopping terminal. Reason: ${reason}")
+      context stop self
+
+    case Serial.Opened(port) =>
+      log.info(s"Port ${port} is now open.")
+      context become opened(sender)
+      context watch sender // get notified in the event the operator crashes
+
+  }
+
+  def opened(operator: ActorRef): Receive = {
+
+    case Serial.Received(data) =>
+      log.info(s"Receivd data: " + data)
+
+    case Serial.Closed =>
+      log.info("Operator closed normally, exiting terminal.")
+      context stop self
+
+    case Terminated(`operator`) =>
+      log.error("Operator crashed unexpectedly, exiting terminal.")
+      context stop self
+
+    case ":q" =>
+      operator ! Serial.Close
+
+    case str: String =>
+      operator ! Serial.Write(ByteString(str))
+
+  }
+
+}
+
+object Terminal {
+  def apply(port: String, settings: SerialSettings) = Props(classOf[Terminal], port, settings)
+}
+```
 
 ## Examples
 Examples on flow's usage are located in the flow-samples directory. The examples may be run by switching to the corresponding project in sbt: `project samples-<sample_name>` and typing `run`. Be sure to connect a serial device before running an example.
