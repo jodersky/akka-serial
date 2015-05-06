@@ -17,6 +17,10 @@ project/plugins/project/
 .cache
 .history
 
+# Ensime
+.ensime
+.ensime_cache
+
 # Native
 *.o
 *.so*
