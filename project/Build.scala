@@ -8,7 +8,7 @@ import Publish._
 object FlowBuild extends Build {
   
   lazy val commonSettings: Seq[Setting[_]] = Seq(
-    version := "2.1.1",
+    version := "2.1.2-SNAPSHOT",
     scalaVersion in ThisBuild := "2.11.6",
     crossScalaVersions in ThisBuild := Seq("2.10.5", "2.11.6"),
     organization := "com.github.jodersky",
