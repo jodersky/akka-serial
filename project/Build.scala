@@ -2,7 +2,6 @@ import sbt._
 import Keys._
 import JniKeys._
 import NativeKeys._
-import Publish._
 
 
 object FlowBuild extends Build {
@@ -12,7 +11,7 @@ object FlowBuild extends Build {
     scalaVersion in ThisBuild := "2.11.6",
     crossScalaVersions in ThisBuild := Seq("2.10.5", "2.11.6"),
     organization := "com.github.jodersky",
-    resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/",
+    licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause"))),
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
   )
   
@@ -25,9 +24,11 @@ object FlowBuild extends Build {
   lazy val root: Project = (
     Project("root", file("."))
     aggregate(main, native)
-    settings(publishSettings: _*)  
+    settings(commonSettings: _*)
     settings(
       publishArtifact := false,
+      publish := (),
+      publishLocal := (),
       publishTo := Some(Resolver.file("Unused transient repository", target.value / "unusedrepo")) // make sbt-pgp happy
     )
   )
@@ -35,7 +36,6 @@ object FlowBuild extends Build {
   lazy val main: Project = (
     Project("main", file("flow-main"))
     settings(commonSettings: _*)
-    settings(publishSettings: _*)
     settings(JniDefaults.settings: _*)
     settings(
       name := "flow",
@@ -49,7 +49,6 @@ object FlowBuild extends Build {
   lazy val native: Project = (
     Project("native", file("flow-native-sbt"))
     settings(commonSettings: _*)
-    settings(publishSettings: _*)
     settings(NativeDefaults.settings: _*)
     settings(
       name := "flow-native",
