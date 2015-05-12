@@ -1,3 +1,10 @@
+# Version 2.1.2
+- Better error message for native library extraction.
+- Fix packaging of distributed jars for ARM systems (#13).
+- Build:
+    - Upgrade debian source package helpers and dependencies.
+    - Remove explicit publishing information (now published to bintray).
+
 # Version 2.1.1
 - Upgrade to Akka 2.3.10
 - Upgrade to Scala 2.11.6 and 2.10.5
