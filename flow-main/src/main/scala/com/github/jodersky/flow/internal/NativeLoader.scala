@@ -42,10 +42,12 @@ object NativeLoader {
 
   private def loadFromJar(library: String) = {
     val fqlib = System.mapLibraryName(library) //fully qualified library name
-    extract(s"/native/${os}-${arch}/${fqlib}", fqlib) match {
+    val path = s"/native/${os}-${arch}/${fqlib}"
+    extract(path, fqlib) match {
       case Some(file) => System.load(file.getAbsolutePath)
       case None => throw new UnsatisfiedLinkError("Cannot extract flow's native library, " +
-        "the native library may not exist for your specific architecture/OS combination.")
+          "the native library does not exist for your specific architecture/OS combination." +
+          "Could not find " + path + ".")
     }
   }
 
