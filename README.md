@@ -1,10 +1,12 @@
+[ ![Download](https://api.bintray.com/packages/jodersky/maven/flow/images/download.svg) ](https://bintray.com/jodersky/maven/flow/_latestVersion)
+
 # flow
 Serial communication library for Scala, designed to be reactive, lightweight and easily integrable with Akka applications.
 
 ## Motivation
 The main reason for yet another serial communication library for the JVM is that all other libraries tested used blocking IO and/or consumed enormous amounts of CPU while being idle. Flow's main goal is therefore to provide a lightweight library that only does work when communication is required. This reactive concept integrates well with the Akka IO layer therefore making flow an ideal library for extending it.
 
-## Dependencies
+## Getting Started
 Flow is built and its examples run with SBT. To get started, include a dependency to flow in your project:
 
     libraryDependencies += "com.github.jodersky" %% "flow" % "2.1.2"
