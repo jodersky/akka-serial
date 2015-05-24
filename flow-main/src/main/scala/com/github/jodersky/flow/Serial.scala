@@ -97,14 +97,15 @@ object Serial extends ExtensionKey[SerialExt] {
    * the given directory.
    * In case the given directory cannot be watched, the manager responds with a `CommandFailed` message.
    *
-   * Note: the directory must exist when this message is sent.
+   * Note: the sender is also notified of currently existing ports.
    *
    * @param directory the directory to watch
+   * @param skipInitial don't get notified of already existing ports
    *
    * @see Unwatch
    * @see Connected
    */
-  case class Watch(directory: String = "/dev") extends Command
+  case class Watch(directory: String = "/dev", skipInitial: Boolean = false) extends Command
 
   /**
    * Stop receiving notifications about a previously watched directory.

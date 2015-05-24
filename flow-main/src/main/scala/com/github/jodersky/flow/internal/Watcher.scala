@@ -2,7 +2,7 @@ package com.github.jodersky.flow
 package internal
 
 import akka.actor.{ Actor, ActorRef, Props }
-import java.nio.file.{ ClosedWatchServiceException, FileSystems, Path, Paths, WatchEvent, WatchKey }
+import java.nio.file.{ ClosedWatchServiceException, Files, FileSystems, Path, Paths, WatchEvent, WatchKey }
 import java.nio.file.StandardWatchEventKinds._
 import scala.collection.JavaConversions._
 import scala.collection.mutable.{ HashMap, Map, MultiMap, Set }
@@ -34,7 +34,7 @@ class Watcher(from: Option[ActorRef]) extends Actor {
 
   def receive = {
 
-    case w @ Serial.Watch(directory) =>
+    case w @ Serial.Watch(directory, skipInitial) =>
       val normalPath = Paths.get(directory).toAbsolutePath
       val normal = normalPath.toString
 
@@ -42,7 +42,15 @@ class Watcher(from: Option[ActorRef]) extends Actor {
         keys.getOrElseUpdate(normal, watcher.watch(normalPath))
       } match {
         case Failure(err) => reply(Serial.CommandFailed(w, err), sender)
-        case Success(key) => clients addBinding (normal, sender)
+        case Success(key) =>
+          clients addBinding (normal, sender)
+          if (!skipInitial) {
+            Files.newDirectoryStream(normalPath) foreach { path =>
+              if (!Files.isDirectory(path)) {
+                reply(Serial.Connected(path.toString), sender)
+              }
+            }
+          }
       }
 
     case u @ Serial.Unwatch(directory) =>
