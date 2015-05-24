@@ -70,4 +70,11 @@ object FlowBuild extends Build {
     )    
   )
 
+  lazy val samplesWatcher = (
+    Project("samples-watcher", file("flow-samples") / "watcher")
+    settings(commonSettings: _*)
+    settings(runSettings: _*)
+    dependsOn(main)
+  )
+
 }
