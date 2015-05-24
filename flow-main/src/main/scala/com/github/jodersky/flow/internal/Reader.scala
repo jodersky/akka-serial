@@ -27,7 +27,7 @@ class Reader(serial: SerialConnection, buffer: ByteBuffer, operator: ActorRef, c
         //stop and tell operator on other exception
         case ex: Exception => {
           stop = true
-          operator.tell(ReaderDied(ex), Actor.noSender)
+          operator.tell(ThreadDied(this, ex), Actor.noSender)
         }
       }
     }

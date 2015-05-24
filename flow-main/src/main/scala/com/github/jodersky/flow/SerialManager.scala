@@ -5,9 +5,8 @@ import scala.util.Success
 import scala.util.Try
 
 import com.github.jodersky.flow.internal.SerialConnection
+import com.github.jodersky.flow.internal.Watcher
 
-import Serial.CommandFailed
-import Serial.Open
 import akka.actor.Actor
 import akka.actor.ActorLogging
 import akka.actor.OneForOneStrategy
@@ -27,13 +26,21 @@ class SerialManager extends Actor with ActorLogging {
     case _: Exception => Stop
   }
 
+  private val watcher = actorOf(Watcher(self), "watcher")
+
   def receive = {
-    case open @ Open(port, settings, bufferSize) => Try {
+
+    case open @ Serial.Open(port, settings, bufferSize) => Try {
       SerialConnection.open(port, settings)
     } match {
       case Success(connection) => context.actorOf(SerialOperator(connection, bufferSize, sender), name = escapePortString(connection.port))
-      case Failure(err) => sender ! CommandFailed(open, err)
+      case Failure(err) => sender ! Serial.CommandFailed(open, err)
     }
+
+    case w: Serial.Watch => watcher.forward(w)
+
+    case u: Serial.Unwatch => watcher.forward(u)
+
   }
 
 }

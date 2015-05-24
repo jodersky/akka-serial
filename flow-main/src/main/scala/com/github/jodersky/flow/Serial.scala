@@ -8,7 +8,7 @@ object Serial extends ExtensionKey[SerialExt] {
 
   /** Base trait for any flow-related messages. */
   sealed trait Message
-  
+
   /** A message extending this trait is to be viewed as a command, an out-bound message issued by the client to flow's API. */
   trait Command extends Message
 
@@ -89,5 +89,35 @@ object Serial extends ExtensionKey[SerialExt] {
    * Event sent from operator, indicating that its port has been closed.
    */
   case object Closed extends Event
+
+  /**
+   * Watch a directory for new ports.
+   *
+   * Send this command to the manager to get notifications when a new port (i.e. file) is created in
+   * the given directory.
+   * In case the given directory cannot be watched, the manager responds with a `CommandFailed` message.
+   *
+   * Note: the directory must exist when this message is sent.
+   *
+   * @param directory the directory to watch
+   *
+   * @see Unwatch
+   * @see Connected
+   */
+  case class Watch(directory: String = "/dev") extends Command
+
+  /**
+   * Stop receiving notifications about a previously watched directory.
+   *
+   * @param directory the directory to unwatch
+   */
+  case class Unwatch(directory: String = "/dev") extends Command
+
+  /**
+   * A new port (i.e. file) has been detected.
+   *
+   * @param port the absolute file name of the connected port
+   */
+  case class Connected(port: String) extends Event
 
 }

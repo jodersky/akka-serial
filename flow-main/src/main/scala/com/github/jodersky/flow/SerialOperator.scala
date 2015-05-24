@@ -3,7 +3,7 @@ package com.github.jodersky.flow
 import java.nio.ByteBuffer
 
 import com.github.jodersky.flow.internal.Reader
-import com.github.jodersky.flow.internal.ReaderDied
+import com.github.jodersky.flow.internal.ThreadDied
 import com.github.jodersky.flow.internal.SerialConnection
 
 import Serial.Close
@@ -57,7 +57,7 @@ class SerialOperator(connection: SerialConnection, bufferSize: Int, client: Acto
     }
 
     //go down with reader thread
-    case ReaderDied(ex) => throw ex
+    case ThreadDied(`reader`, ex) => throw ex
 
   }
 
