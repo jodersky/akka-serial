@@ -26,8 +26,10 @@ val settings = SerialSettings(
 IO(Serial) ! Serial.Open(port, settings)
 
 def receive = {
-  case CommandFailed(cmd: Open, reason: AccessDeniedException) => println("you're not allowed to open that port!")
-  case CommandFailed(cmd: Open, reason) => println("could not open port for some other reason: " + reason.getMessage)
+  case CommandFailed(cmd: Open, reason: AccessDeniedException) =>
+    println("you're not allowed to open that port!")
+  case CommandFailed(cmd: Open, reason) =>
+	println("could not open port for some other reason: " + reason.getMessage)
   case Opened(settings) => {
     val operator = sender
     //do stuff with the operator, e.g. context become opened(op)
