@@ -7,12 +7,12 @@ import NativeKeys._
 object FlowBuild extends Build {
   
   lazy val commonSettings: Seq[Setting[_]] = Seq(
-    version := "2.1.3-SNAPSHOT",
+    version := "2.2.0-SNAPSHOT",
     scalaVersion in ThisBuild := "2.11.6",
     crossScalaVersions in ThisBuild := Seq("2.10.5", "2.11.6"),
     organization := "com.github.jodersky",
     licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause"))),
-    scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
+    scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-target:jvm-1.7")
   )
   
   lazy val runSettings: Seq[Setting[_]] = Seq(
