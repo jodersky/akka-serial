@@ -1,6 +1,8 @@
 [ ![Download](https://api.bintray.com/packages/jodersky/maven/flow/images/download.svg) ](https://bintray.com/jodersky/maven/flow/_latestVersion)
 
 # flow
+
+[![Join the chat at https://gitter.im/jodersky/flow](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jodersky/flow?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Serial communication library for Scala, designed to be reactive, lightweight and easily integrable with Akka applications.
 
 ## Motivation
