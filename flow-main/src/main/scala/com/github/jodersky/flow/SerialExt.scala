@@ -1,7 +1,6 @@
 package com.github.jodersky.flow
 
-import akka.actor.ExtendedActorSystem
-import akka.actor.Props
+import akka.actor.{ ExtendedActorSystem, Props }
 import akka.io.IO
 
 /** Provides the serial IO manager. */

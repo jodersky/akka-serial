@@ -1,17 +1,15 @@
 package com.github.jodersky.flow
 package samples.terminal
 
-import com.github.jodersky.flow.Parity
-import com.github.jodersky.flow.SerialSettings
-import com.github.jodersky.flow.internal.SerialConnection
-
 import akka.actor.ActorSystem
+import internal.SerialConnection
+import scala.io.StdIn
 
 object Main {
- 
+
   def ask(label: String, default: String) = {
     print(label + " [" + default.toString + "]: ")
-    val in = Console.readLine()
+    val in = StdIn.readLine()
     println("")
     if (in.isEmpty) default else in
   }

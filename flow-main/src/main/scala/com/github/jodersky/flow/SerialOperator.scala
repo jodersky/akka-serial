@@ -1,22 +1,8 @@
 package com.github.jodersky.flow
 
+import akka.actor.{ Actor, ActorLogging, ActorRef, Props, Terminated, actorRef2Scala }
+import internal.{ Reader, SerialConnection, ThreadDied }
 import java.nio.ByteBuffer
-
-import com.github.jodersky.flow.internal.Reader
-import com.github.jodersky.flow.internal.ThreadDied
-import com.github.jodersky.flow.internal.SerialConnection
-
-import Serial.Close
-import Serial.Closed
-import Serial.NoAck
-import Serial.Opened
-import Serial.Write
-import akka.actor.Actor
-import akka.actor.ActorLogging
-import akka.actor.ActorRef
-import akka.actor.Props
-import akka.actor.Terminated
-import akka.actor.actorRef2Scala
 
 /**
  * Operator associated to an open serial port. All communication with a port is done via an operator. Operators are created though the serial manager.
@@ -31,7 +17,7 @@ class SerialOperator(connection: SerialConnection, bufferSize: Int, client: Acto
   val writeBuffer = ByteBuffer.allocateDirect(bufferSize)
 
   context.watch(client)
-  client ! Opened(connection.port)
+  client ! Serial.Opened(connection.port)
   reader.start()
 
   override def postStop = {
@@ -40,18 +26,18 @@ class SerialOperator(connection: SerialConnection, bufferSize: Int, client: Acto
 
   def receive: Receive = {
 
-    case Write(data, ack) => {
+    case Serial.Write(data, ack) => {
       writeBuffer.clear()
       data.copyToBuffer(writeBuffer)
       val sent = connection.write(writeBuffer)
-      if (ack != NoAck) sender ! ack(sent)
+      if (ack != Serial.NoAck) sender ! ack(sent)
     }
 
-    case Close => {
-      client ! Closed
+    case Serial.Close => {
+      client ! Serial.Closed
       context stop self
     }
-    
+
     case Terminated(`client`) => {
       context stop self
     }

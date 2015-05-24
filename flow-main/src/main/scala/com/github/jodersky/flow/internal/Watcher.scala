@@ -1,7 +1,7 @@
-package com.github.jodersky.flow.internal
+package com.github.jodersky.flow
+package internal
 
 import akka.actor.{ Actor, ActorRef, Props }
-import com.github.jodersky.flow.Serial
 import java.nio.file.{ ClosedWatchServiceException, FileSystems, Path, Paths, WatchEvent, WatchKey }
 import java.nio.file.StandardWatchEventKinds._
 import scala.collection.JavaConversions._

@@ -1,10 +1,8 @@
-package com.github.jodersky.flow.internal
+package com.github.jodersky.flow
+package internal
 
 import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicBoolean
-
-import com.github.jodersky.flow.PortClosedException
-import com.github.jodersky.flow.SerialSettings
 
 /**
  * Represents a serial connection in a more secure and object-oriented style than `NativeSerial`. In contrast
@@ -16,7 +14,8 @@ import com.github.jodersky.flow.SerialSettings
 class SerialConnection private (
   val port: String,
   val settings: SerialSettings,
-  private val pointer: Long) {
+  private val pointer: Long
+) {
 
   import SerialConnection._
 
@@ -74,7 +73,8 @@ class SerialConnection private (
       try {
         transfer(
           b => NativeSerial.readDirect(pointer, b),
-          b => NativeSerial.read(pointer, b.array()))(buffer)
+          b => NativeSerial.read(pointer, b.array())
+        )(buffer)
       } finally {
         reading = false
         if (closed.get) readLock.notify()
@@ -105,7 +105,8 @@ class SerialConnection private (
       try {
         transfer(
           b => NativeSerial.writeDirect(pointer, b, b.position()),
-          b => NativeSerial.write(pointer, b.array(), b.position()))(buffer)
+          b => NativeSerial.write(pointer, b.array(), b.position())
+        )(buffer)
       } finally {
         writing = false
         if (closed.get) writeLock.notify()

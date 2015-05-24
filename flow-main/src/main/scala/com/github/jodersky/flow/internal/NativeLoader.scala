@@ -1,9 +1,7 @@
-package com.github.jodersky.flow.internal
+package com.github.jodersky.flow
+package internal
 
-import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.io.OutputStream
+import java.io.{ File, FileOutputStream, InputStream, OutputStream }
 
 /** Handles loading of the current platform's native library for flow. */
 object NativeLoader {
@@ -46,8 +44,8 @@ object NativeLoader {
     extract(path, fqlib) match {
       case Some(file) => System.load(file.getAbsolutePath)
       case None => throw new UnsatisfiedLinkError("Cannot extract flow's native library, " +
-          "the native library does not exist for your specific architecture/OS combination." +
-          "Could not find " + path + ".")
+        "the native library does not exist for your specific architecture/OS combination." +
+        "Could not find " + path + ".")
     }
   }
 

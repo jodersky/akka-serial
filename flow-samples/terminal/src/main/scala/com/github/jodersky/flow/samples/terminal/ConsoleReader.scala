@@ -1,7 +1,8 @@
-package com.github.jodersky.flow.samples.terminal
+package com.github.jodersky.flow
+package samples.terminal
 
 import akka.actor.Actor
-import akka.actor.actorRef2Scala
+import scala.io.StdIn
 
 class ConsoleReader extends Actor {
   import context._
@@ -9,7 +10,7 @@ class ConsoleReader extends Actor {
 
   def receive = {
     case Read =>
-      Console.readLine() match {
+      StdIn.readLine() match {
         case ":q" | null => parent ! EOT
         case s => {
           parent ! ConsoleInput(s)
