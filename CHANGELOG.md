@@ -1,5 +1,5 @@
 # Version 2.2.0 (UNRELEASED)
-- Add watching for new ports.
+- Feature: implement watching for new ports.
 
 # Version 2.1.2
 - Better error message for native library extraction.
