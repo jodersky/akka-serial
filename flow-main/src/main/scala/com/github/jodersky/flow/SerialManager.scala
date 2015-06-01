@@ -1,7 +1,7 @@
 package com.github.jodersky.flow
 
 import akka.actor.{ Actor, ActorLogging, OneForOneStrategy }
-import akka.actor.SupervisorStrategy.Stop
+import akka.actor.SupervisorStrategy.{ Escalate, Stop }
 import internal.{ SerialConnection, Watcher }
 import scala.util.{ Failure, Success, Try }
 
@@ -15,6 +15,7 @@ class SerialManager extends Actor with ActorLogging {
   import context._
 
   override val supervisorStrategy = OneForOneStrategy() {
+    case _: Exception if sender == watcher => Escalate
     case _: Exception => Stop
   }
 
