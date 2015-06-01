@@ -42,7 +42,7 @@ object FlowBuild extends Build {
       javahHeaderDirectory := (baseDirectory in ThisBuild).value / "flow-native" / "src",
       javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial"),
       compileOrder in Compile := CompileOrder.Mixed,
-      libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.10"
+      libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.11"
     )
   )
 

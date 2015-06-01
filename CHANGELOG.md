@@ -1,5 +1,6 @@
 # Version 2.2.0 (UNRELEASED)
 - Feature: implement watching for new ports.
+- Upgrade to Akka 2.3.11
 
 # Version 2.1.2
 - Better error message for native library extraction.
