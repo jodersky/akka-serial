@@ -1,4 +1,4 @@
-# Version 2.2.0 (UNRELEASED)
+# Version 2.2.0
 - Feature: implement watching for new ports.
 - Upgrade to Akka 2.3.11
 
