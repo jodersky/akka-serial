@@ -1,3 +1,7 @@
+# Version 2.2.1
+- Upgrade Akka to 2.3.12
+- Upgrade Scala to 2.11.7
+
 # Version 2.2.0
 - Feature: implement watching for new ports.
 - Upgrade to Akka 2.3.11

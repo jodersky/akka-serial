@@ -13,7 +13,7 @@ Serial communication library for Scala, designed to be reactive, lightweight and
 ## Getting Started
 Flow uses sbt as build system. To get started, include a dependency to flow in your project:
 
-    libraryDependencies += "com.github.jodersky" %% "flow" % "2.2.0"
+    libraryDependencies += "com.github.jodersky" %% "flow" % "2.2.1"
 
 ### Including Native Library
 *NOTICE: flow uses native libraries to back serial communication, therefore before you can run any application depending on flow you must include flow's native library! To do so, you have two options.*
@@ -21,7 +21,7 @@ Flow uses sbt as build system. To get started, include a dependency to flow in y
 #### The easy way
 In case your OS/architecture combination is present in the below table, add a second dependency to your project:
 
-    libraryDependencies += "com.github.jodersky" % "flow-native" % "2.2.0"
+    libraryDependencies += "com.github.jodersky" % "flow-native" % "2.2.1"
 
 | OS                | Architecture                | Notes                                                                           |
 |-------------------|-----------------------------|---------------------------------------------------------------------------------|
@@ -106,7 +106,7 @@ object Terminal {
 
 More examples on flow's usage are located in the flow-samples directory. The examples may be run with sbt: `samples-<sample_name>/run`.
 
-Since flow integrates into the Akka-IO framework, a good resource on its general design is the framework's [documentation](http://doc.akka.io/docs/akka/2.3.10/scala/io.html).
+Since flow integrates into the Akka-IO framework, a good resource on its general design is the framework's [documentation](http://doc.akka.io/docs/akka/2.3.12/scala/io.html).
 
 ## Native side
 Since hardware is involved in serial communication, a Scala-only solution is not possible. Nevertherless, the native code is kept simple and minimalistic with the burden of dealing with threads left to Scala. The code aims to be POSIX compliant and therefore easily portable.

@@ -7,9 +7,9 @@ import NativeKeys._
 object FlowBuild extends Build {
   
   lazy val commonSettings: Seq[Setting[_]] = Seq(
-    version := "2.2.0",
-    scalaVersion in ThisBuild := "2.11.6",
-    crossScalaVersions in ThisBuild := Seq("2.10.5", "2.11.6"),
+    version := "2.2.1",
+    scalaVersion in ThisBuild := "2.11.7",
+    crossScalaVersions in ThisBuild := Seq("2.10.5", "2.11.7"),
     organization := "com.github.jodersky",
     licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause"))),
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-target:jvm-1.7")
@@ -42,7 +42,7 @@ object FlowBuild extends Build {
       javahHeaderDirectory := (baseDirectory in ThisBuild).value / "flow-native" / "src",
       javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial"),
       compileOrder in Compile := CompileOrder.Mixed,
-      libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.11"
+      libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.12"
     )
   )
 
