@@ -1,3 +1,6 @@
+# Version 2.2.2
+- Upgrade Akka to 2.3.13
+
 # Version 2.2.1
 - Upgrade Akka to 2.3.12
 - Upgrade Scala to 2.11.7
