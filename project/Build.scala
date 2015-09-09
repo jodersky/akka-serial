@@ -5,11 +5,13 @@ import NativeKeys._
 
 
 object FlowBuild extends Build {
+
+  val scalaVersions = List("2.11.7", "2.10.5")
   
   lazy val commonSettings: Seq[Setting[_]] = Seq(
     version := "2.2.3-SNAPSHOT",
-    scalaVersion in ThisBuild := "2.11.7",
-    crossScalaVersions in ThisBuild := Seq("2.10.5", "2.11.7"),
+    scalaVersion in ThisBuild := scalaVersions.head,
+    crossScalaVersions in ThisBuild := scalaVersions.reverse,
     organization := "com.github.jodersky",
     licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause"))),
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-target:jvm-1.7")

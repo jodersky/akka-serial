@@ -29,7 +29,7 @@ object JniDefaults {
         clazz)
       val cmd = parts.mkString(" ")
       val ev = Process(cmd) ! streams.value.log
-      if (ev != 0) throw new RuntimeException("Error occured running javah.")
+      if (ev != 0) throw new RuntimeException(s"Error occured running javah. Exit code: ${ev}")
     }
     IO.listFiles(javahHeaderDirectory.value)
   }

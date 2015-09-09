@@ -33,7 +33,7 @@ object NativeDefaults {
             "./configure " +
             "--prefix=" + out.getAbsolutePath + " " +
             "--libdir=" + out.getAbsolutePath + " " +
-            "--disable-versioned-lib",
+            "--disable-versioned-lib", //Disable producing versioned library files, not needed for fat jars.
             build)
 
         val make = Process("make", build)
@@ -42,7 +42,7 @@ object NativeDefaults {
 
         val ev = configure #&& make #&& makeInstall ! log
         if (ev != 0)
-            throw new RuntimeException(s"Building native library failed.")
+            throw new RuntimeException(s"Building native library failed. Exit code: ${ev}")
 
         (out ** ("*.la")).get.foreach(_.delete())
 
@@ -67,7 +67,7 @@ object NativeDefaults {
         managedMappings ++ unmanagedMappings
     }
 
-    def os = System.getProperty("os.name").toLowerCase.filter(_ != ' ')
+    def os = System.getProperty("os.name").toLowerCase.filter(c => !c.isWhitespace)
     def arch = System.getProperty("os.arch").toLowerCase
 
     val settings: Seq[Setting[_]] = Seq(

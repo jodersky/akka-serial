@@ -1,3 +1,3 @@
 # Native backend for flow
 
-Refer to documentation/building.md for information on how to build.
+Refer to Documentation/building.md for information on how to build.
