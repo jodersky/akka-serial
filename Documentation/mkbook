@@ -1,0 +1,13 @@
+#!/bin/sh
+
+pandoc -S --toc -N \
+       -V documentclass=report \
+       -V fontsize=11pt \
+       meta.yml \
+       getting-started.md \
+       basics.md \
+       watching.md \
+       building.md \
+       --standalone \
+       -t html5 \
+       -o flow.html
