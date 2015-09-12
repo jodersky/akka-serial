@@ -36,7 +36,7 @@ object FlowBuild extends Build {
   )
   
   lazy val main: Project = (
-    Project("main", file("flow-main"))
+    Project("flow-main", file("flow-main"))
     settings(commonSettings: _*)
     settings(JniDefaults.settings: _*)
     settings(
@@ -49,7 +49,7 @@ object FlowBuild extends Build {
   )
 
   lazy val native: Project = (
-    Project("native", file("flow-native-sbt"))
+    Project("flow-native", file("flow-native-sbt"))
     settings(commonSettings: _*)
     settings(NativeDefaults.settings: _*)
     settings(
@@ -60,7 +60,7 @@ object FlowBuild extends Build {
   )
 
   lazy val samplesTerminal = (
-    Project("samples-terminal", file("flow-samples") / "terminal")
+    Project("flow-samples-terminal", file("flow-samples") / "terminal")
     settings(commonSettings: _*)
     settings(runSettings: _*)
     dependsOn(main)
@@ -73,7 +73,7 @@ object FlowBuild extends Build {
   )
 
   lazy val samplesWatcher = (
-    Project("samples-watcher", file("flow-samples") / "watcher")
+    Project("flow-samples-watcher", file("flow-samples") / "watcher")
     settings(commonSettings: _*)
     settings(runSettings: _*)
     dependsOn(main)
