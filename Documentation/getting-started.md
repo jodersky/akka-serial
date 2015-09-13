@@ -1,7 +1,7 @@
 # Getting Started
 Flow uses SBT as build system. To get started, include a dependency to flow-core in your project:
 
-    libraryDependencies += "com.github.jodersky" %% "flow" % "2.2.2"
+    libraryDependencies += "com.github.jodersky" %% "flow" % "2.2.3"
 
 ## Including Native Library
 *NOTICE: flow uses native libraries to back serial communication, therefore before you can run any application depending on flow you must include flow's native library! To do so, you have two options.*
@@ -9,7 +9,7 @@ Flow uses SBT as build system. To get started, include a dependency to flow-core
 ### The Easy Way
 In case your OS/architecture combination is present in the table below, add a second dependency to your project:
 
-    libraryDependencies += "com.github.jodersky" % "flow-native" % "2.2.2"
+    libraryDependencies += "com.github.jodersky" % "flow-native" % "2.2.3"
 
 | OS                | Architecture                | Notes                                                                           |
 |-------------------|-----------------------------|---------------------------------------------------------------------------------|
