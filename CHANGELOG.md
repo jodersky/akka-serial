@@ -1,5 +1,6 @@
 # Version 2.2.3
 - Include additional info in POM generation, necessary to sync with maven central.
+- Upgrade sbt to 0.13.9
 
 # Version 2.2.2
 - Upgrade Akka to 2.3.13
