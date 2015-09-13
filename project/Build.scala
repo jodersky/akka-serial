@@ -14,7 +14,20 @@ object FlowBuild extends Build {
     crossScalaVersions in ThisBuild := scalaVersions.reverse,
     organization := "com.github.jodersky",
     licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause"))),
-    scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-target:jvm-1.7")
+    scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-target:jvm-1.7"),
+    pomIncludeRepository := { _ => false },
+    pomExtra := {
+      <scm>
+        <url>git@github.com:jodersky/flow.git</url>
+        <connection>scm:git:git@github.com:jodersky/flow.git</connection>
+      </scm>
+      <developers>
+        <developer>
+          <id>jodersky</id>
+          <name>Jakob Odersky</name>
+        </developer>
+      </developers>
+    }
   )
   
   lazy val runSettings: Seq[Setting[_]] = Seq(

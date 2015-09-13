@@ -1,3 +1,6 @@
+# Version 2.2.3
+- Include additional info in POM generation, necessary to sync with maven central.
+
 # Version 2.2.2
 - Upgrade Akka to 2.3.13
 
