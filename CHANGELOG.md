@@ -1,3 +1,6 @@
+# Version 2.2.4
+- Include even more info in POM generation, necessary to sync with maven central.
+
 # Version 2.2.3
 - Include additional info in POM generation, necessary to sync with maven central.
 - Upgrade sbt to 0.13.9
