@@ -1,3 +1,8 @@
+# Version 2.3.0
+- Upgrade Akka to 2.4.0, requiring a minimum JRE version of 1.8
+- Drop support for Scala 2.10
+- Add support for Scala 2.12
+
 # Version 2.2.4
 - Include even more info in POM generation, necessary to sync with maven central.
 

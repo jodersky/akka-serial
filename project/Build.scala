@@ -6,13 +6,13 @@ import NativeKeys._
 
 object FlowBuild extends Build {
 
-  val scalaVersions = List("2.11.7", "2.10.5")
+  val scalaVersions = List("2.11.7", "2.12.0-M2")
   
   lazy val commonSettings: Seq[Setting[_]] = Seq(
-    version := "2.2.5-SNAPSHOT",
+    version := "2.3.0-SNAPSHOT",
     scalaVersion in ThisBuild := scalaVersions.head,
     crossScalaVersions in ThisBuild := scalaVersions.reverse,
-    scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-target:jvm-1.7"),
+    scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-target:jvm-1.8"),
     organization := "com.github.jodersky",
     licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause"))),
     homepage := Some(url("https://github.com/jodersky/flow")),
@@ -58,7 +58,7 @@ object FlowBuild extends Build {
       javahHeaderDirectory := (baseDirectory in ThisBuild).value / "flow-native" / "src",
       javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial"),
       compileOrder in Compile := CompileOrder.Mixed,
-      libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.13"
+      libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.4.0"
     )
   )
 
