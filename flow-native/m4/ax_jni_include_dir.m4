@@ -65,11 +65,8 @@ else
     _JTOPDIR=`echo "$_ACJNI_FOLLOWED" | sed -e 's://*:/:g' -e 's:/[[^/]]*$::'`
 fi
 
-case "$host_os" in
-        darwin*)        _JTOPDIR=`echo "$_JTOPDIR" | sed -e 's:/[[^/]]*$::'`
-                        _JINC="$_JTOPDIR/Headers";;
-        *)              _JINC="$_JTOPDIR/include";;
-esac
+_JINC="$_JTOPDIR/include"
+
 _AS_ECHO_LOG([_JTOPDIR=$_JTOPDIR])
 _AS_ECHO_LOG([_JINC=$_JINC])
 
@@ -93,6 +90,7 @@ osf*)           _JNI_INC_SUBDIRS="alpha";;
 solaris*)       _JNI_INC_SUBDIRS="solaris";;
 mingw*)     _JNI_INC_SUBDIRS="win32";;
 cygwin*)    _JNI_INC_SUBDIRS="win32";;
+darwin*)    _JNI_INC_SUBDIRS="darwin";;
 *)              _JNI_INC_SUBDIRS="genunix";;
 esac
 

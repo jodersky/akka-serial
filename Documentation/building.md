@@ -39,8 +39,9 @@ Several steps are involved in producing the native library:
 
 2. Compile
    
-   1. Check availability of dependencies: C compiler and JDK
-   2. Run `./configure && make`
+    1. Check availability of dependencies: C compiler and JDK (1.7 or above)
+    2. Run `./configure && make`.
+       *Note: should you encounter an error about a missing "jni.h" file, try setting the JAVA_HOME environment variable to point to base path of your JDK installation.*
 
 3. Install
 
