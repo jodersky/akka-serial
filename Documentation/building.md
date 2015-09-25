@@ -58,7 +58,7 @@ The native library produced in the previous step may be bundled into a "fat" jar
 Note: an important feature of fat jars is to include native libraries for several platforms. To copy binaries compiled on other platforms to the fat jar, place them in a subfolder of `flow-native-sbt/lib_native`. The subfolder should have the name `$(os.name)-$(os.arch)`, where `os.name` and `os.arch` are the Java system properties of the respective platforms.
 
 ### Note About Versioning
-The project and package versions follow a sematic pattern: `M.m.p`, where
+The project and package versions follow a [sematic](http://semver.org/) pattern: `M.m.p`, where
 
 - `M` is the major version, representing backwards incompatible changes
 
