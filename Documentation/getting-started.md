@@ -21,10 +21,10 @@ In case your OS/architecture combination is present in the table below, add a se
 
     libraryDependencies += "com.github.jodersky" % "flow-native" % "2.3.0"
 
-| OS                | Architecture                | Notes                                                                           |
-|-------------------|-----------------------------|---------------------------------------------------------------------------------|
-| Linux             | x86<br/>x86_64<br/>ARM (v7) | A user accessing a serial port will probably need to be in the `dialout` group. |
-| Mac OS X          | x86_64                      |                                                                                 |
+| OS                | Architecture                | Notes                                                                                                                  |
+|-------------------|-----------------------------|------------------------------------------------------------------------------------------------------------------------|
+| Linux             | x86<br/>x86_64<br/>ARM (v7) | A user accessing a serial port will usually need to be in the `dialout` group, otherwise permission errors will occur. |
+| Mac OS X          | x86_64                      |                                                                                                                        |
 
 This will add a jar to your classpath containing native libraries for various platforms. At run time, the correct library for the current platform is selected, extracted and loaded. This solution enables running applications seamlessly, as if they were pure JVM applications.
 However, since the JVM does not enable full determination of the current platform (only OS and rough architecture are known), only a couple of platforms can be supported through this solution at the same time.
