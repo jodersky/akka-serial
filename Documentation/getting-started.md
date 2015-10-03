@@ -1,7 +1,9 @@
 # Getting Started
 Flow uses SBT as build system. To get started, include a dependency to flow in your project:
 
-	libraryDependencies += "com.github.jodersky" %% "flow" % "2.2.4"
+	libraryDependencies += "com.github.jodersky" %% "flow" % "2.3.0"
+
+*Note: since version 2.3.0, flow depends on Akka 2.4, therefore requiring a minimum Java Runtime version of 1.8*
 
 Next, you need to include flow's native library that supports communication for serial devices.
 
@@ -17,7 +19,7 @@ It is recommended that you use the first option for testing purposes or end-user
 ### The Easy Way
 In case your OS/architecture combination is present in the table below, add a second dependency to your project:
 
-    libraryDependencies += "com.github.jodersky" % "flow-native" % "2.2.4"
+    libraryDependencies += "com.github.jodersky" % "flow-native" % "2.3.0"
 
 | OS                | Architecture                | Notes                                                                           |
 |-------------------|-----------------------------|---------------------------------------------------------------------------------|
