@@ -48,6 +48,26 @@ object NativeKeys {
 
 }
 
+//windows, as usual, needs special treatment
+object CygwinUtil {
+
+  def onCygwin: Boolean = {
+    val uname = Process("uname").lines.headOption
+    uname map {
+      _.toLowerCase.startsWith("cygwin")
+    } getOrElse {
+      false
+    }
+  }
+
+  def toUnixPath(path: String): String = if (onCygwin) {
+    Process(s"cygpath ${path}").lines.head
+  } else {
+    path
+  }
+  
+}
+
 /** Provides implementations of wrapper tasks suitable for projects using Autotools */
 object Autotools {
   import NativeKeys._
@@ -64,14 +84,14 @@ object Autotools {
     val log = streams.value.log
     val src = (sourceDirectory in Native).value
     val out = (target in Native).value
-    val outPath = out.getAbsolutePath
+    val outPath = CygwinUtil.toUnixPath(out.getAbsolutePath)
 
     val configure = if ((src / "config.status").exists) {
-      Process("./config.status", src)
+      Process("sh ./config.status", src)
     } else {
       Process(
         //Disable producing versioned library files, not needed for fat jars.
-        s"./configure --prefix=$outPath --libdir=$outPath --disable-versioned-lib",
+        s"sh ./configure --prefix=$outPath --libdir=$outPath --disable-versioned-lib",
         src
       )
     }

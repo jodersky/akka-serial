@@ -43,6 +43,21 @@ AC_ARG_ENABLE([versioned-lib],
 
 AM_CONDITIONAL([ENABLE_VERSIONED_LIB], [test "$enable_versioned_lib" = "yes"])
 
+EXTRA_CFLAGS=""
+EXTRA_LDFLAGS=""
+
+case "$host_os" in
+	cygwin*)
+		EXTRA_CFLAGS="-D __int64=int64_t"
+		EXTRA_LDFLAGS="-no-undefined"
+		;;
+	*)
+		;;
+esac
+
+AC_SUBST([EXTRA_CFLAGS])
+AC_SUBST([EXTRA_LDFLAGS])
+
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([src/Makefile])
 AC_OUTPUT
