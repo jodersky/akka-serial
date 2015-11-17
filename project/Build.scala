@@ -1,15 +1,15 @@
-import sbt._
-import Keys._
 import JniKeys._
-import NativeKeys._
-
+import native.NativeDefaults
+import native.NativeKeys._
+import sbt._
+import sbt.Keys._
 
 object FlowBuild extends Build {
 
   val scalaVersions = List("2.11.7", "2.12.0-M2")
-  
+
   lazy val commonSettings: Seq[Setting[_]] = Seq(
-    version := "2.3.1-SNAPSHOT",
+    version := "2.4.0-SNAPSHOT",
     scalaVersion in ThisBuild := scalaVersions.head,
     crossScalaVersions in ThisBuild := scalaVersions.reverse,
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-target:jvm-1.8"),
@@ -30,7 +30,7 @@ object FlowBuild extends Build {
       </developers>
     }
   )
-  
+
   lazy val runSettings: Seq[Setting[_]] = Seq(
     fork := true,
     connectInput in run := true,
@@ -48,7 +48,7 @@ object FlowBuild extends Build {
       publishTo := Some(Resolver.file("Unused transient repository", target.value / "unusedrepo")) // make sbt-pgp happy
     )
   )
-  
+
   lazy val main: Project = (
     Project("flow-main", file("flow-main"))
     settings(commonSettings: _*)
@@ -69,7 +69,8 @@ object FlowBuild extends Build {
     settings(
       name := "flow-native",
       crossPaths := false,
-      nativeBuildDirectory := (baseDirectory in ThisBuild).value / "flow-native"
+      libraryPrefix in Compile := "com/github/jodersky/flow/native",
+      sourceDirectory in Native := (baseDirectory in ThisBuild).value / "flow-native"
     )
   )
 
@@ -78,12 +79,7 @@ object FlowBuild extends Build {
     settings(commonSettings: _*)
     settings(runSettings: _*)
     dependsOn(main)
-
-    //kind of dirty, but it gets the sample to run without installing native libraries
-    settings(
-      (run in Compile) <<= (run in Compile).dependsOn(nativeBuild in native),
-      javaOptions += "-Djava.library.path=" + (nativeOutputDirectory in native).value.getAbsolutePath()
-    )    
+    dependsOn(native)
   )
 
   lazy val samplesWatcher = (

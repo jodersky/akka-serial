@@ -1,83 +1,151 @@
-import sbt._
-import Keys._
+package native
+
 import java.io.File
-import java.util.jar.Manifest
+import sbt._
+import sbt.Keys._
+import scala.util.Try
+
+/** A platform is a the representation of an os-architecture combination */
+case class Platform(kernel: String, arch: String) {
+  val id = kernel + "-" + arch
+}
+
+object Platform {
+
+  /** Create a platform with spaces stripped and case normalized. */
+  def normalize(kernel: String, arch: String) = Platform(
+    kernel.toLowerCase.filter(!_.isWhitespace),
+    arch
+  )
+
+  /** Run 'uname' to determine current platform. Returns None if uname does not exist. */
+  lazy val uname: Option[Platform] = {
+    val lines = Try { Process("uname -sm").lines.head }.toOption
+    lines.map { line =>
+      val parts = line.split(" ")
+      if (parts.length != 2) {
+        sys.error("Could not determine platform: 'uname -sm' returned unexpected string: " + line)
+      } else {
+        Platform.normalize(parts(0), parts(1))
+      }
+    }
+  }
+
+}
 
 object NativeKeys {
 
-    val nativeBuildDirectory = settingKey[File]("Directory containing native build scripts.")
-    val nativeTargetDirectory = settingKey[File]("Base directory to store native products.")
-    val nativeOutputDirectory = settingKey[File]("Actual directory where native products are stored.")
-    val nativePackageUnmanagedDirectory = settingKey[File]("Directory containing external products that will be copied to the native jar.")
+  val Native = config("native")
 
-    val nativeClean = taskKey[Unit]("Clean native build.")
-    val nativeBuild = taskKey[File]("Invoke native build.")
+  val platform = settingKey[Platform]("Platform of the system this build is being run on.")
+
+  //fat jar settings
+  val libraryPrefix = settingKey[String]("A string to be prepended to native products when packaged.")
+  val libraryManifest = settingKey[String]("Name of a file that will contain a list of all native products.")
+  val libraryResourceDirectory = settingKey[File](
+    "Directory that contains native products when they treated as resources."
+  )
+
+}
+
+/** Provides implementations of wrapper tasks suitable for projects using Autotools */
+object Autotools {
+  import NativeKeys._
+  import sbt.Def.Initialize
+
+  private val clean: Initialize[Task[Unit]] = Def.task {
+    val log = streams.value.log
+    val src = (sourceDirectory in Native).value
+
+    Process("make distclean", src) #|| Process("make clean", src) ! log
+  }
+
+  private val lib: Initialize[Task[File]] = Def.task {
+    val log = streams.value.log
+    val src = (sourceDirectory in Native).value
+    val out = (target in Native).value
+    val outPath = out.getAbsolutePath
+
+    val configure = if ((src / "config.status").exists) {
+      Process("./config.status", src)
+    } else {
+      Process(
+        //Disable producing versioned library files, not needed for fat jars.
+        s"./configure --prefix=$outPath --libdir=$outPath --disable-versioned-lib",
+        src
+      )
+    }
+
+    val make = Process("make", src)
+
+    val makeInstall = Process("make install", src)
+
+    val ev = configure #&& make #&& makeInstall ! log
+    if (ev != 0)
+      throw new RuntimeException(s"Building native library failed. Exit code: ${ev}")
+
+    val products: List[File] = (out ** ("*" -- "*.la")).get.filter(_.isFile).toList
+
+    //only one produced library is expected
+    products match {
+      case Nil =>
+        sys.error("No files were created during compilation, " +
+          "something went wrong with the autotools configuration.")
+      case head :: Nil =>
+        head
+      case head :: tail =>
+        log.warn("More than one file was created during compilation, " +
+          s"only the first one (${head.getAbsolutePath}) will be used.")
+        head
+    }
+  }
+
+  val settings: Seq[Setting[_]] = Seq(
+    Keys.clean in Native := Autotools.clean.value,
+    Keys.compile in Native := {
+      lib.value
+      sbt.inc.Analysis.Empty
+    },
+    Keys.packageBin in Native := {
+      lib.value
+    }
+  )
 }
 
 object NativeDefaults {
-    import NativeKeys._
+  import NativeKeys._
 
-    val autoClean = Def.task {
-        val log = streams.value.log
-        val build = nativeBuildDirectory.value
+  /** Copy native product to resource directory and create manifest */
+  private val libraryResources = Def.task {
+    val out = (libraryResourceDirectory in Compile).value
 
-        Process("make distclean", build) #|| Process("make clean", build) ! log
-    }
+    val product = (packageBin in Native).value
 
-    val autoLib = Def.task {
-        val log = streams.value.log
-        val build = nativeBuildDirectory.value
-        val out = nativeOutputDirectory.value
+    val productResource = out / product.name
+    val manifestResource = out / (libraryManifest in Compile).value
 
-        val configure = Process(
-            "./configure " +
-            "--prefix=" + out.getAbsolutePath + " " +
-            "--libdir=" + out.getAbsolutePath + " " +
-            "--disable-versioned-lib", //Disable producing versioned library files, not needed for fat jars.
-            build)
+    IO.copyFile(product, productResource)
+    IO.write(manifestResource, productResource.name)
 
-        val make = Process("make", build)
+    Seq(productResource, manifestResource)
+  }
 
-        val makeInstall = Process("make install", build)
+  private val fatJarSettings = Seq(
+    libraryPrefix in Compile := "",
+    libraryManifest in Compile := "library",
+    libraryResourceDirectory in Compile := (resourceManaged in Compile).value /
+      (libraryPrefix in Compile).value / (platform in Native).value.id,
+    unmanagedResourceDirectories in Compile += (baseDirectory).value / "lib_native",
+    resourceGenerators in Compile += libraryResources.taskValue
+  )
 
-        val ev = configure #&& make #&& makeInstall ! log
-        if (ev != 0)
-            throw new RuntimeException(s"Building native library failed. Exit code: ${ev}")
-
-        (out ** ("*.la")).get.foreach(_.delete())
-
-        out
-    }
-
-    val nativePackageMappings = Def.task {
-        val managedDir = nativeTargetDirectory.value
-        val unmanagedDir = nativePackageUnmanagedDirectory.value
-
-        val managed = (nativeBuild.value ** "*").get
-        val unmanaged = (unmanagedDir ** "*").get
-
-        val managedMappings: Seq[(File, String)] = for (file <- managed; if file.isFile) yield {
-            file -> ("native/" + (file relativeTo managedDir).get.getPath)
-        }
-
-        val unmanagedMappings: Seq[(File, String)] = for (file <- unmanaged; if file.isFile) yield {
-            file -> ("native/" + (file relativeTo unmanagedDir).get.getPath)
-        }
-
-        managedMappings ++ unmanagedMappings
-    }
-
-    def os = System.getProperty("os.name").toLowerCase.filter(c => !c.isWhitespace)
-    def arch = System.getProperty("os.arch").toLowerCase
-
-    val settings: Seq[Setting[_]] = Seq(
-        nativeTargetDirectory := target.value / "native",
-        nativeOutputDirectory := nativeTargetDirectory.value / (os + "-" + arch),
-        nativeClean := autoClean.value,
-        nativeBuild := autoLib.value,
-        nativePackageUnmanagedDirectory := baseDirectory.value / "lib_native",
-        mappings in (Compile, packageBin) ++= nativePackageMappings.value
-    )
+  val settings: Seq[Setting[_]] = Seq(
+    platform in Native := Platform.uname.getOrElse {
+      System.err.println("Warning: Cannot determine platform! It will be set to 'unknown'.")
+      Platform("unknown", "unknown")
+    },
+    target in Native := target.value / "native" / (platform in Native).value.id
+  ) ++ fatJarSettings ++ Autotools.settings
 
 }
 
