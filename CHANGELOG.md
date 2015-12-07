@@ -1,3 +1,7 @@
+# Version 2.3.1
+- Upgrade Akka to 2.4.1
+- Upgrade Scala to support 2.12.0-M3
+
 # Version 2.3.0
 - Upgrade Akka to 2.4.0, requiring a minimum JRE version of 1.8
 - Drop support for Scala 2.10

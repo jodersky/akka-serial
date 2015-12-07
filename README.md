@@ -76,7 +76,7 @@ object Terminal {
 
 More examples on flow's usage are located in the `flow-samples` directory. The examples may be run with sbt: `flow-samples-<sample_name>/run`.
 
-Since flow integrates into the Akka-IO framework, a good resource on its general design is the framework's [documentation](http://doc.akka.io/docs/akka/2.4.0/scala/io.html).
+Since flow integrates into the Akka-IO framework, a good resource on its general design is the framework's [documentation](http://doc.akka.io/docs/akka/2.4.1/scala/io.html).
 
 ## Native side
 Since hardware is involved in serial communication, a Scala-only solution is not possible. Nevertherless, the native code is kept simple and minimalistic with the burden of dealing with threads left to Scala. The code aims to be POSIX compliant and therefore easily portable.
