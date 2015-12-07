@@ -6,7 +6,7 @@ import NativeKeys._
 
 object FlowBuild extends Build {
 
-  val scalaVersions = List("2.11.7", "2.12.0-M2")
+  val scalaVersions = List("2.11.7", "2.12.0-M3")
   
   lazy val commonSettings: Seq[Setting[_]] = Seq(
     version := "2.3.1-SNAPSHOT",
@@ -58,7 +58,7 @@ object FlowBuild extends Build {
       javahHeaderDirectory := (baseDirectory in ThisBuild).value / "flow-native" / "src",
       javahClasses := Seq("com.github.jodersky.flow.internal.NativeSerial"),
       compileOrder in Compile := CompileOrder.Mixed,
-      libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.4.0"
+      libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.4.1"
     )
   )
 
