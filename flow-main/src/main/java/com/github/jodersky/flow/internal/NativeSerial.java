@@ -3,6 +3,8 @@ package com.github.jodersky.flow.internal;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import ch.jodersky.jni.NativeLoader;
+
 import com.github.jodersky.flow.AccessDeniedException;
 import com.github.jodersky.flow.InvalidSettingsException;
 import com.github.jodersky.flow.NoSuchPortException;
@@ -25,7 +27,7 @@ import com.github.jodersky.flow.PortInterruptedException;
 final class NativeSerial {
 	
 	static {
-		NativeLoader.load("flow3");
+		NativeLoader.load("/com/github/jodersky/flow", "flow3");
 	}
 	
 	final static int PARITY_NONE = 0;

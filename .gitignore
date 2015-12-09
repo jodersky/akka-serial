@@ -22,6 +22,7 @@ project/plugins/project/
 .ensime_cache
 
 # Native
+lib_native/
 *.o
 *.so*
 *.jnilib
