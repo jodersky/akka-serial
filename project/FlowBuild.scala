@@ -39,7 +39,7 @@ object FlowBuild extends Build {
     aggregate(main, native)
     settings(commonSettings: _*)
     settings(
-      publishArtifact := false,
+      //publishArtifact := false,
       publish := (),
       publishLocal := (),
       publishTo := Some(Resolver.file("Unused transient repository", target.value / "unusedrepo")) // make sbt-pgp happy
@@ -67,7 +67,7 @@ object FlowBuild extends Build {
   
   lazy val samplesWatcher = Project(
     id = "flow-samples-watcher",
-    base = file("flow-samples"),
+    base = file("flow-samples") / "watcher",
     settings = commonSettings,
     dependencies = Seq(main, native % Runtime)
   )

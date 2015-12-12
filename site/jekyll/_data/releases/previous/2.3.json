@@ -1,0 +1,54 @@
+{   
+    "version": "2.3.1",
+    "native_version": {
+	"major": "3",
+	"minor": "0",
+	"patch": "1"
+    },
+    "downloads":[
+	{
+	    "name": "Main Jar",
+	    "links": [
+		{
+		    "name": ".jar (scala 2.11)",
+		    "url": "https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow_2.11/2.3.1/flow_2.11-2.3.1.jar"
+		},
+		{
+		    "name": ".asc (signature)",
+		    "url": "https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow_2.11/2.3.1/flow_2.11-2.3.1.jar.asc"
+		}
+	    ]
+	},
+	{
+	    "name": "Native Jar",
+	    "links": [
+		{
+		    "name": ".jar",
+		    "url" : "https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.3.1/flow-native-2.3.1.jar"
+		},
+		{
+		    "name": ".asc (signature)",
+		    "url" : "https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.3.1/flow-native-2.3.1.jar.asc"
+		}
+	    ]
+	}
+    ],
+    "platforms":[
+	{
+	    "arch":"x86_64",
+	    "kernel":"Linux"
+	},
+	{
+	    "arch":"i686",
+	    "kernel":"Linux"
+	},
+	{
+	    "arch":"armv7l",
+	    "kernel":"Linux"
+	},
+	{
+	    "arch":"x86_64",
+	    "kernel":"Darwin (MacOSX)"
+	}
+    ]
+}

@@ -1,0 +1,67 @@
+{   
+    "version": "2.4.0-RC1",
+    "native_version": {
+	"major": "3",
+	"minor": "0",
+	"patch": "1"
+    },
+    "downloads":[
+	{
+	    "name": "Main Jar",
+	    "links": [
+		{
+		    "name": ".jar (scala 2.11)",
+		    "url": "https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow_2.11/2.4.0-RC1/flow_2.11-2.4.0-RC1.jar"
+		},
+		{
+		    "name": ".asc (signature)",
+		    "url": "https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow_2.11/2.4.0-RC1/flow_2.11-2.4.0-RC1.jar.asc"
+		}
+	    ]
+	},
+	{
+	    "name": "Native Jar",
+	    "links": [
+		{
+		    "name": ".jar",
+		    "url" : "https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.4.0-RC1/flow-native-2.4.0-RC1.jar"
+		},
+		{
+		    "name": ".asc (signature)",
+		    "url" : "https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.4.0-RC1/flow-native-2.4.0.jar-RC1.asc"
+		}
+	    ]
+	},
+	{
+	    "name": "Native Libraries",
+	    "links": [
+		{
+		    "name": ".tar.gz",
+		    "url" : "https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.4.0-RC1/flow-native-2.4.0-RC1.jar"
+		},
+		{
+		    "name": ".asc (signature)",
+		    "url" : "https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.4.0-RC1/flow-native-2.4.0.jar-RC1.asc"
+		}
+	    ]
+	}
+    ],
+    "platforms":[
+	{
+	    "arch":"x86_64",
+	    "kernel":"Linux"
+	},
+	{
+	    "arch":"i686",
+	    "kernel":"Linux"
+	},
+	{
+	    "arch":"armv7l",
+	    "kernel":"Linux"
+	},
+	{
+	    "arch":"x86_64",
+	    "kernel":"Darwin (Mac OSX)"
+	}
+    ]
+}
