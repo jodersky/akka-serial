@@ -1,3 +1,9 @@
+# Version 2.4.0-M1
+- Use sbt-jni plugin:
+    - More platforms can now be supported in fat jar
+    - Simplify build configuration
+- Create website
+
 # Version 2.3.1
 - Upgrade Akka to 2.4.1
 - Upgrade Scala to support 2.12.0-M3
