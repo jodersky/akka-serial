@@ -1,3 +1,4 @@
 # Site settings
 title: flow
 description: Serial communication library for Akka and Scala.
+url: "https://jodersky.github.io/flow"
