@@ -10,7 +10,7 @@ layout: page
 Flow uses SBT as build system. To get started, include a dependency to flow in your project:
 
 ~~~scala
-libraryDependencies += "com.github.jodersky" %% "flow" % "{{site.data.releases.current.version}}"
+libraryDependencies += "com.github.jodersky" %% "flow" % "{{site.data.current.version}}"
 ~~~
 
 Next, you need to include flow's native library that supports communication for serial devices.
@@ -28,18 +28,18 @@ It is recommended that you use the first option for testing purposes or end-user
 In case your OS/architecture combination is present in the "supported platforms" table in the downloads section, add a second dependency to your project:
 
 ~~~scala
-libraryDependencies += "com.github.jodersky" % "flow-native" % "{{site.data.releases.current.version}}" % "runtime"
+libraryDependencies += "com.github.jodersky" % "flow-native" % "{{site.data.current.version}}" % "runtime"
 ~~~
 
 This will add a jar to your classpath containing native libraries for various platforms. At run time, the correct library for the current platform is selected, extracted and loaded. This solution enables running applications seamlessly, as if they were pure JVM applications.
 
 ### Maximum Portability
-First, obtain a copy of the native library, either by [building flow](#building-from-source) or by [downloading]({{site.url}}/downloads) a precompiled version. In order to work with this version of flow, native libraries need to be of major version {{site.data.releases.current.native_version.major}} and minor version greater or equal to {{site.data.releases.current.native_version.minor}}. 
+First, obtain a copy of the native library, either by [building flow](#building-from-source) or by [downloading]({{site.url}}/downloads) a precompiled version. In order to work with this version of flow, native libraries need to be of major version {{site.data.current.native_version.major}} and minor version greater or equal to {{site.data.current.native_version.minor}}. 
 
 Second, for every end-user application that relies on flow, manually add the native library for the current platform to the JVM's library path. This can be achieved through various ways, notably:
 
 - Per application:
-  Run your program with the command-line option ```-Djava.library.path=".:<folder containing libflow{{site.data.releases.current.native_version.major}}.so>"```. E.g. ```java -Djava.library.path=".:/home/<folder containing libflow{{site.data.releases.current.native_version.major}}.so>" -jar your-app.jar```
+  Run your program with the command-line option ```-Djava.library.path=".:<folder containing libflow{{site.data.current.native_version.major}}.so>"```. E.g. ```java -Djava.library.path=".:/home/<folder containing libflow{{site.data.current.native_version.major}}.so>" -jar your-app.jar```
 
 - System- or user-wide:
 
