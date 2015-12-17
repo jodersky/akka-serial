@@ -12,7 +12,7 @@ object FlowBuild extends Build {
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-target:jvm-1.8"),
     organization := "com.github.jodersky",
     licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause"))),
-    homepage := Some(url("https://github.com/jodersky/flow")),
+    homepage := Some(url("https://jodersky.github.io/flow")),
     pomIncludeRepository := { _ => false },
     pomExtra := {
       <scm>
