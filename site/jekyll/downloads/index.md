@@ -30,6 +30,10 @@ libraryDependencies += "com.github.jodersky" % "flow-native" % "{{site.data.curr
 [.jar](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.4.0-M1/flow-native-2.4.0-M1.jar)
 [.asc (signature)](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.4.0-M1/flow-native-2.4.0-M1.jar.asc)
 
+- Native Libraries
+[.tar.gz](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries.tar.gz)
+[(signature)](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries.tar.gz.asc)
+
 </div>
 
 <div class="col-sm-4">
