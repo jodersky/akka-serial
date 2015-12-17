@@ -1,1 +1,143 @@
-My GitHub Page
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Serial communication library for Akka and Scala.">
+
+	<link rel="shortcut icon" type="image/png" href="/assets/images/logo.png"/>
+
+	<title>flow</title>
+
+	<link rel="stylesheet" href="/assets/lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/assets/lib/fontawesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/assets/stylesheets/solarized-dark.css">
+	<link rel="stylesheet" href="/assets/stylesheets/main.css">
+
+	<script src="/assets/lib/jquery/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+	
+	
+<header>
+  <nav class="navbar navbar-static-top navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+	<a class="navbar-brand" href="/">
+	  <img src="/assets/images/logo.png" alt="flow logo">
+	  flow
+	</a>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+	<li><a href="/documentation">Documentation & Help</a></li>
+	<li><a href="/downloads">Download</a></li>
+	<li><a href="https://github.com/jodersky/flow">GitHub</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>Serial communication for Akka</h1>
+    <div class="row">
+      <div class="col-sm-6">
+	<h2>Highlights</h2>
+	<ul>
+	  <li>Reactive: only does work when required (no constant polling of ports or blocking IO)</li>
+	  <li>Integrates seamlessly with Akka</li>
+	  <li>Portable to POSIX systems</li>
+	  <li>Watchable ports: react to connection of new devices</li>
+	</ul>	
+      </div>
+      <div class="col-sm-6">
+	<h2>Getting Started</h2>
+	<p>Have a look at the example below to get a feel of flow's usage, then follow the first steps of the <a href="/documentation/manual.html">user guide</a>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <h2>Quick Example</h2>
+  <div class="row">
+    <div class="col-md-12">
+      <figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">import</span> <span class="nn">akka.actor.</span><span class="o">{</span><span class="nc">Actor</span><span class="o">,</span> <span class="nc">ActorLogging</span><span class="o">,</span> <span class="nc">ActorRef</span><span class="o">,</span> <span class="nc">Props</span><span class="o">,</span> <span class="nc">Terminated</span><span class="o">}</span>
+<span class="k">import</span> <span class="nn">akka.io.IO</span>
+<span class="k">import</span> <span class="nn">akka.util.ByteString</span>
+<span class="k">import</span> <span class="nn">com.github.jodersky.flow.</span><span class="o">{</span><span class="nc">Serial</span><span class="o">,</span> <span class="nc">SerialSettings</span><span class="o">}</span>
+
+<span class="cm">/**
+ *  Sample actor representing a simple terminal.
+ */</span>
+<span class="k">class</span> <span class="nc">Terminal</span><span class="o">(</span><span class="n">port</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">settings</span><span class="k">:</span> <span class="kt">SerialSettings</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="k">with</span> <span class="nc">ActorLogging</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">context._</span>
+
+  <span class="k">override</span> <span class="k">def</span> <span class="n">preStart</span><span class="o">()</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="n">s</span><span class="s">"Requesting manager to open port: ${port}, baud: ${settings.baud}"</span><span class="o">)</span>
+    <span class="nc">IO</span><span class="o">(</span><span class="nc">Serial</span><span class="o">)</span> <span class="o">!</span> <span class="nc">Serial</span><span class="o">.</span><span class="nc">Open</span><span class="o">(</span><span class="n">port</span><span class="o">,</span> <span class="n">settings</span><span class="o">)</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">receive</span><span class="k">:</span> <span class="kt">Receive</span> <span class="o">=</span> <span class="o">{</span>
+
+    <span class="k">case</span> <span class="nc">Serial</span><span class="o">.</span><span class="nc">CommandFailed</span><span class="o">(</span><span class="n">cmd</span><span class="o">,</span> <span class="n">reason</span><span class="o">)</span> <span class="k">=&gt;</span>
+      <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="n">s</span><span class="s">"Connection failed, stopping terminal. Reason: ${reason}"</span><span class="o">)</span>
+      <span class="n">context</span> <span class="n">stop</span> <span class="n">self</span>
+
+    <span class="k">case</span> <span class="nc">Serial</span><span class="o">.</span><span class="nc">Opened</span><span class="o">(</span><span class="n">port</span><span class="o">)</span> <span class="k">=&gt;</span>
+      <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="n">s</span><span class="s">"Port ${port} is now open."</span><span class="o">)</span>
+      <span class="n">context</span> <span class="n">become</span> <span class="n">opened</span><span class="o">(</span><span class="n">sender</span><span class="o">)</span>
+      <span class="n">context</span> <span class="n">watch</span> <span class="n">sender</span> <span class="c1">// get notified in the event the operator crashes
+</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">opened</span><span class="o">(</span><span class="n">operator</span><span class="k">:</span> <span class="kt">ActorRef</span><span class="o">)</span><span class="k">:</span> <span class="kt">Receive</span> <span class="o">=</span> <span class="o">{</span>
+
+    <span class="k">case</span> <span class="nc">Serial</span><span class="o">.</span><span class="nc">Received</span><span class="o">(</span><span class="n">data</span><span class="o">)</span> <span class="k">=&gt;</span>
+      <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="n">s</span><span class="s">"Received data: "</span> <span class="o">+</span> <span class="n">data</span><span class="o">)</span>
+
+    <span class="k">case</span> <span class="nc">Serial</span><span class="o">.</span><span class="nc">Closed</span> <span class="k">=&gt;</span>
+      <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="s">"Operator closed normally, exiting terminal."</span><span class="o">)</span>
+      <span class="n">context</span> <span class="n">stop</span> <span class="n">self</span>
+
+    <span class="k">case</span> <span class="nc">Terminated</span><span class="o">(</span><span class="n">`operator`</span><span class="o">)</span> <span class="k">=&gt;</span>
+      <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="s">"Operator crashed unexpectedly, exiting terminal."</span><span class="o">)</span>
+      <span class="n">context</span> <span class="n">stop</span> <span class="n">self</span>
+
+    <span class="k">case</span> <span class="s">":q"</span> <span class="k">=&gt;</span>
+      <span class="n">operator</span> <span class="o">!</span> <span class="nc">Serial</span><span class="o">.</span><span class="nc">Close</span>
+
+    <span class="k">case</span> <span class="n">str</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=&gt;</span>
+      <span class="n">operator</span> <span class="o">!</span> <span class="nc">Serial</span><span class="o">.</span><span class="nc">Write</span><span class="o">(</span><span class="nc">ByteString</span><span class="o">(</span><span class="n">str</span><span class="o">))</span>
+
+  <span class="o">}</span>
+
+<span class="o">}</span>
+
+<span class="k">object</span> <span class="nc">Terminal</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">port</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">settings</span><span class="k">:</span> <span class="kt">SerialSettings</span><span class="o">)</span> <span class="k">=</span> <span class="nc">Props</span><span class="o">(</span><span class="n">classOf</span><span class="o">[</span><span class="kt">Terminal</span><span class="o">],</span> <span class="n">port</span><span class="o">,</span> <span class="n">settings</span><span class="o">)</span>
+<span class="o">}</span></code></pre></figure>
+
+    </div>
+  </div>
+  <p>More examples on flow's usage are available in the <a href="https://github.com/jodersky/flow/tree/master/flow-samples">flow-samples</a> source directory.</p>
+</div>
+
+<footer style="text-align: center;">
+  <p><small>Released under the terms of the 3-clause BSD license. Copyright (c) 2015 Jakob Odersky.</small></p>
+</footer>
+
+
+
+
+
+    <script src="/assets/lib/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,137 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Serial communication library for Akka and Scala.">
+
+	<link rel="shortcut icon" type="image/png" href="/assets/images/logo.png"/>
+
+	<title>flow - Downloads</title>
+
+	<link rel="stylesheet" href="/assets/lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/assets/lib/fontawesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/assets/stylesheets/solarized-dark.css">
+	<link rel="stylesheet" href="/assets/stylesheets/main.css">
+
+	<script src="/assets/lib/jquery/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+	
+	
+<header>
+  <nav class="navbar navbar-static-top navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+	<a class="navbar-brand" href="/">
+	  <img src="/assets/images/logo.png" alt="flow logo">
+	  flow
+	</a>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+	<li><a href="/documentation">Documentation & Help</a></li>
+	<li><a href="/downloads">Download</a></li>
+	<li><a href="https://github.com/jodersky/flow">GitHub</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+
+<div class="container">
+<h2 id="latest-version-small240-m11small">Latest Version <small>2.4.0-M11</small></h2>
+
+<div class="row">
+
+  <div class="col-sm-8">
+    <h3 id="sbt-coordinates-">Sbt Coordinates :</h3>
+    <p>Add the following tothe build configuration:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">//main artifact
+</span><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"com.github.jodersky"</span> <span class="o">%%</span> <span class="s">"flow"</span> <span class="o">%</span> <span class="s">"2.4.0-M11"</span>
+
+<span class="c1">//(optional) "fat" jar containing native libraries
+</span><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"com.github.jodersky"</span> <span class="o">%</span> <span class="s">"flow-native"</span> <span class="o">%</span> <span class="s">"2.4.0-M11"</span> <span class="o">%</span> <span class="s">"runtime"</span>
+</code></pre>
+    </div>
+
+    <h3 id="archives">Archives</h3>
+
+    <ul>
+      <li>
+        <p>Main Jar
+<a href="https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow_2.11/2.4.0-RC1/flow_2.11-2.4.0-RC1.jar">.jar (scala 2.11)</a>
+<a href="https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow_2.11/2.4.0-RC1/flow_2.11-2.4.0-RC1.jar.asc">.asc (signature)</a></p>
+      </li>
+      <li>
+        <p>Native Jar
+<a href="https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.4.0-RC1/flow-native-2.4.0-RC1.jar">.jar</a>
+<a href="https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.4.0-RC1/flow-native-2.4.0-RC1.jar.asc">.asc (signature)</a></p>
+      </li>
+    </ul>
+
+  </div>
+
+  <div class="col-sm-4">
+    <h3 id="supported-platforms">Supported Platforms*</h3>
+
+    <table class="table">
+	<thead>
+		<tr>
+			<th>Kernel</th><th>Architecture</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td rowspan="3">Linux</td><td>x86_64</td></tr>
+		<tr><td>x86</td></tr>
+		<tr><td>armv7l</td></tr>
+		<tr><td>Darwin (Mac OSX)</td><td>x86_64</td></tr>
+	</tbody>
+</table>
+
+    <p class="small">*These are the platforms for which a native library is included in the release.
+Flow is POSIX compatible so it can be built for a lot more platforms.</p>
+  </div>
+
+</div>
+
+<h2 id="release-notes">Release Notes</h2>
+<p>Consult the <a href="https://github.com/jodersky/flow/blob/master/CHANGELOG.md">release notes</a> for important changes.</p>
+
+<h2 id="requirements">Requirements</h2>
+<p>Flow depends on Akka 2.4 and requires a Java runtime version of 1.8.</p>
+
+<h2 id="previous-versions">Previous Versions</h2>
+
+<h3 id="section">2.3.1</h3>
+
+<ul>
+  <li>
+    <p>Main Jar
+<a href="https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow_2.11/2.3.1/flow_2.11-2.3.1.jar">.jar (scala 2.11)</a>
+<a href="https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow_2.11/2.3.1/flow_2.11-2.3.1.jar.asc">.asc (signature)</a></p>
+  </li>
+  <li>
+    <p>Native Jar
+<a href="https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.3.1/flow-native-2.3.1.jar">.jar</a>
+<a href="https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.3.1/flow-native-2.3.1.jar.asc">.asc (signature)</a></p>
+  </li>
+</ul>
+
+<h3 id="older-releases">Older Releases</h3>
+<p>Archived releases are available in <a href="https://github.com/jodersky/flow/releases">GitHub releases</a>.</p>
+
+</div>
+
+
+
+
+    <script src="/assets/lib/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
