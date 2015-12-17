@@ -2,7 +2,7 @@
 [![Join the chat at https://gitter.im/jodersky/flow](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jodersky/flow?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # flow
-Serial communication library for Scala, designed to be reactive, lightweight and easily integrable with Akka applications. See the [website]("https://jodersky.github.io/flow") for a guide.
+Serial communication library for Scala, designed to be reactive, lightweight and easily integrable with Akka applications. See the [website](https://jodersky.github.io/flow) for a guide.
 
 ## Highlights
 - Reactive: only does work when required (no constant polling of ports or blocking IO)
