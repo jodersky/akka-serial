@@ -27,12 +27,6 @@ object FlowBuild extends Build {
       </developers>
     }
   )
-  
-  lazy val runSettings: Seq[Setting[_]] = Seq(
-    fork := true,
-    connectInput in run := true,
-    outputStrategy := Some(StdoutOutput)
-  )
 
   lazy val root: Project = (
     Project("root", file("."))
