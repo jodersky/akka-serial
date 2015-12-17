@@ -16,7 +16,6 @@ flow/
 ├── flow-main             Main scala source files.
 ├── flow-native           C sources used to implement serial communication.
 ├── flow-samples          Runnable example projects.
-├── notes                 Release notes.
 ├── project               SBT configuration.
 └── site                  Website sources, including documentation.
 ```
