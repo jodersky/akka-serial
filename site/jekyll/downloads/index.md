@@ -32,7 +32,7 @@ libraryDependencies += "com.github.jodersky" % "flow-native" % "{{site.data.curr
 
 - Native Libraries
 [.tar.gz](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries.tar.gz)
-[(signature)](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries.tar.gz.asc)
+[.asc (signature)](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries.tar.gz.asc)
 
 </div>
 
