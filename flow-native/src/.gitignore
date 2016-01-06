@@ -1,3 +1,4 @@
+# Autotools
 /autom4te.cache
 /libtool
 /aclocal.m4
@@ -14,11 +15,12 @@
 /missing
 /stamp-h1
 /compile
-/m4
+/m4/*
 !/m4/ax_jni_include_dir.m4
-
 Makefile.in
 Makefile
+
+# Binary files
 .deps
 .libs
 *.o
@@ -28,4 +30,3 @@ Makefile
 *.dylib
 *.a
 *~
-

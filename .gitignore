@@ -1,13 +1,5 @@
-*.class
-*.log
-
 # sbt specific
-dist/*
 target/
-lib_managed/
-src_managed/
-project/boot/
-project/plugins/project/
 
 # Scala-IDE specific
 .settings
@@ -23,10 +15,6 @@ project/plugins/project/
 
 # Native
 lib_native/
-*.o
-*.so*
-*.jnilib
-*.dylib
 
 # Temporary files
 *~
