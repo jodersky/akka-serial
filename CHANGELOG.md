@@ -1,3 +1,6 @@
+# Version 2.4.0-M2
+- Add support for armv6l
+
 # Version 2.4.0-M1
 - Use sbt-jni plugin:
     - More platforms can now be supported in fat jar

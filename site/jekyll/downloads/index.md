@@ -46,13 +46,14 @@ libraryDependencies += "com.github.jodersky" % "flow-native" % "{{site.data.curr
 		</tr>
 	</thead>
 	<tbody>
-		<tr><td rowspan="3">Linux</td><td>x86_64</td></tr>
+		<tr><td rowspan="4">Linux</td><td>x86_64</td></tr>
 		<tr><td>x86</td></tr>
+		<tr><td>armv6l</td></tr>
 		<tr><td>armv7l</td></tr>
 		<tr><td>Darwin (Mac OSX)</td><td>x86_64</td></tr>
 	</tbody>
 </table>
-	
+
 <p class="small">*These are the platforms for which a native library is included in the release.
 Flow is POSIX compatible so it can be built for a lot more platforms.</p>
 </div>
