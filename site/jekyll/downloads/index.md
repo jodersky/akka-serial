@@ -23,16 +23,16 @@ libraryDependencies += "com.github.jodersky" % "flow-native" % "{{site.data.curr
 ### Archives
 
 - Main Jar
-[.jar (scala 2.11)](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow_2.11/2.4.0-M1/flow_2.11-2.4.0-M1.jar)
-[.asc (signature)](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow_2.11/2.4.0-M1/flow_2.11-2.4.0-M1.jar.asc)
+[.jar (scala 2.11)](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow_2.11/2.4.0-M2/flow_2.11-2.4.0-M2.jar)
+[.asc (signature)](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow_2.11/2.4.0-M2/flow_2.11-2.4.0-M2.jar.asc)
 
 - Native Jar
-[.jar](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.4.0-M1/flow-native-2.4.0-M1.jar)
-[.asc (signature)](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.4.0-M1/flow-native-2.4.0-M1.jar.asc)
+[.jar](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.4.0-M2/flow-native-2.4.0-M2.jar)
+[.asc (signature)](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.4.0-M2/flow-native-2.4.0-M2.jar.asc)
 
 - Native Libraries
-[.tar.gz](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries.tar.gz)
-[.asc (signature)](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries.tar.gz.asc)
+[.tar.gz](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries-3.0.1.tar.gz)
+[.asc (signature)](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries-3.0.1.tar.gz.asc)
 
 </div>
 
