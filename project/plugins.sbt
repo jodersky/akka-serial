@@ -1,4 +1,4 @@
-addSbtPlugin("ch.jodersky" %% "sbt-jni" % "0.2-SNAPSHOT")
+addSbtPlugin("ch.jodersky" %% "sbt-jni" % "0.3.0")
 
 addSbtPlugin("com.eed3si9n" % "sbt-unidoc" % "0.3.3")
 

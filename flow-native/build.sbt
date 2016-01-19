@@ -1,3 +1,9 @@
+import flow.{FlowBuild}
+
+FlowBuild.commonSettings
+
 enablePlugins(JniNative)
 
-jniLibraryPath in (Compile, jni) := "com/github/jodersky/flow"
+sourceDirectory in nativeCompile in Compile := sourceDirectory.value
+
+nativeLibraryPath in Compile := "com/github/jodersky/flow"

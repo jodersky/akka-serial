@@ -1,12 +1,14 @@
+package flow
+
 import sbt._
 import Keys._
 
 object FlowBuild extends Build {
 
   val scalaVersions = List("2.11.7", "2.12.0-M3")
-  
+
   lazy val commonSettings: Seq[Setting[_]] = Seq(
-    version := "2.4.0-M2",
+    version := "2.4.0-RC1",
     scalaVersion in ThisBuild := scalaVersions.head,
     crossScalaVersions in ThisBuild := scalaVersions.reverse,
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-target:jvm-1.8"),
@@ -42,28 +44,24 @@ object FlowBuild extends Build {
 
   lazy val main = Project(
     id = "flow-main",
-    base = file("flow-main"),
-    settings = commonSettings
+    base = file("flow-main")
   )
 
   lazy val native = Project(
     id = "flow-native",
-    base = file("flow-native"),
-    settings = commonSettings
+    base = file("flow-native")
   )
-    
+
   lazy val samplesTerminal = Project(
     id = "flow-samples-terminal",
     base = file("flow-samples") / "terminal",
-    settings = commonSettings,
     dependencies = Seq(main, native % Runtime)
   )
-  
+
   lazy val samplesWatcher = Project(
     id = "flow-samples-watcher",
     base = file("flow-samples") / "watcher",
-    settings = commonSettings,
     dependencies = Seq(main, native % Runtime)
   )
- 
+
 }
