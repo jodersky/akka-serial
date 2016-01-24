@@ -34,7 +34,7 @@ object FlowBuild extends Build {
     aggregate(main, native)
     settings(commonSettings: _*)
     settings(
-      //publishArtifact := false,
+      publishArtifact := false,
       publish := (),
       publishLocal := (),
       publishTo := Some(Resolver.file("Unused transient repository", target.value / "unusedrepo")) // make sbt-pgp happy

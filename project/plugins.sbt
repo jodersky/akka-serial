@@ -3,7 +3,7 @@
  */
 
 // Build, package and load native libraries
-addSbtPlugin("ch.jodersky" %% "sbt-jni" % "0.4.0")
+addSbtPlugin("ch.jodersky" %% "sbt-jni" % "0.4.1")
 
 
 /*
