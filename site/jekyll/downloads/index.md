@@ -22,17 +22,9 @@ libraryDependencies += "com.github.jodersky" % "flow-native" % "{{site.data.curr
 
 ### Archives
 
-- Main Jar
-[.jar (scala 2.11)](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow_2.11/2.4.0-M2/flow_2.11-2.4.0-M2.jar)
-[.asc (signature)](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow_2.11/2.4.0-M2/flow_2.11-2.4.0-M2.jar.asc)
-
-- Native Jar
-[.jar](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.4.0-M2/flow-native-2.4.0-M2.jar)
-[.asc (signature)](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.4.0-M2/flow-native-2.4.0-M2.jar.asc)
-
 - Native Libraries
-[.tar.gz](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries-3.0.1.tar.gz)
-[.asc (signature)](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries-3.0.1.tar.gz.asc)
+[.tar.gz](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries-{{site.data.current.native_version.major}}.{{site.data.current.native_version.minor}}.{{site.data.current.native_version.patch}}.tar.gz)
+[.asc (signature)](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries-{{site.data.current.native_version.major}}.{{site.data.current.native_version.minor}}.{{site.data.current.native_version.patch}}.tar.gz.asc)
 
 </div>
 
@@ -64,20 +56,7 @@ Flow is POSIX compatible so it can be built for a lot more platforms.</p>
 Consult the <a href="https://github.com/jodersky/flow/blob/master/CHANGELOG.md">release notes</a> for important changes.
 
 ## Requirements
-Flow depends on Akka 2.4 and requires a Java runtime version of 1.8.
+Flow depends on Akka 2.4 and requires a Java runtime version of 1.8. It is released for Scala binary versions 2.11 and 2.12.
 
 ## Previous Versions
-
-### 2.3.1
-
-- Main Jar
-[.jar (scala 2.11)](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow_2.11/2.3.1/flow_2.11-2.3.1.jar)
-[.asc (signature)](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow_2.11/2.3.1/flow_2.11-2.3.1.jar.asc)
-
-- Native Jar
-[.jar](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.3.1/flow-native-2.3.1.jar)
-[.asc (signature)](https://bintray.com/artifact/download/jodersky/maven/com/github/jodersky/flow-native/2.3.1/flow-native-2.3.1.jar.asc)
-
-
-### Older Releases
 Archived releases are available in <a href="https://github.com/jodersky/flow/releases">GitHub releases</a>.
