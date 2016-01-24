@@ -60,7 +60,7 @@ object Release {
       //Bump version to next development
       setNextVersion,
 
-      //update website
+      //TODO: update website
 
       //Commit
       commitNextVersion,
@@ -68,7 +68,7 @@ object Release {
       //Push all changes (commits and tags) to GitHub
       pushChanges
 
-      //Release artifact on bintray
+      //TODO: release artifact on bintray
     )
   )
 
