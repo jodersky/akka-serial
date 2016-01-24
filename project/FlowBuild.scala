@@ -8,7 +8,6 @@ object FlowBuild extends Build {
   val scalaVersions = List("2.11.7", "2.12.0-M3")
 
   lazy val commonSettings: Seq[Setting[_]] = Seq(
-    version := "2.4.0-RC1",
     scalaVersion in ThisBuild := scalaVersions.head,
     crossScalaVersions in ThisBuild := scalaVersions.reverse,
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-target:jvm-1.8"),
