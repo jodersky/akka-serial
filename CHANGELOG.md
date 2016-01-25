@@ -1,11 +1,9 @@
-# Version 2.4.0-M2
-- Add support for armv6l
-
-# Version 2.4.0-M1
+# Version 2.4.0
 - Use sbt-jni plugin:
     - More platforms can now be supported in fat jar
     - Simplify build configuration
 - Create website
+- Add support for armv6l
 
 # Version 2.3.1
 - Upgrade Akka to 2.4.1
