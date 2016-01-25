@@ -7,10 +7,10 @@ layout: page
 {:toc}
 
 # Getting Started
-Flow uses SBT as build system. To get started, include a dependency to flow in your project:
+Flow uses sbt as build system. To get started, include a dependency to flow in your project:
 
 ~~~scala
-libraryDependencies += "com.github.jodersky" %% "flow" % "{{site.data.current.version}}"
+libraryDependencies += "com.github.jodersky" %% "flow-core" % "{{site.data.current.version}}"
 ~~~
 
 Next, you need to include flow's native library that supports communication for serial devices.
@@ -18,14 +18,14 @@ Next, you need to include flow's native library that supports communication for 
 ## Including Native Library
 There are two options to include the native library:
 
-1. Using an easy, pre-packaged dependency, avialble only for certain OSes.
+1. Using a pre-packaged dependency, available only for certain OSes but easily included.
 
 2. Including the library manually for maximum portability.
 
 It is recommended that you use the first option for testing purposes or end-user applications. The second option is recomended for libraries, since it leaves more choice to the end-user.
 
 ### The Easy Way
-In case your OS/architecture combination is present in the "supported platforms" table in the downloads section, add a second dependency to your project:
+In case your kernel/architecture combination is present in the "supported platforms" table in the [downloads section]({{site.url}}/downloads/), add a second dependency to your project:
 
 ~~~scala
 libraryDependencies += "com.github.jodersky" % "flow-native" % "{{site.data.current.version}}" % "runtime"
@@ -34,12 +34,13 @@ libraryDependencies += "com.github.jodersky" % "flow-native" % "{{site.data.curr
 This will add a jar to your classpath containing native libraries for various platforms. At run time, the correct library for the current platform is selected, extracted and loaded. This solution enables running applications seamlessly, as if they were pure JVM applications.
 
 ### Maximum Portability
-First, obtain a copy of the native library, either by [building flow](./developer) or by [downloading]({{site.url}}/downloads) a precompiled version. In order to work with this version of flow, native libraries need to be of major version {{site.data.current.native_version.major}} and minor version greater or equal to {{site.data.current.native_version.minor}}.
+Start by obtaining a copy of the native library, either by [building flow](./developer) or by [downloading]({{site.url}}/downloads/) a native archive. In order to work with this version of flow, native libraries need to be of major version {{site.data.current.native_version.major}} and minor version greater or equal to {{site.data.current.native_version.minor}}.
 
-Second, for every end-user application that relies on flow, manually add the native library for the current platform to the JVM's library path. This can be achieved through various ways, notably:
+Then, for every end-user application that relies on flow, manually add the native library for the current platform to the JVM's library path. This can be achieved through various ways, notably:
 
 - Per application:
-  Run your program with the command-line option ```-Djava.library.path=".:<folder containing libflow{{site.data.current.native_version.major}}.so>"```. E.g. ```java -Djava.library.path=".:/home/<folder containing libflow{{site.data.current.native_version.major}}.so>" -jar your-app.jar```
+
+    Run your program with the command-line option ```-Djava.library.path=".:<folder containing libflow{{site.data.current.native_version.major}}.so>"```. E.g. ```java -Djava.library.path=".:/home/<folder containing libflow{{site.data.current.native_version.major}}.so>" -jar your-app.jar```
 
 - System- or user-wide:
 
@@ -181,5 +182,43 @@ IO(Serial) ! Unwatch("/dev/")
 ## Resource Handling
 Note that the manager has a deathwatch on every subscribed client. Hence, should a client die, any underlying resources will be freed.
 
-## Requirements
-Flow uses Java's `WatchService`s under the hood, therefore a Java runtime of a version of at least 1.7 is required.
+---
+
+# Stream Support
+Flow provides support for Akka streams and thus can be interfaced with reactive-streams. Support is implemented in a separate module, which needs to be added as a library dependency:
+
+~~~scala
+libraryDependencies += "com.github.jodersky" %% "flow-stream" % "{{site.data.current.version}}"
+~~~
+
+The main entry point for serial streaming is `com.github.jodersky.flow.stream.Serial`. It's API is also well documented and should serve as the starting point when searching documentation on serial streaming.
+
+## Opening a Port
+Connection is established by materializing a `Flow[ByteString, ByteString, Future[Connection]]` obtained by calling `Serial().open()`
+
+~~~scala
+val serial: Flow[ByteString, ByteString, Future[Connection]] = Serial().open("/dev/ttyUSB0", settings)
+
+val source: Source[ByteString, _] = // some source
+val sink: Sink[ByteString, _] = // some sink
+
+source.viaMat(serial)(Keep.right).toMat(sink)(Keep.left).run() onComplete {
+  case Success(connection) => // a serial connection has been established
+  case Failure(error) => // connection could not be established due to error
+}
+~~~
+
+The materialized future will be completed with a `Success` in case the port is opened or a `Failure` in case an error is encountered whilst opening.
+
+## Communication
+Any data pushed to the `Flow`'s inlet will be sent to the serial port and any data received by the port will be emitted by the `Flow`'s outlet.
+
+Note that backpressure is only available for writing, to add backpressure on the receiving side a higher-level protocol needs to be implemented on top of serial communication.
+
+## Closing a Port
+The underlying serial port is closed when its materialized serial flow is closed.
+
+## Errors and Resource Handling
+Any errors described in flow-core can also be encountered in flow-streaming. When thrown, they will be wrapped as the cause of a `StreamSerialException` and cause the the serial `Flow` stage to fail.
+
+As with flow-core, native resources are handled by underlying Akka mechanisms and any crashes in user code will automatically case the resources to be freed.

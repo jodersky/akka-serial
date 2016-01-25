@@ -31,7 +31,7 @@ object FlowBuild extends Build {
 
   lazy val root: Project = (
     Project("root", file("."))
-    aggregate(main, native)
+    aggregate(core, native, stream)
     settings(commonSettings: _*)
     settings(
       publishArtifact := false,
@@ -41,9 +41,9 @@ object FlowBuild extends Build {
     )
   )
 
-  lazy val main = Project(
-    id = "flow-main",
-    base = file("flow-main")
+  lazy val core = Project(
+    id = "flow-core",
+    base = file("flow-core")
   )
 
   lazy val native = Project(
@@ -51,16 +51,28 @@ object FlowBuild extends Build {
     base = file("flow-native")
   )
 
+  lazy val stream = Project(
+    id = "flow-stream",
+    base = file("flow-stream"),
+    dependencies = Seq(core)
+  )
+
   lazy val samplesTerminal = Project(
-    id = "flow-samples-terminal",
+    id = "samples-terminal",
     base = file("flow-samples") / "terminal",
-    dependencies = Seq(main, native % Runtime)
+    dependencies = Seq(core, native % Runtime)
+  )
+
+  lazy val samplesTerminalStream = Project(
+    id = "samples-terminal-stream",
+    base = file("flow-samples") / "terminal-stream",
+    dependencies = Seq(stream, native % Runtime)
   )
 
   lazy val samplesWatcher = Project(
-    id = "flow-samples-watcher",
+    id = "samples-watcher",
     base = file("flow-samples") / "watcher",
-    dependencies = Seq(main, native % Runtime)
+    dependencies = Seq(core, native % Runtime)
   )
 
 }

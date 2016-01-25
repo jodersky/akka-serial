@@ -6,7 +6,7 @@ title: Documentation
 Start by reading the manual and checking out some examples.
 
 - <i class="fa fa-book"></i> [Manual](manual.html)
-  Explains how to get started and how all features work. Definitive guide to using flow.
+  Explains how to get started and how to use all features. Definitive guide to using flow.
 
 - <i class="fa fa-book"></i> [Examples](https://github.com/jodersky/flow/tree/master/flow-samples)
   See some very simple, working demo applications.

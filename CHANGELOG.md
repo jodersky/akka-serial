@@ -1,3 +1,8 @@
+# Version 2.5.0-M1
+- Implement support for Akka streams
+- Rename main flow to flow-core
+- Upgrade Akka to 2.4.2-RC1
+
 # Version 2.4.1
 - Upgrade sbt-jni
 

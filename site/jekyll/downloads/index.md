@@ -10,21 +10,17 @@ title: Downloads
 
 <div class="col-sm-8">
 ### Sbt Coordinates :
-Add the following tothe build configuration:
+Add the following to your build configuration:
 
 ~~~scala
 //main artifact
-libraryDependencies += "com.github.jodersky" %% "flow" % "{{site.data.current.version}}"
+libraryDependencies += "com.github.jodersky" %% "flow-core" % "{{site.data.current.version}}"
 
 //(optional) "fat" jar containing native libraries
 libraryDependencies += "com.github.jodersky" % "flow-native" % "{{site.data.current.version}}" % "runtime"
-~~~
 
-
-*Note (as of 2016-01-24 17:00 PST): a dependency (jni-library) is currently awaiting inclusion in the official jcenter repository. Until this is the case, an additional resolver will have to be added to the sbt build configuration:*
-
-~~~scala
-resolvers += Resolver.bintrayRepo("jodersky", "maven")
+//(optional & experimental) support for Akka streams
+libraryDependencies += "com.github.jodersky" %% "flow-stream" % "{{site.data.current.version}}"
 ~~~
 
 ### Archives

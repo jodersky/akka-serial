@@ -1,0 +1,6 @@
+*.o
+*.d
+*.hex
+*.elf
+firmware
+*~
