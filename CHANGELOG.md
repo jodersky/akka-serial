@@ -1,3 +1,6 @@
+# Version 2.4.1
+- Upgrade sbt-jni
+
 # Version 2.4.0
 - Use sbt-jni plugin:
     - More platforms can now be supported in fat jar
