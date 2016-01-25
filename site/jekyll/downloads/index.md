@@ -20,6 +20,13 @@ libraryDependencies += "com.github.jodersky" %% "flow" % "{{site.data.current.ve
 libraryDependencies += "com.github.jodersky" % "flow-native" % "{{site.data.current.version}}" % "runtime"
 ~~~
 
+
+*Note (as of 2016-01-24 17:00 PST): a dependency (jni-library) is currently awaiting inclusion in the official jcenter repository. Until this is the case, an additional resolver will have to be added to the sbt build configuration:*
+
+~~~scala
+resolvers += Resolver.bintrayRepo("jodersky", "maven")
+~~~
+
 ### Archives
 
 - Native Libraries
