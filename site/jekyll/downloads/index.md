@@ -13,9 +13,6 @@ title: Downloads
 Add the following to your build configuration:
 
 ~~~scala
-//(temporary fix) add the following to fix an ongoing resolution issue
-resolvers += "jodersky-maven" at "http://dl.bintray.com/jodersky/maven"
-
 //main artifact
 libraryDependencies += "com.github.jodersky" %% "flow-core" % "{{site.data.current.version}}"
 
