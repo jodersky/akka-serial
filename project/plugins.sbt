@@ -2,9 +2,10 @@
  * Main plugins
  */
 
-// Build, package and load native libraries
-addSbtPlugin("ch.jodersky" % "sbt-jni" % "0.4.2")
+resolvers += "jodersky-maven" at "http://dl.bintray.com/jodersky/maven/"
 
+// Build, package and load native libraries
+addSbtPlugin("ch.jodersky" % "sbt-jni" % "0.4.3")
 
 /*
  * Utility plugins, can be disabled during plain build
