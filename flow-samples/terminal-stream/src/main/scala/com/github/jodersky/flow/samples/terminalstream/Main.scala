@@ -6,7 +6,6 @@ import akka.stream._
 import akka.stream.stage._
 import akka.stream.scaladsl._
 import akka.util._
-import akka.stream.io._
 import scala.concurrent._
 import scala.concurrent.duration._
 import scala.util._
