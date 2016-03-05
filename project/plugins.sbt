@@ -2,7 +2,7 @@
  * Main plugins
  */
 
-resolvers += "jodersky-maven" at "http://dl.bintray.com/jodersky/maven/"
+resolvers += Resolver.jcenterRepo
 
 // Build, package and load native libraries
 addSbtPlugin("ch.jodersky" % "sbt-jni" % "0.4.3")
