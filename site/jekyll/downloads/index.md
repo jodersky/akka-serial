@@ -13,6 +13,9 @@ title: Downloads
 Add the following to your build configuration:
 
 ~~~scala
+//add resolver to Bintray's jcenter
+resolvers += Resolver.jcenterRepo
+
 //main artifact
 libraryDependencies += "com.github.jodersky" %% "flow-core" % "{{site.data.current.version}}"
 
