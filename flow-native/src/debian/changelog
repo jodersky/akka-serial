@@ -1,6 +1,0 @@
-flow (3.0.1) UNRELEASED; urgency=low
-
-  * Initial release.
-  * Fix termios initialization issue.
-
- -- Jakob Odersky <jodersky@gmail.com>  Sun, 11 Jan 2015 10:56:29 +0100
