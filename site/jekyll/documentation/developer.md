@@ -15,35 +15,19 @@ Both steps are independent, their only interaction being a header file generated
 Run `sbt flow-main/packageBin` in the base directory. This simply compiles Scala sources as with any standard sbt project and packages the resulting class files in a jar.
 
 ## Building Native Sources
-The back-end is managed by GNU Autotools and all relevant files are contained in `flow-native`.
-
-{::options parse_block_html="true" /}
-<aside class="notice">
-### Aside: Autotools Introduction
-Autotools is a suite of programs constituting a sort of "meta-build system". It is used to generate a platform-independent build script known as `./configure`, which, when run, will analyze the current system (search for a C compiler, required libraries etc) and produce a `Makefile`. The makefile in turn is system-specific and can be used to create the final binary. In summary the build process is as follows:
-
-1. Autotools (specifically the program `autoreconf`) generates `./configure`, this happens on the developer's machine
-2. `./configure` is run on the host computer
-3. `make` is run to produce a binary, also on the host computer
-
-In a typical, source-controlled repository, only a bootstrapping script that calls Autotools is checked into version control. However, source *releases* include the generated `./configure` script. An end-user then downloads a source release and only has to run `./configure && make`.
-
-However, since flow does currently not provide source releases (not to be confused with source repository or Git tags), the developer's machine is the same as the host machine and so the bootstrapping process always needs to be performed.
-</aside>
+The back-end is managed by CMake and all relevant files are contained in `flow-native/src`.
 
 ### Build Process
-
 Several steps are involved in producing the native library:
 
-1. Bootstrap the build (run this once, if `./configure` does not exist).
+1. Bootstrap the build (run this once, if `Makefile` does not exist).
 
-    1. Check availability of dependencies: autotools and libtool (on Debian-based systems run `apt-get install build-essential autoconf automake libtool`)
-    2. Run `./bootstrap`
+	1. Required dependencies: CMake (2.6 or higher), JDK (1.8 or above)
+    2. Run `cmake .`
 
 2. Compile
 
-    1. Check availability of dependencies: C compiler and JDK (1.8 or above)
-    2. Run `./configure && make`.
+    1. Run `make`.
        *Note: should you encounter an error about a missing "jni.h" file, try setting the JAVA_HOME environment variable to point to base path of your JDK installation.*
 
 3. Install
@@ -54,7 +38,7 @@ Several steps are involved in producing the native library:
 
     - installed system-wide: `make install`
 
-    - put into a "fat" jar, useful for dependency management with SBT (see next section)
+    - put into a "fat" jar, useful for dependency management with sbt (see next section)
 
 ### Creating a Fat Jar
 The native library produced in the previous step may be bundled into a "fat" jar so that it can be included in SBT projects through its regular dependency mechanisms. In this process, sbt basically acts as a wrapper script around Autotools, calling the native build process and packaging generated libraries. Running `sbt flow-native/packageBin` in the base directory produces the fat jar in `flow-native/target`.
@@ -82,4 +66,3 @@ Here are some important notes on creating a release:
 - Currently, the release script does not handle uploading the native libraries archive (don't confuse this with the fat jar, which is uploaded). If creating a release that changed the native libraries or added support for more platforms, creating and uploading a new native archive must be done manually.
 
 - Don't forget to update the website after creating a new release.
-  

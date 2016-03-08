@@ -44,9 +44,7 @@ Then, for every end-user application that relies on flow, manually add the nativ
 
 - System- or user-wide:
 
-	- Copy the native library to a place that is on the default Java library path and run your application normally. Such places usually include `/usr/lib` and `/usr/local/lib`.
-
-	- Install a native package from the downloads section
+	Copy the native library to a place that is on the default Java library path and run your application normally. Such places usually include `/usr/lib` and `/usr/local/lib`.
 
 ---
 
