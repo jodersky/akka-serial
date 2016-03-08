@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jodersky/flow.svg?branch=master)](https://travis-ci.org/jodersky/flow)
+
 # flow
 Serial communication library for Scala, designed to be reactive, lightweight and easily integrable with Akka applications. See the [website](https://jodersky.github.io/flow) for a guide.
 
