@@ -9,4 +9,4 @@ compileOrder in Compile := CompileOrder.Mixed
 
 enablePlugins(JniLoading)
 
-target in javah in Compile := (baseDirectory in ThisBuild).value / "flow-native" / "src" / "src"
+target in javah in Compile := (baseDirectory in ThisBuild).value / "flow-native" / "src" / "include"
