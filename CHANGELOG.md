@@ -1,7 +1,8 @@
 # Version 2.5.0
-- Rename main flow to flow-core
+- Rename main 'flow' project to 'flow-core'
 - Implement support for Akka streams
 - Upgrade Akka to 2.4.2
+- Upgrade Scala to 2.11.8
 - Build:
     - Upgrade sbt to 0.13.11
     - Upgrade sbt-jni to 0.4.3
