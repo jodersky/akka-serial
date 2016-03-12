@@ -2,21 +2,19 @@ package com.github.jodersky.flow
 package stream
 package impl
 
-import akka.actor._
-import akka.stream.stage.GraphStageLogic.StageActorRef
-import akka.util._
-import akka.stream._
-import akka.stream.stage._
-import scala.concurrent._
-import akka.io._
-import com.github.jodersky.flow.{Serial => CoreSerial}
-import akka.stream.impl.ReactiveStreamsCompliance
+import scala.concurrent.Promise
 
+import akka.actor.{ActorRef, Terminated}
+import akka.stream.{FlowShape, Inlet, Outlet}
+import akka.stream.stage.{GraphStageLogic, InHandler, OutHandler}
+import akka.util.ByteString
+
+import com.github.jodersky.flow.{Serial => CoreSerial, SerialSettings}
 
 /**
   * Graph logic that handles establishing and forwarding serial communication.
   * The underlying stream is closed when downstream (output) finishes,
-  * conversely upstream (input) closes are ignored.
+  * upstream (input) closes are ignored.
   */
 private[stream] class SerialConnectionLogic(
   shape: FlowShape[ByteString, ByteString],
@@ -40,8 +38,9 @@ private[stream] class SerialConnectionLogic(
     * explicitly specifying a sender. */
   implicit private def self = stageActor.ref
 
-  /** Input handler for an established connection.
-    * @param operator ther operator actor of the established connection
+  /**
+    * Input handler for an established connection.
+    * @param operator the operator actor of the established connection
     */
   class ConnectedInHandler(operator: ActorRef) extends InHandler {
 
@@ -60,13 +59,13 @@ private[stream] class SerialConnectionLogic(
   }
 
   class ConnectedOutHandler(operator: ActorRef) extends OutHandler {
-    // alias stage actor as implicit to it will be used in "!" calls
+    // implicit alias to stage actor, so it will be used in "!" calls
     implicit val self = stageActor.ref
 
     override def onPull(): Unit = {
       // serial connections are at the end of the "backpressure chain",
       // they do not natively support backpressure (as does TCP for example)
-      // therefore nothing is done here as
+      // therefore nothing is done here
     }
 
     override def onDownstreamFinish(): Unit = {
@@ -86,7 +85,7 @@ private[stream] class SerialConnectionLogic(
   setHandler(in, IgnoreTerminateInput)
   setHandler(out, IgnoreTerminateOutput)
 
-  /** Initial behaviour, before a serial connection is established. */
+  /** Initial behavior, before a serial connection is established. */
   private def connecting(event: (ActorRef, Any)): Unit = {
     val sender = event._1
     val message = event._2
@@ -114,7 +113,7 @@ private[stream] class SerialConnectionLogic(
         pull(in) // start pulling input
 
       case other =>
-        val ex = new StreamSerialException(s"Stage actor received unkown message [$other]")
+        val ex = new StreamSerialException(s"Stage actor received unknown message [$other]")
         failStage(ex)
         connectionPromise.failure(ex)
 

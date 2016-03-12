@@ -2,11 +2,12 @@ package com.github.jodersky.flow
 package stream
 package impl
 
-import akka.actor._
-import akka.util._
-import akka.stream._
-import akka.stream.stage._
-import scala.concurrent._
+import scala.concurrent.{Future, Promise}
+
+import akka.actor.ActorRef
+import akka.stream.{Attributes, FlowShape, Inlet, Outlet}
+import akka.stream.stage.{GraphStageLogic, GraphStageWithMaterializedValue}
+import akka.util.ByteString
 
 /**
   * Graph stage that establishes and thereby materializes a serial connection.

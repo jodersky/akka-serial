@@ -1,16 +1,14 @@
 package com.github.jodersky.flow
 package stream
 
-import akka.actor._
-import akka.stream.scaladsl.Flow
-import akka.stream._
-import akka.stream.stage._
-import akka.dispatch.ExecutionContexts
-import akka.util.ByteString
-import com.github.jodersky.flow.{Serial => CoreSerial, _}
-import scala.concurrent._
-import akka.io._
+import scala.concurrent.Future
 
+import akka.actor.{Extension, ActorSystem, ExtendedActorSystem, ExtensionId, ExtensionIdProvider}
+import akka.io.IO
+import akka.stream.scaladsl.Flow
+import akka.util.ByteString
+
+import com.github.jodersky.flow.{Serial => CoreSerial}
 import impl._
 
 object Serial extends ExtensionId[Serial] with ExtensionIdProvider {
