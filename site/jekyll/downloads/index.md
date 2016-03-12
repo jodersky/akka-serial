@@ -62,7 +62,7 @@ Flow is POSIX compatible so it can be built for a lot more platforms.</p>
 Consult the <a href="https://github.com/jodersky/flow/blob/master/CHANGELOG.md">release notes</a> for important changes.
 
 ## Requirements
-Flow depends on Akka 2.4 and requires a Java runtime version of 1.8. It is released for Scala binary versions 2.11 and 2.12.
+Flow depends on Akka 2.4 and requires a Java runtime version of 1.8. It is released for Scala binary versions 2.11 and 2.12.0-M3.
 
 ## Previous Versions
 Archived releases are available in <a href="https://github.com/jodersky/flow/releases">GitHub releases</a>.
