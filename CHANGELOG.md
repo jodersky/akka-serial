@@ -1,3 +1,6 @@
+# Version 2.5.1
+- Upgrade Akka to 2.4.3
+
 # Version 2.5.0
 - Rename main 'flow' project to 'flow-core'
 - Implement support for Akka streams
