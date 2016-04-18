@@ -110,7 +110,9 @@ private[stream] class SerialConnectionLogic(
         connectionPromise.success(Serial.Connection(port, settings)) //complete materialized value
         stageActor unwatch manager
         stageActor watch operator
-        pull(in) // start pulling input
+        if (!isClosed(in)) {
+          pull(in) // start pulling input
+        }
 
       case other =>
         val ex = new StreamSerialException(s"Stage actor received unknown message [$other]")
