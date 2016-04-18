@@ -5,7 +5,7 @@
 resolvers += Resolver.jcenterRepo
 
 // Build, package and load native libraries
-addSbtPlugin("ch.jodersky" % "sbt-jni" % "0.4.3")
+addSbtPlugin("ch.jodersky" % "sbt-jni" % "0.4.4")
 
 /*
  * Utility plugins, can be disabled during plain build
