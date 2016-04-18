@@ -1,5 +1,7 @@
-# Version 2.5.1
-- Upgrade Akka to 2.4.3
+# Version 2.6.0
+- Implement streaming API for port watchers
+- Upgrade Akka to 2.4.4
+- Build for Scala 2.12.0-M4
 
 # Version 2.5.0
 - Rename main 'flow' project to 'flow-core'

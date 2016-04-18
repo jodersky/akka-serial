@@ -1,6 +1,7 @@
 package com.github.jodersky.flow
 package stream
 
+import akka.stream.scaladsl.Source
 import scala.concurrent.Future
 
 import akka.actor.{Extension, ActorSystem, ExtendedActorSystem, ExtensionId, ExtensionIdProvider}
@@ -17,6 +18,8 @@ object Serial extends ExtensionId[Serial] with ExtensionIdProvider {
     * Represents a prospective serial connection.
     */
   case class Connection(port: String, settings: SerialSettings)
+
+  case class Watch(ports: Set[String])
 
   def apply()(implicit system: ActorSystem): Serial = super.apply(system)
 
@@ -51,6 +54,13 @@ class Serial(system: ExtendedActorSystem) extends Extension {
       settings,
       failOnOverflow,
       bufferSize
+    )
+  )
+
+  def watch(ports: Set[String]): Source[String, Future[Serial.Watch]] = Source.fromGraph(
+    new WatcherStage(
+      IO(CoreSerial)(system),
+      ports
     )
   )
 
