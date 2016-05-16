@@ -22,7 +22,7 @@ Several steps are involved in producing the native library:
 
 1. Bootstrap the build (run this once, if `Makefile` does not exist).
 
-	1. Required dependencies: CMake (2.6 or higher), JDK (1.8 or above)
+	1. Required dependencies: CMake (2.8 or higher), JDK (1.8 or above)
     2. Run `cmake .`
 
 2. Compile
@@ -65,4 +65,10 @@ Here are some important notes on creating a release:
 
 - Currently, the release script does not handle uploading the native libraries archive (don't confuse this with the fat jar, which is uploaded). If creating a release that changed the native libraries or added support for more platforms, creating and uploading a new native archive must be done manually.
 
-- Don't forget to update the website after creating a new release.
+- Don't forget to update the website after creating a new release:
+
+    - Run `sbt makeSite` to generate documentation in `target/site/`
+	- Checkout GitHub Pages branch `git checkout gh-pages`
+	- Copy contents of `target/site/` to `documentation/M.m/`
+	- Update `_config.yml` with latest version
+	- Push to GitHub

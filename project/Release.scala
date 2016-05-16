@@ -6,7 +6,7 @@ import sbtrelease.ReleasePlugin.autoImport._
 import sbtrelease.ReleaseStateTransformations._
 
 import ch.jodersky.sbt.jni.plugins.JniNative.autoImport._
-import ch.jodersky.sbt.jni.plugins.JniPackaging.autoImport._
+import ch.jodersky.sbt.jni.plugins.JniPackage.autoImport._
 
 import com.typesafe.sbt.pgp.PgpKeys._
 
@@ -90,19 +90,13 @@ object Release {
     val (st1, libs) = extracted.runTask(unmanagedNativeLibraries in project in Compile, st0)
 
     log.info("The following native libraries will be packaged:")
-    log.info("Kernel\tArchitecture\tFile")
     log.info("---------------------")
-    libs.toSeq.sortBy(_._1.id).foreach{ case (platform, file) =>
-      log.info(platform.kernel + "\t" + platform.arch + "\t" + file.getAbsolutePath)
-    }
-
-    val currentPlatform = extracted.get(nativePlatform in project in Compile)
-    if (!libs.contains(currentPlatform)) {
-      log.warn("Native library for the current platform does not exist! It will not be released.")
+    libs.toSeq.sortBy(_._2).foreach{ case (file, path) =>
+      log.info(path)
     }
     SimpleReader.readLine("Are the all native libraries listed (y/n)? [n] ") match {
       case Some("y") => //do nothing
-      case _ => sys.error("Mssing native libaries. Aborting release.")
+      case _ => sys.error("Missing native libaries. Aborting release.")
     }
     st1
   })

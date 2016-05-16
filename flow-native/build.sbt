@@ -4,6 +4,7 @@ FlowBuild.commonSettings
 
 enablePlugins(JniNative)
 
-sourceDirectory in nativeCompile in Compile := sourceDirectory.value
+sourceDirectory in nativeCompile := sourceDirectory.value
 
-nativeLibraryPath in Compile := "com/github/jodersky/flow"
+// uncomment below to use library in lib_native instead
+//enableNativeCompilation in Compile := false

@@ -12,7 +12,7 @@ Flow uses sbt as build system. To get started, add the Bintray jcenter resolver 
 ~~~scala
 resolvers += Resolver.jcenterRepo
 
-libraryDependencies += "com.github.jodersky" %% "flow-core" % "@version@"
+libraryDependencies += "ch.jodersky" %% "flow-core" % "@version@"
 ~~~
 
 Next, you need to include flow's native library that supports communication for serial devices.
@@ -30,7 +30,7 @@ It is recommended that you use the first option for testing purposes or end-user
 In case your kernel/architecture combination is present in the "supported platforms" table in the [downloads section]({{site.url}}/downloads/), add a second dependency to your project:
 
 ~~~scala
-libraryDependencies += "com.github.jodersky" % "flow-native" % "@version@" % "runtime"
+libraryDependencies += "ch.jodersky" % "flow-native" % "@version@" % "runtime"
 ~~~
 
 This will add a jar to your classpath containing native libraries for various platforms. At run-time, the correct library for the current platform is selected, extracted and loaded. This solution enables running applications seamlessly, as if they were pure JVM applications.
@@ -59,7 +59,7 @@ Flow's API follows that of an actor based system, where each actor is assigned s
 
 2. Serial "operators". Operators are created once per open serial port and serve as an intermediate between client code and native code dealing with serial data transmission and reception. They isolate the user from threading issues and enable the reactive dispatch of incoming data. A serial operator is said to be "associated" to its underlying open serial port.
 
-The messages understood by flow's actors are all contained in the `com.github.jodersky.flow.Serial` object. They are well documented and should serve as the entry point when searching the API documentation.
+The messages understood by flow's actors are all contained in the `ch.jodersky.flow.Serial` object. They are well documented and should serve as the entry point when searching the API documentation.
 
 ## Opening a Port
 A serial port is opened by sending an `Open` message to the serial manager. The response varies on the outcome of opening the underlying serial port.
@@ -69,7 +69,7 @@ A serial port is opened by sending an `Open` message to the serial manager. The 
 2. In case of success, the sender is notified with an `Opened` message. This message is sent from an operator actor, spawned by the serial manager. It is useful to capture the sender (i.e. the operator) of this message as all further communication with the newly opened port must pass through the operator.
 
 ~~~scala
-import com.github.jodersky.flow.{ Serial, SerialSettings, AccessDeniedException }
+import ch.jodersky.flow.{ Serial, SerialSettings, AccessDeniedException }
 
 val port = "/dev/ttyXXX"
 val settings = SerialSettings(
@@ -188,10 +188,10 @@ Note that the manager has a deathwatch on every subscribed client. Hence, should
 Flow provides support for Akka streams and thus can be interfaced with reactive-streams. Support is implemented in a separate module, which needs to be added as a library dependency:
 
 ~~~scala
-libraryDependencies += "com.github.jodersky" %% "flow-stream" % "@version@"
+libraryDependencies += "ch.jodersky" %% "flow-stream" % "@version@"
 ~~~
 
-The main entry point for serial streaming is `com.github.jodersky.flow.stream.Serial`. It's API is also well documented and should serve as the starting point when searching documentation on serial streaming.
+The main entry point for serial streaming is `ch.jodersky.flow.stream.Serial`. It's API is also well documented and should serve as the starting point when searching documentation on serial streaming.
 
 ## Opening a Port
 Connection is established by materializing a `Flow[ByteString, ByteString, Future[Connection]]` obtained by calling `Serial().open()`

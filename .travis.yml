@@ -4,3 +4,5 @@ scala:
    - 2.12.0-M4
 jdk:
   - oraclejdk8 # this should be changed to openjdk as soon as it becomes available on Travis CI
+compiler:
+  - gcc-4.8

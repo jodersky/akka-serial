@@ -16,7 +16,7 @@ enablePlugins(PreprocessPlugin)
 sourceDirectory in Preprocess := (baseDirectory in ThisBuild).value / "Documentation"
 preprocessVars in Preprocess := Map(
   "version" -> version.value,
-  "native_major" -> "3",
+  "native_major" -> "4",
   "native_minor" -> "0"
 )
 

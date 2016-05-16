@@ -17,13 +17,17 @@ Since hardware is involved in serial communication, a Scala-only solution is not
 ## Directory Structure
 ```
 flow/
+├── Documentation         Sources for user documentation as published on the website.
+├── dev                   Firmware samples for serial devices, to make testing easier.
 ├── flow-core             Main Scala source files.
 ├── flow-native           C sources used to implement serial communication.
+│   └── lib_native        Compiled native libraries that are published in flow-native.
 ├── flow-samples          Runnable example projects.
 ├── flow-stream           Stream API, used to connect with Akka streams.
-├── project               Build configuration.
-└── site                  Website sources, including documentation.
+└── project               Build configuration.
 ```
+
+*Website source code is in the git branch 'gh-pages'.*
 
 ## Build
 Detailed documentation on building flow is available on the website (or, equivalently, in [developer.md](Documentation/developer.md)).

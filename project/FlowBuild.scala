@@ -12,7 +12,7 @@ object FlowBuild extends Build {
     scalaVersion in ThisBuild := scalaVersions.head,
     crossScalaVersions in ThisBuild := scalaVersions.reverse,
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-target:jvm-1.8"),
-    organization := "com.github.jodersky",
+    organization := "ch.jodersky",
     licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause"))),
     homepage := Some(url("https://jodersky.github.io/flow")),
     pomIncludeRepository := { _ => false },
@@ -33,11 +33,14 @@ object FlowBuild extends Build {
   lazy val root = (project in file(".")).
     aggregate(core, native, stream)
 
-  lazy val core = (project in file("flow-core"))
+  lazy val core = (project in file("flow-core")).
+    settings(name:= "flow-core")
 
-  lazy val native = (project in file("flow-native"))
+  lazy val native = (project in file("flow-native")).
+    settings(name:= "flow-native")
 
   lazy val stream = (project in file("flow-stream")).
+    settings(name:= "flow-stream").
     dependsOn(core)
 
   lazy val samplesTerminal = (project in file("flow-samples") / "terminal").

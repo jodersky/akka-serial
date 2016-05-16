@@ -1,23 +1,24 @@
-cmake_minimum_required(VERSION 2.6)
+################################################################
+# A minimal CMake file that is compatible with sbt-jni         #
+#                                                              #
+# All settings required by sbt-jni have been marked so, please #
+# add/modify/remove settings to build your specific library.   #
+################################################################
+
+cmake_minimum_required(VERSION 2.8.0)
 
 # Define project and related variables
+# (required by sbt-jni) please use semantic versioning
 #
 project (flow)
+set(PROJECT_VERSION_MAJOR 4)
+set(PROJECT_VERSION_MINOR 0)
+set(PROJECT_VERSION_PATCH 0)
 
-# Set versions and library name
-# Note: major version will be appended to library name
-#
-set (VERSION_MAJOR 3)
-set (VERSION_MINOR 0)
-set (VERSION_PATCH 1)
-set (LIB_NAME flow${VERSION_MAJOR})
-
-# Command-line options
-#
-# required by sbt-jni to install binaries to correct places
-set (LIB_INSTALL_DIR lib CACHE PATH "Path in which to install libraries (Autoconf equivalent to --libdir).")
-# required by sbt-jni to disable versioned libraries
-set (ENABLE_VERSIONED_LIB ON CACHE BOOLEAN "Generate versioned library files and symlinks.")
+set(CMAKE_C_FLAGS "-std=c99")
+add_definitions(-Wall)
+add_definitions(-Wextra)
+add_definitions(-pedantic)
 
 # Setup JNI
 find_package(JNI REQUIRED)
@@ -26,20 +27,19 @@ if (JNI_FOUND)
 endif()
 
 # Include directories
+include_directories(.)
 include_directories(include)
 include_directories(${JNI_INCLUDE_DIRS})
 
-# Setup main shared library
-# Note: major version is appended to library name
-add_library(${LIB_NAME} SHARED flow_jni.c platform/posix/flow.c)
-if (ENABLE_VERSIONED_LIB)
-   set_target_properties(
-	${LIB_NAME}
-	PROPERTIES
-	VERSION 0.${VERSION_MINOR}.${VERSION_PATCH} # major version always 0, it is included in name
-	SOVERSION 0
-   )
-endif()
+# Sources
+file(GLOB LIB_SRC
+  "*.c"
+  "platform/posix/*.c"
+)
 
-# Installation targets
-install(TARGETS ${LIB_NAME} LIBRARY DESTINATION ${LIB_INSTALL_DIR}) 
+# Setup installation targets
+# (required by sbt-jni) major version should always be appended to library name
+#
+set (LIB_NAME ${PROJECT_NAME}${PROJECT_VERSION_MAJOR})
+add_library(${LIB_NAME} SHARED ${LIB_SRC})
+install(TARGETS ${LIB_NAME} LIBRARY DESTINATION .)
