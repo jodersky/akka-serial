@@ -31,4 +31,6 @@ Get inspired by some real projects that use flow.
 
 - [Virtual Cockpit](https://github.com/project-condor/vfd) part of [Project Condor](https://project-condor.github.io/), a do-it-yourself drone.
 
+- [Hyperion](https://github.com/mthmulders/hyperion) back-end, part of a web-based energy dashboard for "smart meters".
+
 - [(add yours by opening an issue)](https://github.com/jodersky/flow/issues)
