@@ -9,7 +9,7 @@ Start by reading the manual and checking out some examples.
   Explains how to get started and how to use all features. Definitive guide to using flow.
 
 - <i class="fa fa-book"></i> [Examples](https://github.com/jodersky/flow/tree/master/flow-samples)
-  See some very simple, working demo applications.
+  See some very simple, demo applications.
 
 - <i class="fa fa-code"></i> [API documentation]({{site.url}}/latest/api#com.github.jodersky.flow.Serial$)
   Browse flow's API.
