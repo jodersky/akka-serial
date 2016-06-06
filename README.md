@@ -26,9 +26,9 @@ flow/
 ```
 
 ## Build
-Detailed documentation on building flow is available on the website (or, equivalently, in [developer.md](site/jekyll/documentation/developer.md)).
+Detailed documentation on building flow is available on the website (or, equivalently, in [developer.md](Documentation/developer.md)).
 
-Since flow integrates into the Akka-IO framework, a good resource on its general design is the framework's [documentation](http://doc.akka.io/docs/akka/2.4.2-RC1/scala/io.html).
+Since flow integrates into the Akka-IO framework, a good resource on its general design is the framework's [documentation](http://doc.akka.io/docs/akka/current/scala/io.html).
 
 This project is also an experiment on working with JNI and automating build infrastructure.
 

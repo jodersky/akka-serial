@@ -30,50 +30,23 @@ object FlowBuild extends Build {
     }
   )
 
-  lazy val root: Project = (
-    Project("root", file("."))
+  lazy val root = (project in file(".")).
     aggregate(core, native, stream)
-    settings(commonSettings: _*)
-    settings(
-      publishArtifact := false,
-      publish := (),
-      publishLocal := (),
-      publishTo := Some(Resolver.file("Unused transient repository", target.value / "unusedrepo")) // make sbt-pgp happy
-    )
-  )
 
-  lazy val core = Project(
-    id = "flow-core",
-    base = file("flow-core")
-  )
+  lazy val core = (project in file("flow-core"))
 
-  lazy val native = Project(
-    id = "flow-native",
-    base = file("flow-native")
-  )
+  lazy val native = (project in file("flow-native"))
 
-  lazy val stream = Project(
-    id = "flow-stream",
-    base = file("flow-stream"),
-    dependencies = Seq(core)
-  )
+  lazy val stream = (project in file("flow-stream")).
+    dependsOn(core)
 
-  lazy val samplesTerminal = Project(
-    id = "samples-terminal",
-    base = file("flow-samples") / "terminal",
-    dependencies = Seq(core, native % Runtime)
-  )
+  lazy val samplesTerminal = (project in file("flow-samples") / "terminal").
+    dependsOn(core, native % Runtime)
 
-  lazy val samplesTerminalStream = Project(
-    id = "samples-terminal-stream",
-    base = file("flow-samples") / "terminal-stream",
-    dependencies = Seq(stream, native % Runtime)
-  )
+  lazy val samplesTerminalStream = (project in file("flow-samples") / "terminal-stream").
+    dependsOn(stream, native % Runtime)
 
-  lazy val samplesWatcher = Project(
-    id = "samples-watcher",
-    base = file("flow-samples") / "watcher",
-    dependencies = Seq(core, native % Runtime)
-  )
+  lazy val samplesWatcher = (project in file("flow-samples") / "watcher").
+    dependsOn(core, native % Runtime)
 
 }

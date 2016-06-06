@@ -68,7 +68,6 @@ object Release {
       //Push all changes (commits and tags) to GitHub
       pushChanges
 
-      //TODO: release artifact on bintray
     )
   )
 
