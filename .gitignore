@@ -13,8 +13,5 @@ target/
 .ensime
 .ensime_cache
 
-# Native
-lib_native/
-
 # Temporary files
 *~
