@@ -29,8 +29,8 @@ libraryDependencies += "com.github.jodersky" %% "flow-stream" % "{{site.version_
 ### Archives
 
 - Native Libraries
-[.tar.gz](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries-{{site.data.current.native_version.major}}.{{site.data.current.native_version.minor}}.{{site.data.current.native_version.patch}}.tar.gz)
-[.asc (signature)](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries-{{site.data.current.native_version.major}}.{{site.data.current.native_version.minor}}.{{site.data.current.native_version.patch}}.tar.gz.asc)
+[.tar.gz](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries-3.0.1.tar.gz)
+[.asc (signature)](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries-3.0.1.tar.gz.asc)
 
 </div>
 
