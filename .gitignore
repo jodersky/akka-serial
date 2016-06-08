@@ -1,3 +1,5 @@
 /_site
+
+target/
 .ensime
 .ensime_cache
