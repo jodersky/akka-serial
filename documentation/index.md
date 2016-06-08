@@ -5,16 +5,16 @@ title: Documentation
 ## Documentation
 Start by reading the manual and checking out some examples.
 
-- <i class="fa fa-book"></i> [Manual](current/manual)
+- <i class="fa fa-book"></i> [Manual]({{site.version_docs}}/manual)
   Explains how to get started and how to use all features. Definitive guide to using flow.
 
 - <i class="fa fa-book"></i> [Examples](https://github.com/jodersky/flow/tree/master/flow-samples)
   See some very simple, working demo applications.
 
-- <i class="fa fa-code"></i> [API documentation](current/api/index.html#com.github.jodersky.flow.Serial$)
+- <i class="fa fa-code"></i> [API documentation]({{site.version_docs}}/api/index.html#com.github.jodersky.flow.Serial$)
   Browse flow's API.
 
-- <i class="fa fa-book"></i> [Developer Guide](current/developer)
+- <i class="fa fa-book"></i> [Developer Guide]({{site.version_docs}}/developer)
   Instructions on building and publishing flow.
 
 ## Help
