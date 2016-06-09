@@ -12,7 +12,7 @@ Serial communication library for Scala, designed to be reactive, lightweight and
 - Compatible with Reactive Streams
 
 ## Native side
-Since hardware is involved in serial communication, a Scala-only solution is not possible. Nevertherless, the native code is kept simple and minimalistic with the burden of dealing with threads left to Scala. The code aims to be POSIX compliant and therefore easily portable.
+Since hardware is involved in serial communication, a Scala-only solution is not possible. Nevertheless, the native code is kept simple and minimalistic with the burden of dealing with threads left to Scala. The code aims to be POSIX compliant and therefore easily portable.
 
 ## Directory Structure
 ```
