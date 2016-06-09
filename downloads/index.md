@@ -17,20 +17,14 @@ Add the following to your build configuration:
 resolvers += Resolver.jcenterRepo
 
 //main artifact
-libraryDependencies += "com.github.jodersky" %% "flow-core" % "{{site.version_latest}}"
+libraryDependencies += "ch.jodersky" %% "flow-core" % "{{site.version_latest}}"
 
 //"fat" jar containing native libraries
-libraryDependencies += "com.github.jodersky" % "flow-native" % "{{site.version_latest}}" % "runtime"
+libraryDependencies += "ch.jodersky" % "flow-native" % "{{site.version_latest}}" % "runtime"
 
 //(experimental) support for Akka streams
-libraryDependencies += "com.github.jodersky" %% "flow-stream" % "{{site.version_latest}}"
+libraryDependencies += "ch.jodersky" %% "flow-stream" % "{{site.version_latest}}"
 ~~~
-
-### Archives
-
-- Native Libraries
-[.tar.gz](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries-3.0.1.tar.gz)
-[.asc (signature)](https://bintray.com/artifact/download/jodersky/generic/flow-native-libraries-3.0.1.tar.gz.asc)
 
 </div>
 
@@ -46,7 +40,6 @@ libraryDependencies += "com.github.jodersky" %% "flow-stream" % "{{site.version_
 	<tbody>
 		<tr><td rowspan="4">Linux</td><td>x86_64</td></tr>
 		<tr><td>x86</td></tr>
-		<tr><td>armv6l</td></tr>
 		<tr><td>armv7l</td></tr>
 		<tr><td>Darwin (Mac OSX)</td><td>x86_64</td></tr>
 	</tbody>
