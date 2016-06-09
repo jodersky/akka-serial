@@ -19,10 +19,10 @@ resolvers += Resolver.jcenterRepo
 //main artifact
 libraryDependencies += "com.github.jodersky" %% "flow-core" % "{{site.version_latest}}"
 
-//(optional) "fat" jar containing native libraries
+//"fat" jar containing native libraries
 libraryDependencies += "com.github.jodersky" % "flow-native" % "{{site.version_latest}}" % "runtime"
 
-//(optional & experimental) support for Akka streams
+//(experimental) support for Akka streams
 libraryDependencies += "com.github.jodersky" %% "flow-stream" % "{{site.version_latest}}"
 ~~~
 
