@@ -9,7 +9,7 @@ title: Downloads
 <div class="row">
 
 <div class="col-sm-8">
-### Sbt Coordinates :
+### Sbt Coordinates
 Add the following to your build configuration:
 
 ~~~scala
@@ -38,7 +38,7 @@ libraryDependencies += "ch.jodersky" %% "flow-stream" % "{{site.version_latest}}
 		</tr>
 	</thead>
 	<tbody>
-		<tr><td rowspan="4">Linux</td><td>x86_64</td></tr>
+		<tr><td rowspan="3">Linux</td><td>x86_64</td></tr>
 		<tr><td>x86</td></tr>
 		<tr><td>armv7l</td></tr>
 		<tr><td>Darwin (Mac OSX)</td><td>x86_64</td></tr>

@@ -2,21 +2,22 @@
 layout: page
 title: Documentation
 ---
-## Documentation
 
 -----
 
-### NOTICE: Upgrading from 2.0 to 3.0
+## Migrating from 2.x to 3.x
 
-The latest release, 3.0.0, introduces some compatibility-breaking changes:
+The latest release, 3.0.0, introduces some source compatibility-breaking changes:
 
-- Organization and packages have been changes from "com.github.jodersky" to "ch.jodersky"
-- A new major version of the native library has been released, libflow4
+- Organization and packages have been changed from `com.github.jodersky` to `ch.jodersky`
+- A new major version of the native library has been released, `libflow4`
 
 It should be sufficient to change any imports that previously used "com.github.jodersky.flow" to "ch.jodersky.flow".
-In case you manually istaled the native library, you will also need to install libflow4 (see the Developer Guide for more information).
+In case you manually installed the native library, you will also need to upgrade to libflow4 (see the Developer Guide for more information).
 
 -----
+
+## Documentation
 
 Start by reading the manual and checking out some examples.
 
