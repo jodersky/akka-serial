@@ -74,7 +74,8 @@ object Release {
   /** Set `enableNativeCompilations` to false. */
   lazy val disableLocalBuild = ReleaseStep(st => {
     val st1 = ReleaseStateTransformations.reapply(Seq(
-      enableNativeCompilation in FlowBuild.native in Compile := false
+      enableNativeCompilation in FlowBuild.native in Compile := false,
+      enableNativeCompilation in FlowBuild.native in Test := false
     ), st)
     st1.log.info("Disabled compilation of native libraries during release process.")
     st1
