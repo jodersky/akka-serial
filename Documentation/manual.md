@@ -7,11 +7,9 @@ title: User Guide
 {:toc}
 
 # Getting Started
-Flow uses sbt as build system. To get started, add the Bintray jcenter resolver and include a dependency to flow in your project:
+Flow uses sbt as build system. To get started, include a dependency to flow in your project:
 
 ~~~scala
-resolvers += Resolver.jcenterRepo
-
 libraryDependencies += "ch.jodersky" %% "flow-core" % "@version@"
 ~~~
 
