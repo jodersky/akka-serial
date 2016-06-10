@@ -70,6 +70,5 @@ Here are some important notes on creating a release:
     - Run `sbt makeSite` to generate documentation in `target/site/`
 	- Checkout GitHub Pages branch `git checkout gh-pages`
 	- Copy contents of `target/site/` to `documentation/M.m/`
-	- Update symlink `documentation/current` if necessary
-	- Update `_site.yml` with latest version
+	- Update `_config.yml` with latest version
 	- Push to GitHub

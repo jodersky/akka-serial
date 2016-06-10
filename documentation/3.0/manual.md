@@ -7,12 +7,10 @@ title: User Guide
 {:toc}
 
 # Getting Started
-Flow uses sbt as build system. To get started, add the Bintray jcenter resolver and include a dependency to flow in your project:
+Flow uses sbt as build system. To get started, include a dependency to flow in your project:
 
 ~~~scala
-resolvers += Resolver.jcenterRepo
-
-libraryDependencies += "ch.jodersky" %% "flow-core" % "3.0.0"
+libraryDependencies += "ch.jodersky" %% "flow-core" % "3.0.1"
 ~~~
 
 Next, you need to include flow's native library that supports communication for serial devices.
@@ -30,7 +28,7 @@ It is recommended that you use the first option for testing purposes or end-user
 In case your kernel/architecture combination is present in the "supported platforms" table in the [downloads section]({{site.url}}/downloads/), add a second dependency to your project:
 
 ~~~scala
-libraryDependencies += "ch.jodersky" % "flow-native" % "3.0.0" % "runtime"
+libraryDependencies += "ch.jodersky" % "flow-native" % "3.0.1" % "runtime"
 ~~~
 
 This will add a jar to your classpath containing native libraries for various platforms. At run-time, the correct library for the current platform is selected, extracted and loaded. This solution enables running applications seamlessly, as if they were pure JVM applications.
@@ -51,7 +49,7 @@ Then, for every end-user application that relies on flow, manually add the nativ
 ---
 
 # Communication Protocol
-The following is a general guide on the usage of flow. If you prefer a complete example, check out the code contained in the [flow-samples](https://github.com/jodersky/flow/tree/v3.0.0/flow-samples) directory.
+The following is a general guide on the usage of flow. If you prefer a complete example, check out the code contained in the [flow-samples](https://github.com/jodersky/flow/tree/v3.0.1/flow-samples) directory.
 
 Flow's API follows that of an actor based system, where each actor is assigned specific functions involved in serial communication. The two main actor types are:
 
@@ -188,7 +186,7 @@ Note that the manager has a deathwatch on every subscribed client. Hence, should
 Flow provides support for Akka streams and thus can be interfaced with reactive-streams. Support is implemented in a separate module, which needs to be added as a library dependency:
 
 ~~~scala
-libraryDependencies += "ch.jodersky" %% "flow-stream" % "3.0.0"
+libraryDependencies += "ch.jodersky" %% "flow-stream" % "3.0.1"
 ~~~
 
 The main entry point for serial streaming is `ch.jodersky.flow.stream.Serial`. It's API is also well documented and should serve as the starting point when searching documentation on serial streaming.
