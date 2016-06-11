@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/jodersky/flow.svg?branch=master)](https://travis-ci.org/jodersky/flow)
-[![Download](https://api.bintray.com/packages/jodersky/maven/flow-core/images/download.svg)](https://bintray.com/jodersky/maven/flow-core/_latestVersion)
+[![Download](https://img.shields.io/maven-central/v/ch.jodersky/flow-native.svg?maxAge=2592000)](http://search.maven.org/#search|ga|1|ch.jodersky%20flow-)
 
 # flow
 Serial communication library for Scala, designed to be reactive, lightweight and easily integrable with Akka applications. See the [website](https://jodersky.github.io/flow) for a guide.
