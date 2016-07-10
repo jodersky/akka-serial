@@ -2,5 +2,5 @@
 title: flow
 description: Serial communication library for Akka and Scala.
 url: "https://www.jodersky.ch/flow"
-version_latest: 3.0.1
+version_latest: 3.0.2
 version_docs: 3.0

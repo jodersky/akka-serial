@@ -7,7 +7,7 @@ title: Documentation
 
 ## Migrating from 2.x to 3.x
 
-The latest release, 3.0.0, introduces some source compatibility-breaking changes:
+The latest major release, 3, introduces some source compatibility-breaking changes:
 
 - Organization and packages have been changed from `com.github.jodersky` to `ch.jodersky`
 - A new major version of the native library has been released, `libflow4`
