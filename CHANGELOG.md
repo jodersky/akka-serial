@@ -1,3 +1,13 @@
+# Version 3.0.2
+- Upgrade Akka to 2.4.8
+- Build:
+	- Upgrade sbt-jni to 1.2.1
+	- Add support for Scala 2.12.0-M5
+
+# Version 3.0.1
+- Build:
+	- Publish to maven central (don't use bintray anymore)
+
 # Version 3.0.0
 - Change organization and refactor packages packages from `com.github.jodersky` to `ch.jodersky`
 - Upgrade Akka to 2.4.7
