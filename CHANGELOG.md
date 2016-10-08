@@ -1,3 +1,8 @@
+# Version 3.0.3
+- Upgrade Akka to 2.4.11
+- Build for Scala 2.12.0-RC1
+- Build: upgrade sbt to 0.13.12
+
 # Version 3.0.2
 - Upgrade Akka to 2.4.8
 - Build:
