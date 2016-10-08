@@ -5,7 +5,7 @@ import Keys._
 
 object FlowBuild extends Build {
 
-  val scalaVersions = List("2.11.8", "2.12.0-M5")
+  val scalaVersions = List("2.11.8", "2.12.0-RC1")
 
   lazy val commonSettings: Seq[Setting[_]] = Seq(
     resolvers += Resolver.jcenterRepo,
