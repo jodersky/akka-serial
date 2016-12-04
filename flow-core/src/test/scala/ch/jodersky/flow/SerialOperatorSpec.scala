@@ -39,10 +39,6 @@ class SerialOperatorSpec
       op ! Serial.Write(data)
       expectMsg(Serial.Received(data))
 
-      op ! Serial.Write(data, n => Ack(n))
-      expectMsg(Serial.Received(data))
-      expectMsg(Ack(data.length))
-
       op ! Serial.Close
       expectMsg(Serial.Closed)
 
