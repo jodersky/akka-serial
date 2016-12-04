@@ -6,6 +6,7 @@
 ################################################################
 
 cmake_minimum_required(VERSION 2.8.0)
+set(ignoreMe "${SBT}") # sbt-jni defines -DSBT
 
 # Define project and related variables
 # (required by sbt-jni) please use semantic versioning
