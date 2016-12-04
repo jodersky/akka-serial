@@ -1,9 +1,7 @@
-import flow.{FlowBuild, Dependencies}
-
-FlowBuild.commonSettings
+import flow.Dependencies
 
 libraryDependencies += Dependencies.akkaActor
-libraryDependencies += Dependencies.akkaTestKit
-libraryDependencies += Dependencies.scalatest
+libraryDependencies += Dependencies.akkaTestKit % "test"
+libraryDependencies += Dependencies.scalatest % "test"
 
 target in javah := (baseDirectory in ThisBuild).value / "flow-native" / "src" / "include"

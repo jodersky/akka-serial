@@ -1,8 +1,25 @@
 language: scala
-scala:
-   - 2.11.8
-   - 2.12.0-RC1
+
 jdk:
   - oraclejdk8 # this should be changed to openjdk as soon as it becomes available on Travis CI
-compiler:
-  - gcc-4.8
+
+addons:
+  apt:
+    packages:
+      - cmake
+      - socat
+
+env:
+  - secure: "cb7gVK66QE5dMvyDnUNxjzaXC1dDpGip8hS38Ffv/c6LEGkyUQBJYtIpfh2cXqgTFeapmWLBLnNI2e3IrK/0DwlbJjf3B61pvgUI1GafG/B4ma+RIrIvxwWD1gY3w7VmWxlu2ZfFHLrjsUNyFOom0qWFKuxDdwDoW9WNzrX8cOY="
+
+script: .ci/build
+
+cache:
+  directories:
+    - "$HOME/.ivy2/cache"
+    - "$HOME/.sbt/boot/"
+
+before_cache:
+  - find $HOME/.ivy2/cache/ch.jodersky -depth -name "flow*" -exec rm -r {} \;
+  - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
+  - find $HOME/.sbt -name "*.lock" -delete

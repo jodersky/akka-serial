@@ -1,7 +1,5 @@
-import flow.{FlowBuild, Dependencies}
-
-FlowBuild.commonSettings
+import flow.Dependencies
 
 libraryDependencies += Dependencies.akkaActor
 libraryDependencies += Dependencies.akkaStream
-libraryDependencies += Dependencies.scalatest
+libraryDependencies += Dependencies.scalatest % "test"

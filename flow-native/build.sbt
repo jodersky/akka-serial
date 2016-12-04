@@ -1,10 +1,8 @@
-import flow.{FlowBuild}
-
-FlowBuild.commonSettings
-
 enablePlugins(JniNative)
 
 sourceDirectory in nativeCompile := sourceDirectory.value
 
-// uncomment below to use library in lib_native instead
-//enableNativeCompilation in Compile := false
+// package native libraries from lib_native during releases
+val isRelease = sys.props("release") == "true"
+enableNativeCompilation in Compile := !isRelease
+enableNativeCompilation in Test := !isRelease
