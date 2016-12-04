@@ -61,11 +61,10 @@ The project and package versions follow a [semantic](http://semver.org/) pattern
 Usually (following most Linux distribution's conventions), shared libraries produced by a project `name` of version `M.m.p` are named `libname.so.M.m.p`. However, since when accessing shared libraries through the JVM, only the `name` can be specified and no particular version, the convention adopted by flow is to append `M` to the library name and always keep the major version at zero. E.g. `libflow.so.3.1.2` becomes `libflow3.so.0.1.2`.
 
 # Testing
-
 `flow-samples` directory contains fully functional application examples of flow. To run an example, change to the base directory of flow and run sbt samples<SampleName>/run.
 All projects, including samples, can be listed by running sbt projects.
 
-To be able connect You can use real device (arduino) burned with sample-echo (`dev/arduino-terminal`) code, or create Virtual Serial Port pair
+To be able connect you can use real device (arduino) burned with sample-echo (`dev/arduino-terminal`) code, or create Virtual Serial Port pair
 
 [socat (SOcket CAT)](http://www.dest-unreach.org/socat/) – multipurpose relay – is a command line based utility that establishes two bidirectional byte streams and transfers data between them.
 socat is #4 on the Top 100 Network Security Tools list, available in most distro repositories (on Debian/Ubuntu sudo apt-get install socat does the trick), really light on resources, and very efficient.
@@ -102,15 +101,13 @@ socat -d -d pty,raw,echo=0 "exec:/bin/cat,pty,raw,echo=0"
 ```
 
 # Publishing and Releasing
-The release process is managed with the `sbt-release` plugin. See 'project/Release.scala' for a description of the various steps involved.
+Releases are handled automatically by the continuous integration and deployment system (Travis CI). A release will be performed for every annotated Git tag that is pushed to the main repository.
 
-Here are some important notes on creating a release:
+Here are a couple of observations on the release process:
 
 - During a release, only readily available libraries in `lib_native` are packaged into the fat jar, no local native compilation is performed. The rationale behind this is that while native libraries rarely change, they are still tied to the version of libc of the compiling system. Since the releases are mostly done on a development machine (cutting-edge OS), compiling native libraries locally could break compatibility with older systems.
 
-- Currently, the release script does not handle uploading the native libraries archive (don't confuse this with the fat jar, which is uploaded). If creating a release that changed the native libraries or added support for more platforms, creating and uploading a new native archive must be done manually.
-
-- Don't forget to update the website after creating a new release:
+- The website is not automatically updated. After creating a new release:
 
     - Run `sbt makeSite` to generate documentation in `target/site/`
 	- Checkout GitHub Pages branch `git checkout gh-pages`
