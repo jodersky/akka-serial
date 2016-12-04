@@ -1,3 +1,12 @@
+# Version 3.0.4
+- Implement unit tests
+- Upgrade Akka to 2.4.14
+- Build for Scala 2.12.0
+- Build:
+	- Upgrade to sbt 0.13.13
+	- Migrate to .sbt build definition
+	- Set up continuous deployment
+
 # Version 3.0.3
 - Upgrade Akka to 2.4.11
 - Build for Scala 2.12.0-RC1
