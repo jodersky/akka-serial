@@ -42,14 +42,15 @@ object FlowBuild extends Build {
     aggregate(core, native, stream)
 
   lazy val core = (project in file("flow-core")).
-    settings(name:= "flow-core")
+    settings(name:= "flow-core").
+    dependsOn(native % "test->runtime")
 
   lazy val native = (project in file("flow-native")).
     settings(name:= "flow-native")
 
   lazy val stream = (project in file("flow-stream")).
     settings(name:= "flow-stream").
-    dependsOn(core)
+    dependsOn(core, core % "test->test", native % "test->runtime")
 
   lazy val samplesTerminal = (project in file("flow-samples") / "terminal").
     dependsOn(core, native % Runtime)

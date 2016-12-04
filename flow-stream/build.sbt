@@ -4,4 +4,4 @@ FlowBuild.commonSettings
 
 libraryDependencies += Dependencies.akkaActor
 libraryDependencies += Dependencies.akkaStream
-
+libraryDependencies += Dependencies.scalatest

@@ -37,3 +37,4 @@ scalacOptions in (ScalaUnidoc, doc) ++= Seq(
 siteMappings ++= (mappings in (ScalaUnidoc, packageDoc)).value.map{ case (file, path) =>
   (file, "api/" + path)
 }
+fork := true
