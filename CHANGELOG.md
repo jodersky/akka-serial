@@ -1,3 +1,7 @@
+# (unreleased)
+- Rename project to akka-serial
+- Move non-akka-dependent serial code into separate project, "akka-serial-sync"
+
 # Version 3.0.4
 - Implement unit tests
 - Upgrade Akka to 2.4.14

@@ -1,6 +1,6 @@
 // Build settings
 version in ThisBuild := ("git describe --always --dirty=-SNAPSHOT --match v[0-9].*" !!).tail.trim
-crossScalaVersions in ThisBuild := List("2.11.8", "2.12.0")
+crossScalaVersions in ThisBuild := List("2.12.1", "2.11.8")
 scalaVersion in ThisBuild := crossScalaVersions.value.head
 scalacOptions in ThisBuild ++= Seq(
   "-deprecation",
@@ -9,11 +9,13 @@ scalacOptions in ThisBuild ++= Seq(
   "-target:jvm-1.8"
 )
 fork in ThisBuild := true
+connectInput in run in ThisBuild := true
+outputStrategy in run in ThisBuild := Some(StdoutOutput)
 
 // Publishing
 organization in ThisBuild := "ch.jodersky"
 licenses in ThisBuild := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause")))
-homepage in ThisBuild := Some(url("https://jodersky.github.io/flow"))
+homepage in ThisBuild := Some(url("https://jodersky.github.io/akka-serial"))
 publishMavenStyle in ThisBuild := true
 publishTo in ThisBuild := {
   val nexus = "https://oss.sonatype.org/"
@@ -21,8 +23,8 @@ publishTo in ThisBuild := {
 }
 pomExtra in ThisBuild := {
   <scm>
-    <url>git@github.com:jodersky/flow.git</url>
-    <connection>scm:git:git@github.com:jodersky/flow.git</connection>
+    <url>git@github.com:jodersky/akka-serial.git</url>
+    <connection>scm:git:git@github.com:jodersky/akka-serial.git</connection>
   </scm>
   <developers>
     <developer>
@@ -34,26 +36,30 @@ pomExtra in ThisBuild := {
 
 // Project structure
 lazy val root = (project in file("."))
-  .aggregate(core, native, stream)
+  .aggregate(core, native, stream, sync)
 
-lazy val core = (project in file("flow-core"))
-  .settings(name := "flow-core")
+lazy val core = (project in file("core"))
+  .settings(name := "akka-serial-core")
+  .dependsOn(sync, sync % "test->test")
+
+lazy val native = (project in file("native"))
+  .settings(name := "akka-serial-native")
+
+lazy val stream = (project in file("stream"))
+  .settings(name := "akka-serial-stream")
+  .dependsOn(core, sync % "test->test")
+
+lazy val sync = (project in file("sync"))
+  .settings(name := "akka-serial-sync")
   .dependsOn(native % "test->runtime")
 
-lazy val native = (project in file("flow-native"))
-  .settings(name := "flow-native")
-
-lazy val stream = (project in file("flow-stream"))
-  .settings(name := "flow-stream")
-  .dependsOn(core, core % "test->test", native % "test->runtime")
-
-lazy val samplesTerminal = (project in file("flow-samples") / "terminal")
+lazy val samplesTerminal = (project in file("samples") / "terminal")
   .dependsOn(core, native % Runtime)
 
-lazy val samplesTerminalStream = (project in file("flow-samples") / "terminal-stream")
+lazy val samplesTerminalStream = (project in file("samples") / "terminal-stream")
   .dependsOn(stream, native % Runtime)
 
-lazy val samplesWatcher = (project in file("flow-samples") / "watcher")
+lazy val samplesWatcher = (project in file("samples") / "watcher")
   .dependsOn(core, native % Runtime)
 
 // Root project settings
@@ -68,13 +74,16 @@ enablePlugins(PreprocessPlugin)
 sourceDirectory in Preprocess := (baseDirectory in ThisBuild).value / "Documentation"
 preprocessVars in Preprocess := Map(
   "version" -> version.value,
-  "native_major" -> "4",
+  "native_major" -> "1",
   "native_minor" -> "0"
 )
 
 // Add scaladoc to documentation
 enablePlugins(SiteScaladocPlugin)
+import UnidocKeys._
 unidocSettings
+unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(
+  samplesTerminal, samplesTerminalStream, samplesWatcher)
 scalacOptions in (ScalaUnidoc, doc) ++= Seq(
   "-groups", // Group similar methods together based on the @group annotation.
   "-diagrams", // Show classs hierarchy diagrams (requires 'dot' to be available on path)
@@ -83,7 +92,7 @@ scalacOptions in (ScalaUnidoc, doc) ++= Seq(
 ) ++ {
   val latestTag: String = "git describe --abbrev=0 --match v[0-9].*".!!
   Opts.doc.sourceUrl(
-    s"https://github.com/jodersky/flow/blob/$latestTag€{FILE_PATH}.scala"
+    s"https://github.com/jodersky/akka-serial/blob/$latestTag€{FILE_PATH}.scala"
   )
 }
 siteMappings ++= (mappings in (ScalaUnidoc, packageDoc)).value.map{ case (file, path) =>
