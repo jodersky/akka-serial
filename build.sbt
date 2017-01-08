@@ -36,24 +36,24 @@ pomExtra in ThisBuild := {
 lazy val root = (project in file("."))
   .aggregate(core, native, stream)
 
-lazy val core = (project in file("flow-core"))
-  .settings(name := "flow-core")
+lazy val core = (project in file("core"))
+  .settings(name := "akka-serial-core")
   .dependsOn(native % "test->runtime")
 
-lazy val native = (project in file("flow-native"))
-  .settings(name := "flow-native")
+lazy val native = (project in file("native"))
+  .settings(name := "akka-serial-native")
 
-lazy val stream = (project in file("flow-stream"))
-  .settings(name := "flow-stream")
+lazy val stream = (project in file("stream"))
+  .settings(name := "akka-serial-stream")
   .dependsOn(core, core % "test->test", native % "test->runtime")
 
-lazy val samplesTerminal = (project in file("flow-samples") / "terminal")
+lazy val samplesTerminal = (project in file("samples") / "terminal")
   .dependsOn(core, native % Runtime)
 
-lazy val samplesTerminalStream = (project in file("flow-samples") / "terminal-stream")
+lazy val samplesTerminalStream = (project in file("samples") / "terminal-stream")
   .dependsOn(stream, native % Runtime)
 
-lazy val samplesWatcher = (project in file("flow-samples") / "watcher")
+lazy val samplesWatcher = (project in file("samples") / "watcher")
   .dependsOn(core, native % Runtime)
 
 // Root project settings
@@ -83,7 +83,7 @@ scalacOptions in (ScalaUnidoc, doc) ++= Seq(
 ) ++ {
   val latestTag: String = "git describe --abbrev=0 --match v[0-9].*".!!
   Opts.doc.sourceUrl(
-    s"https://github.com/jodersky/flow/blob/$latestTag€{FILE_PATH}.scala"
+    s"https://github.com/jodersky/akka-serial/blob/$latestTag€{FILE_PATH}.scala"
   )
 }
 siteMappings ++= (mappings in (ScalaUnidoc, packageDoc)).value.map{ case (file, path) =>

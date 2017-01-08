@@ -57,7 +57,7 @@ Flow's API follows that of an actor based system, where each actor is assigned s
 
 2. Serial "operators". Operators are created once per open serial port and serve as an intermediate between client code and native code dealing with serial data transmission and reception. They isolate the user from threading issues and enable the reactive dispatch of incoming data. A serial operator is said to be "associated" to its underlying open serial port.
 
-The messages understood by flow's actors are all contained in the `ch.jodersky.flow.Serial` object. They are well documented and should serve as the entry point when searching the API documentation.
+The messages understood by flow's actors are all contained in the `ch.jodersky.akka.serial.Serial` object. They are well documented and should serve as the entry point when searching the API documentation.
 
 ## Opening a Port
 A serial port is opened by sending an `Open` message to the serial manager. The response varies on the outcome of opening the underlying serial port.
@@ -67,7 +67,7 @@ A serial port is opened by sending an `Open` message to the serial manager. The 
 2. In case of success, the sender is notified with an `Opened` message. This message is sent from an operator actor, spawned by the serial manager. It is useful to capture the sender (i.e. the operator) of this message as all further communication with the newly opened port must pass through the operator.
 
 ~~~scala
-import ch.jodersky.flow.{ Serial, SerialSettings, AccessDeniedException }
+import ch.jodersky.akka.serial.{ Serial, SerialSettings, AccessDeniedException }
 
 val port = "/dev/ttyXXX"
 val settings = SerialSettings(
@@ -189,7 +189,7 @@ Flow provides support for Akka streams and thus can be interfaced with reactive-
 libraryDependencies += "ch.jodersky" %% "flow-stream" % "@version@"
 ~~~
 
-The main entry point for serial streaming is `ch.jodersky.flow.stream.Serial`. It's API is also well documented and should serve as the starting point when searching documentation on serial streaming.
+The main entry point for serial streaming is `ch.jodersky.akka.serial.stream.Serial`. Its API is also well documented and should serve as the starting point when searching documentation on serial streaming.
 
 ## Opening a Port
 Connection is established by materializing a `Flow[ByteString, ByteString, Future[Connection]]` obtained by calling `Serial().open()`
