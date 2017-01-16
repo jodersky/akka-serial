@@ -1,6 +1,6 @@
 // Build settings
 version in ThisBuild := ("git describe --always --dirty=-SNAPSHOT --match v[0-9].*" !!).tail.trim
-crossScalaVersions in ThisBuild := List("2.11.8", "2.12.1")
+crossScalaVersions in ThisBuild := List("2.12.1", "2.11.8")
 scalaVersion in ThisBuild := crossScalaVersions.value.head
 scalacOptions in ThisBuild ++= Seq(
   "-deprecation",
@@ -80,7 +80,10 @@ preprocessVars in Preprocess := Map(
 
 // Add scaladoc to documentation
 enablePlugins(SiteScaladocPlugin)
+import UnidocKeys._
 unidocSettings
+unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(
+  samplesTerminal, samplesTerminalStream, samplesWatcher)
 scalacOptions in (ScalaUnidoc, doc) ++= Seq(
   "-groups", // Group similar methods together based on the @group annotation.
   "-diagrams", // Show classs hierarchy diagrams (requires 'dot' to be available on path)
