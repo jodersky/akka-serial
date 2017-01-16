@@ -1,8 +1,8 @@
 {% highlight scala %}
 import akka.actor.{Actor, ActorLogging, ActorRef, Props, Terminated}
 import akka.io.IO
+import akka.serial.{Serial, SerialSettings}
 import akka.util.ByteString
-import com.github.jodersky.flow.{Serial, SerialSettings}
 
 /**
  *  Sample actor representing a simple terminal.

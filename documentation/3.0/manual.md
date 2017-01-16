@@ -6,6 +6,20 @@ title: User Guide
 * TOC
 {:toc}
 
+-----
+
+## Migrating from 2.x to 3.x
+
+The latest major release, 3, introduces some source compatibility-breaking changes:
+
+- Organization and packages have been changed from `com.github.jodersky` to `ch.jodersky`
+- A new major version of the native library has been released, `libflow4`
+
+It should be sufficient to change any imports that previously used "com.github.jodersky.flow" to "ch.jodersky.flow".
+In case you manually installed the native library, you will also need to upgrade to libflow4 (see the Developer Guide for more information).
+
+-----
+
 # Getting Started
 Flow uses sbt as build system. To get started, include a dependency to flow in your project:
 

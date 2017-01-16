@@ -13,14 +13,14 @@ title: Downloads
 Add the following to your build configuration:
 
 ~~~scala
-//main artifact
-libraryDependencies += "ch.jodersky" %% "flow-core" % "{{site.version_latest}}"
+// main artifact
+libraryDependencies += "ch.jodersky" %% "akka-serial-core" % "{{site.version_latest}}"
 
-//"fat" jar containing native libraries
-libraryDependencies += "ch.jodersky" % "flow-native" % "{{site.version_latest}}" % "runtime"
+// "fat" jar containing native libraries
+libraryDependencies += "ch.jodersky" % "akka-serial-native" % "{{site.version_latest}}" % "runtime"
 
-//(experimental) support for Akka streams
-libraryDependencies += "ch.jodersky" %% "flow-stream" % "{{site.version_latest}}"
+// support for Akka streams
+libraryDependencies += "ch.jodersky" %% "akka-serial-stream" % "{{site.version_latest}}"
 ~~~
 
 </div>
@@ -43,16 +43,16 @@ libraryDependencies += "ch.jodersky" %% "flow-stream" % "{{site.version_latest}}
 </table>
 
 <p class="small">*These are the platforms for which a native library is included in the release.
-Flow is POSIX compatible so it can be built for a lot more platforms.</p>
+akka-serial is POSIX compatible so it can be built for a lot more platforms.</p>
 </div>
 
 </div>
 
 ## Release Notes
-Consult the <a href="https://github.com/jodersky/flow/blob/master/CHANGELOG.md">release notes</a> for important changes.
+Consult the <a href="https://github.com/jodersky/akka-serial/blob/master/CHANGELOG.md">release notes</a> for important changes.
 
 ## Requirements
-Flow depends on Akka 2.4 and requires a Java runtime version of 1.8. It is released for Scala binary versions 2.11 and 2.12.0-M5.
+Flow depends on Akka 2.4 and requires a Java runtime version of 1.8. It is released for Scala binary versions 2.11 and 2.12.
 
 ## Previous Versions
-Archived releases are available in <a href="https://github.com/jodersky/flow/releases">GitHub releases</a>.
+Archived releases are available in <a href="https://github.com/jodersky/akka-serial/releases">GitHub releases</a>.
