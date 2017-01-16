@@ -12,7 +12,7 @@ import org.scalatest._
 
 class SerialSpec extends WordSpec with BeforeAndAfterAll with PseudoTerminal {
 
-  implicit val system = ActorSystem("flow-test")
+  implicit val system = ActorSystem("akka-serial-test")
   implicit val materializer = ActorMaterializer()
 
   override def afterAll {

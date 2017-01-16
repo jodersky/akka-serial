@@ -7,7 +7,7 @@ title: Developer Guide
 {:toc}
 
 # Building from Source
-A complete build of flow involves two parts
+A complete build of akka-serial involves two parts
 
 1. Building Scala sources (the front-end), resulting in a platform independent artifact (i.e. a jar file).
 
@@ -19,7 +19,7 @@ Both steps are independent, their only interaction being a header file generated
 Run `sbt core/package` in the base directory. This simply compiles Scala sources as with any standard sbt project and packages the resulting class files into a jar.
 
 ## Building Native Sources
-The back-end is managed by CMake and all relevant files are contained in `flow-native/src`.
+The back-end is managed by CMake and all relevant files are contained in `native/src`.
 
 ### Build Process
 Several steps are involved in producing the native library:
@@ -45,9 +45,9 @@ Several steps are involved in producing the native library:
     - put into a "fat" jar, useful for dependency management with sbt (see next section)
 
 ### Creating a Fat Jar
-The native library produced in the previous step may be bundled into a "fat" jar so that it can be included in SBT projects through its regular dependency mechanisms. In this process, sbt basically acts as a wrapper script around CMake, calling the native build process and packaging generated libraries. Running `sbt native/package` produces the fat jar in `flow-native/target`.
+The native library produced in the previous step may be bundled into a "fat" jar so that it can be included in sbt projects through its regular dependency mechanisms. In this process, sbt basically acts as a wrapper script around CMake, calling the native build process and packaging generated libraries. Running `sbt native/package` produces the fat jar in `native/target`.
 
-Note: an important feature of fat jars is to include native libraries for several platforms. To copy binaries compiled on other platforms to the fat jar, place them in a subfolder of `flow-native/lib_native`. The subfolder should have the name `$(arch)-$(kernel)`, where `arch` and `kernel` are, respectively, the lower-case values returned by `uname -m` and `uname -s`.
+Note: an important feature of fat jars is to include native libraries for several platforms. To copy binaries compiled on other platforms to the fat jar, place them in a subfolder of `native/lib_native`. The subfolder should have the name `$(arch)-$(kernel)`, where `arch` and `kernel` are, respectively, the lower-case values returned by `uname -m` and `uname -s`.
 
 ### Note About Versioning
 The project and package versions follow a [semantic](http://semver.org/) pattern: `M.m.p`, where
@@ -58,11 +58,11 @@ The project and package versions follow a [semantic](http://semver.org/) pattern
 
 - `p` is the patch number, representing internal modifications such as bug-fixes
 
-Usually (following most Linux distribution's conventions), shared libraries produced by a project `name` of version `M.m.p` are named `libname.so.M.m.p`. However, since when accessing shared libraries through the JVM, only the `name` can be specified and no particular version, the convention adopted by flow is to append `M` to the library name and always keep the major version at zero. E.g. `libflow.so.3.1.2` becomes `libflow3.so.0.1.2`.
+Usually (following most Linux distribution's conventions), shared libraries produced by a project `name` of version `M.m.p` are named `libname.so.M.m.p`. However, since when accessing shared libraries through the JVM, only the `name` can be specified and no particular version, the convention adopted by akka-serial is to append `M` to the library name and always keep the major version at zero. E.g. `libakkaserial.so.3.1.2` becomes `libakakserial3.so.0.1.2`.
 
 # Testing
-`flow-samples` directory contains fully functional application examples of flow. To run an example, change to the base directory of flow and run sbt samples<SampleName>/run.
-All projects, including samples, can be listed by running sbt projects.
+The `samples` directory contains fully functional application examples of akka-serial. To run an example, change to the base directory of akka-serial and run sbt samples<SampleName>/run.
+All projects, including samples, can be listed by running `sbt projects`.
 
 To be able connect you can use real device (arduino) burned with sample-echo (`dev/arduino-terminal`) code, or create Virtual Serial Port pair
 
@@ -101,11 +101,11 @@ socat -d -d pty,raw,echo=0 "exec:/bin/cat,pty,raw,echo=0"
 ```
 
 # Publishing and Releasing
-Releases are handled automatically by the continuous integration and deployment system (Travis CI). A release will be performed for every annotated Git tag that is pushed to the main repository.
+Releases are handled automatically by the continuous integration and deployment system, Travis CI. A release will be performed for every annotated Git tag that is pushed to the main repository.
 
 Here are a couple of observations on the release process:
 
-- During a release, only readily available libraries in `lib_native` are packaged into the fat jar, no local native compilation is performed. The rationale behind this is that while native libraries rarely change, they are still tied to the version of libc of the compiling system. Since the releases are mostly done on a development machine (cutting-edge OS), compiling native libraries locally could break compatibility with older systems.
+- During a release, only readily available libraries in `native/lib_native` are packaged into the fat jar, no local native compilation is performed. The rationale behind this is that while native libraries rarely change, they are still tied to the version of libc of the compiling system. Since the releases are mostly done on a development machine with a cutting-edge OS, compiling native libraries locally could break compatibility with older systems.
 
 - The website is not automatically updated. After creating a new release:
 

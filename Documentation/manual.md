@@ -7,13 +7,13 @@ title: User Guide
 {:toc}
 
 # Getting Started
-Flow uses sbt as build system. To get started, include a dependency to flow in your project:
+akka-serial uses sbt as build system. To get started, include a dependency to akka-serial in your project:
 
 ~~~scala
-libraryDependencies += "ch.jodersky" %% "flow-core" % "@version@"
+libraryDependencies += "ch.jodersky" %% "akka-serial-core" % "@version@"
 ~~~
 
-Next, you need to include flow's native library that supports communication for serial devices.
+Next, you need to include akka-serial's native library that supports communication for serial devices.
 
 ## Including Native Library
 There are two options to include the native library:
@@ -28,19 +28,19 @@ It is recommended that you use the first option for testing purposes or end-user
 In case your kernel/architecture combination is present in the "supported platforms" table in the [downloads section]({{site.url}}/downloads/), add a second dependency to your project:
 
 ~~~scala
-libraryDependencies += "ch.jodersky" % "flow-native" % "@version@" % "runtime"
+libraryDependencies += "ch.jodersky" % "akka-serial-native" % "@version@" % "runtime"
 ~~~
 
 This will add a jar to your classpath containing native libraries for various platforms. At run-time, the correct library for the current platform is selected, extracted and loaded. This solution enables running applications seamlessly, as if they were pure JVM applications.
 
 ### Maximum Portability
-Start by obtaining a copy of the native library, either by [building flow](./developer) or by [downloading]({{site.url}}/downloads/) a native archive. In order to work with this version of flow, native libraries need to be of major version @native_major@ and minor version greater or equal to @native_minor@.
+Start by obtaining a copy of the native library, either by [building akka-serial](./developer) or by [downloading]({{site.url}}/downloads/) a native archive. In order to work with this version of akka-serial, native libraries need to be of major version @native_major@ and minor version greater or equal to @native_minor@.
 
-Then, for every end-user application that relies on flow, manually add the native library for the current platform to the JVM's library path. This can be achieved through various ways, notably:
+Then, for every end-user application that relies on akka-serial, manually add the native library for the current platform to the JVM's library path. This can be achieved through various ways, notably:
 
 - Per application:
 
-    Run your program with the command-line option ```-Djava.library.path=".:<folder containing libflow@native_major@.so>"```. E.g. ```java -Djava.library.path=".:/home/<folder containing libflow@native_major@.so>" -jar your-app.jar```
+    Run your program with the command-line option ```-Djava.library.path=".:<folder containing libakkaserial@native_major@.so>"```. E.g. ```java -Djava.library.path=".:/home/<folder containing libakkaserial@native_major@.so>" -jar your-app.jar```
 
 - System- or user-wide:
 
@@ -49,15 +49,15 @@ Then, for every end-user application that relies on flow, manually add the nativ
 ---
 
 # Communication Protocol
-The following is a general guide on the usage of flow. If you prefer a complete example, check out the code contained in the [flow-samples](https://github.com/jodersky/flow/tree/v@version@/flow-samples) directory.
+The following is a general guide on the usage of akak-serial. If you prefer a complete example, check out the code contained in the [samples](https://github.com/jodersky/akka-serial/tree/v@version@/samples) directory.
 
-Flow's API follows that of an actor based system, where each actor is assigned specific functions involved in serial communication. The two main actor types are:
+akka-serial's API follows that of an actor based system, where each actor is assigned specific functions involved in serial communication. The two main actor types are:
 
 1. Serial "manager". The manager is a singleton actor that is instantiated once per actor system, a reference to it may be obtained with `IO(Serial)`. It is typically used to open serial ports (see following section).
 
 2. Serial "operators". Operators are created once per open serial port and serve as an intermediate between client code and native code dealing with serial data transmission and reception. They isolate the user from threading issues and enable the reactive dispatch of incoming data. A serial operator is said to be "associated" to its underlying open serial port.
 
-The messages understood by flow's actors are all contained in the `ch.jodersky.akka.serial.Serial` object. They are well documented and should serve as the entry point when searching the API documentation.
+The messages understood by akka-serial's actors are all contained in the `akka.serial.Serial` object. They are well documented and should serve as the entry point when searching the API documentation.
 
 ## Opening a Port
 A serial port is opened by sending an `Open` message to the serial manager. The response varies on the outcome of opening the underlying serial port.
@@ -67,7 +67,7 @@ A serial port is opened by sending an `Open` message to the serial manager. The 
 2. In case of success, the sender is notified with an `Opened` message. This message is sent from an operator actor, spawned by the serial manager. It is useful to capture the sender (i.e. the operator) of this message as all further communication with the newly opened port must pass through the operator.
 
 ~~~scala
-import ch.jodersky.akka.serial.{ Serial, SerialSettings, AccessDeniedException }
+import akka.serial.{ Serial, SerialSettings, AccessDeniedException }
 
 val port = "/dev/ttyXXX"
 val settings = SerialSettings(
@@ -138,7 +138,7 @@ The opposite is not true by default, i.e. if the operator crashes (this can happ
 ---
 
 # Watching Ports
-As of version 2.2.0, flow can watch directories for new files. On most unix systems this can be used for watching for new serial ports in `/dev/`.
+akka-serial can watch directories for new files. On most unix systems this can be used for watching for new serial ports in `/dev/`.
 Watching happens through a message-based, publish-subscribe protocol as explained in the sections below.
 
 ## Subscribing
@@ -183,13 +183,13 @@ Note that the manager has a deathwatch on every subscribed client. Hence, should
 ---
 
 # Stream Support
-Flow provides support for Akka streams and thus can be interfaced with reactive-streams. Support is implemented in a separate module, which needs to be added as a library dependency:
+akka-serial provides support for Akka streams and thus can be interfaced with reactive-streams. Support is implemented in a separate module, which needs to be added as a library dependency:
 
 ~~~scala
-libraryDependencies += "ch.jodersky" %% "flow-stream" % "@version@"
+libraryDependencies += "ch.jodersky" %% "akka-serial-stream" % "@version@"
 ~~~
 
-The main entry point for serial streaming is `ch.jodersky.akka.serial.stream.Serial`. Its API is also well documented and should serve as the starting point when searching documentation on serial streaming.
+The main entry point for serial streaming is `akka.serial.stream.Serial`. Its API is also well documented and should serve as the starting point when searching documentation on serial streaming.
 
 ## Opening a Port
 Connection is established by materializing a `Flow[ByteString, ByteString, Future[Connection]]` obtained by calling `Serial().open()`
@@ -217,6 +217,6 @@ Note that backpressure is only available for writing, to add backpressure on the
 The underlying serial port is closed when its materialized serial flow is closed.
 
 ## Errors and Resource Handling
-Any errors described in flow-core can also be encountered in flow-streaming. When thrown, they will be wrapped as the cause of a `StreamSerialException` and cause the the serial `Flow` stage to fail.
+Any errors described in akka-serial-core can also be encountered in akka-serial-stream. When thrown, they will be wrapped as the cause of a `StreamSerialException` and cause the the serial `Flow` stage to fail.
 
-As with flow-core, native resources are handled by underlying Akka mechanisms and any crashes in user code will automatically case the resources to be freed.
+As with akka-serial-core, native resources are handled by underlying Akka mechanisms and any crashes in user code will automatically case the resources to be freed.

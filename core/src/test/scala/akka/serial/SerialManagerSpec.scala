@@ -30,6 +30,8 @@ class SerialManagerSpec
     "fail opening a non-existing port" in {
       val cmd = Serial.Open("nonexistent", SerialSettings(115200))
       manager ! cmd
+
+      //manager.context.set
       assert(expectMsgType[Serial.CommandFailed].command == cmd)
     }
 

@@ -143,11 +143,11 @@ private[stream] class SerialConnectionLogic(
         if (isAvailable(out)) {
           push(out, data)
         } else if (failOnOverflow) {
-          /* Note that the native backend does not provide any way of informing about
-           * dropped serial data. However, in most cases, a computer capable of running flow
-           * is also capable of processing incoming serial data at typical baud rates.
-           * Hence packets will usually only be dropped if an application that uses flow
-           * backpressures, which can however be detected here. */
+          /* Note that the native backend does not provide any way of informing about dropped serial
+           * data. However, in most cases, a computer capable of running akka-serial is also capable
+           * of processing incoming serial data at typical baud rates. Hence packets will usually
+           * only be dropped if an application that uses akka-serial backpressures, which can
+           * however be detected here. */
           failStage(new StreamSerialException("Incoming serial data was dropped."))
         }
 

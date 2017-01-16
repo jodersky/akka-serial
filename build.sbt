@@ -9,11 +9,13 @@ scalacOptions in ThisBuild ++= Seq(
   "-target:jvm-1.8"
 )
 fork in ThisBuild := true
+connectInput in run in ThisBuild := true
+outputStrategy in run in ThisBuild := Some(StdoutOutput)
 
 // Publishing
 organization in ThisBuild := "ch.jodersky"
 licenses in ThisBuild := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause")))
-homepage in ThisBuild := Some(url("https://jodersky.github.io/flow"))
+homepage in ThisBuild := Some(url("https://jodersky.github.io/akka-serial"))
 publishMavenStyle in ThisBuild := true
 publishTo in ThisBuild := {
   val nexus = "https://oss.sonatype.org/"
@@ -21,8 +23,8 @@ publishTo in ThisBuild := {
 }
 pomExtra in ThisBuild := {
   <scm>
-    <url>git@github.com:jodersky/flow.git</url>
-    <connection>scm:git:git@github.com:jodersky/flow.git</connection>
+    <url>git@github.com:jodersky/akka-serial.git</url>
+    <connection>scm:git:git@github.com:jodersky/akka-serial.git</connection>
   </scm>
   <developers>
     <developer>
@@ -45,7 +47,7 @@ lazy val native = (project in file("native"))
 
 lazy val stream = (project in file("stream"))
   .settings(name := "akka-serial-stream")
-  .dependsOn(core, sync % "test->test", native % "test->runtime")
+  .dependsOn(core, sync % "test->test")
 
 lazy val sync = (project in file("sync"))
   .settings(name := "akka-serial-sync")

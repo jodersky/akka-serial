@@ -41,7 +41,7 @@ class Watcher extends Actor with ActorLogging {
 object Main {
 
   def main(args: Array[String]): Unit = {
-    val system = ActorSystem("flow")
+    val system = ActorSystem("akka-serial")
     val watcher = system.actorOf(Props(classOf[Watcher]), name = "watcher")
     StdIn.readLine()
     system.terminate()

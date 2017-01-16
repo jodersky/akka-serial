@@ -1,6 +1,6 @@
 package akka.serial
 
-import akka.actor.{ Actor, ActorLogging, ActorRef, Props, Terminated }
+import akka.actor.{ Actor, ActorRef, Props, Terminated }
 import akka.util.ByteString
 import java.nio.ByteBuffer
 

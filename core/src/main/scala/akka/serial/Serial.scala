@@ -3,16 +3,16 @@ package akka.serial
 import akka.actor.ExtensionKey
 import akka.util.ByteString
 
-/** Defines messages used by flow's serial IO layer. */
+/** Defines messages used by akka-serial's serial IO layer. */
 object Serial extends ExtensionKey[SerialExt] {
 
-  /** Base trait for any flow-related messages. */
+  /** Base trait for any akka-serial-related messages. */
   sealed trait Message
 
-  /** A message extending this trait is to be viewed as a command, an out-bound message issued by the client to flow's API. */
+  /** A message extending this trait is to be viewed as a command, an out-bound message issued by the client to akka-serial's API. */
   trait Command extends Message
 
-  /** A message extending this trait is to be viewed as an event, an in-bound message issued by flow to the client. */
+  /** A message extending this trait is to be viewed as an event, an in-bound message issued by akka-serial to the client. */
   trait Event extends Message
 
   /** A command has failed. */

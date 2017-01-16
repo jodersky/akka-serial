@@ -23,7 +23,7 @@ object Main {
 
     println("Starting terminal system, enter :q to exit.")
     Serial.debug(true)
-    val system = ActorSystem("flow")
+    val system = ActorSystem("akka-serial")
     val terminal = system.actorOf(Terminal(port, settings), name = "terminal")
     system.registerOnTermination(println("Stopped terminal system."))
   }

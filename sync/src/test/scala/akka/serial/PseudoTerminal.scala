@@ -12,7 +12,7 @@ trait PseudoTerminal {
   final val SetupTimeout = 100.milliseconds
 
   def withEcho[A](action: (String, SerialSettings) => A): A = {
-    val dir = Files.createTempDirectory("flow-pty").toFile
+    val dir = Files.createTempDirectory("akka-serial-pty").toFile
     val pty = new File(dir, "pty")
 
     val socat = try {

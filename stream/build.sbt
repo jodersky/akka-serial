@@ -1,4 +1,4 @@
-import flow.Dependencies
+import akkaserial.Dependencies
 
 libraryDependencies += Dependencies.akkaActor
 libraryDependencies += Dependencies.akkaStream

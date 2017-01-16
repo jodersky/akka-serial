@@ -1,4 +1,4 @@
-package flow
+package akkaserial
 
 import sbt._
 
