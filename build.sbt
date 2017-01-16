@@ -1,6 +1,6 @@
 // Build settings
 version in ThisBuild := ("git describe --always --dirty=-SNAPSHOT --match v[0-9].*" !!).tail.trim
-crossScalaVersions in ThisBuild := List("2.11.8", "2.12.0")
+crossScalaVersions in ThisBuild := List("2.11.8", "2.12.1")
 scalaVersion in ThisBuild := crossScalaVersions.value.head
 scalacOptions in ThisBuild ++= Seq(
   "-deprecation",
