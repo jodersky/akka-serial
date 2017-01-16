@@ -20,6 +20,6 @@ cache:
     - "$HOME/.sbt/boot/"
 
 before_cache:
-  - find $HOME/.ivy2/cache/ch.jodersky -depth -name "flow*" -exec rm -r {} \;
+  - find $HOME/.ivy2/cache/ch.jodersky -depth -name "akka-serial*" -exec rm -r {} \;
   - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
   - find $HOME/.sbt -name "*.lock" -delete
