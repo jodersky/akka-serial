@@ -12,7 +12,7 @@ set(ignoreMe "${SBT}") # sbt-jni defines -DSBT
 # (required by sbt-jni) please use semantic versioning
 #
 project (akkaserial)
-set(PROJECT_VERSION_MAJOR 5)
+set(PROJECT_VERSION_MAJOR 1)
 set(PROJECT_VERSION_MINOR 0)
 set(PROJECT_VERSION_PATCH 0)
 

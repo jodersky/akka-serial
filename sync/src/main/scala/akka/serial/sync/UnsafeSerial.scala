@@ -17,7 +17,7 @@ import ch.jodersky.jni.nativeLoader
   *
   * @param serialAddr address of natively allocated serial configuration structure
   */
-@nativeLoader("akkaserial5")
+@nativeLoader("akkaserial1")
 private[serial] class UnsafeSerial(final val serialAddr: Long) {
 
   final val ParityNone: Int = 0
