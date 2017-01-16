@@ -16,7 +16,7 @@ Start by reading the manual and checking out some examples.
 - <i class="fa fa-book"></i> [Developer Guide]({{site.version_docs}}/developer)
   Instructions on building, testing and publishing akka-serial.
 
-- <i class="fa fa-code"></i> [API documentation]({{site.version_docs}}/api/index.html#akka.serial.Serial$)
+- <i class="fa fa-code"></i> [API documentation]({{site.version_docs}}/api/akka/serial/Serial$)
   Browse akka-serial's API.
 
 ## Help

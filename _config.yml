@@ -1,5 +1,5 @@
 # Site settings
-title: flow
+title: akka-serial
 description: Serial communication library for Akka and Scala.
 url: "https://www.jodersky.ch/akka-serial"
 version_latest: 4.0.0
