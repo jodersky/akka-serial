@@ -1,4 +1,4 @@
-package ch.jodersky.akka.serial
+akka.serial
 package samples.terminalstream
 
 import scala.concurrent.Future

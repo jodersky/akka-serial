@@ -1,4 +1,4 @@
-package ch.jodersky.akka.serial
+package akka.serial
 package samples.terminal
 
 import akka.actor.ActorSystem

@@ -1,4 +1,4 @@
-package ch.jodersky.akka.serial
+package akka.serial
 package samples.watcher
 
 import akka.actor.{ Actor, ActorLogging, ActorSystem, Props }

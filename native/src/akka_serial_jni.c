@@ -2,8 +2,8 @@
 
 #include "akka_serial.h"
 
-#include "ch_jodersky_akka_serial_sync_UnsafeSerial.h"
-#include "ch_jodersky_akka_serial_sync_UnsafeSerial__.h"
+#include "akka_serial_sync_UnsafeSerial.h"
+#include "akka_serial_sync_UnsafeSerial__.h"
 
 // suppress unused parameter warnings
 #define UNUSED_ARG(x) (void)(x)
@@ -18,11 +18,11 @@ static void check(JNIEnv* env, int ret)
 {
 	switch (ret) {
 	case -E_IO: throwException(env, "java/io/IOException", ""); break;
-	case -E_BUSY: throwException(env, "ch/jodersky/akka/serial/PortInUseException", ""); break;
-	case -E_ACCESS_DENIED: throwException(env, "ch/jodersky/akka/serial/AccessDeniedException", ""); break;
-	case -E_INVALID_SETTINGS: throwException(env, "ch/jodersky/akka/serial/InvalidSettingsException", ""); break;
-	case -E_INTERRUPT: throwException(env, "ch/jodersky/akka/serial/PortInterruptedException", ""); break;
-	case -E_NO_PORT: throwException(env, "ch/jodersky/akka/serial/NoSuchPortException", ""); break;
+	case -E_BUSY: throwException(env, "akka/serial/PortInUseException", ""); break;
+	case -E_ACCESS_DENIED: throwException(env, "akka/serial/AccessDeniedException", ""); break;
+	case -E_INVALID_SETTINGS: throwException(env, "akka/serial/InvalidSettingsException", ""); break;
+	case -E_INTERRUPT: throwException(env, "akka/serial/PortInterruptedException", ""); break;
+	case -E_NO_PORT: throwException(env, "akka/serial/NoSuchPortException", ""); break;
 	default: return;
 	}
 }
@@ -30,18 +30,18 @@ static void check(JNIEnv* env, int ret)
 /** Get pointer to serial config associated to an UnsafeSerial instance. */
 static struct serial_config* get_config(JNIEnv* env, jobject unsafe_serial)
 {
-	jclass clazz = (*env)->FindClass(env, "ch/jodersky/akka/serial/sync/UnsafeSerial");
+	jclass clazz = (*env)->FindClass(env, "akka/serial/sync/UnsafeSerial");
 	jfieldID field = (*env)->GetFieldID(env, clazz, "serialAddr", "J");
 	jlong addr = (*env)->GetLongField(env, unsafe_serial, field);
 	return (struct serial_config*) (intptr_t) addr;
 }
 
 /*
- * Class:     ch_jodersky_akka_serial_sync_UnsafeSerial__
+ * Class:     akka_serial_sync_UnsafeSerial__
  * Method:    open
  * Signature: (Ljava/lang/String;IIZI)J
  */
-JNIEXPORT jlong JNICALL Java_ch_jodersky_akka_serial_sync_UnsafeSerial_00024_open
+JNIEXPORT jlong JNICALL Java_akka_serial_sync_UnsafeSerial_00024_open
 (JNIEnv *env, jobject instance, jstring port_name, jint baud, jint char_size, jboolean two_stop_bits, jint parity)
 {
 	UNUSED_ARG(instance);
@@ -61,11 +61,11 @@ JNIEXPORT jlong JNICALL Java_ch_jodersky_akka_serial_sync_UnsafeSerial_00024_ope
 }
 
 /*
- * Class:     ch_jodersky_akka_serial_sync_UnsafeSerial
+ * Class:     akka_serial_sync_UnsafeSerial
  * Method:    read
  * Signature: (Ljava/nio/ByteBuffer;)I
  */
-JNIEXPORT jint JNICALL Java_ch_jodersky_akka_serial_sync_UnsafeSerial_read
+JNIEXPORT jint JNICALL Java_akka_serial_sync_UnsafeSerial_read
 (JNIEnv *env, jobject instance, jobject buffer)
 {
 	char* local_buffer = (char*) (*env)->GetDirectBufferAddress(env, buffer);
@@ -85,11 +85,11 @@ JNIEXPORT jint JNICALL Java_ch_jodersky_akka_serial_sync_UnsafeSerial_read
 }
 
 /*
- * Class:     ch_jodersky_akka_serial_sync_UnsafeSerial
+ * Class:     akka_serial_sync_UnsafeSerial
  * Method:    cancelRead
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_ch_jodersky_akka_serial_sync_UnsafeSerial_cancelRead
+JNIEXPORT void JNICALL Java_akka_serial_sync_UnsafeSerial_cancelRead
 (JNIEnv *env, jobject instance)
 {
 	int r = serial_cancel_read(get_config(env, instance));
@@ -99,11 +99,11 @@ JNIEXPORT void JNICALL Java_ch_jodersky_akka_serial_sync_UnsafeSerial_cancelRead
 }
 
 /*
- * Class:     ch_jodersky_akka_serial_sync_UnsafeSerial
+ * Class:     akka_serial_sync_UnsafeSerial
  * Method:    write
  * Signature: (Ljava/nio/ByteBuffer;I)I
  */
-JNIEXPORT jint JNICALL Java_ch_jodersky_akka_serial_sync_UnsafeSerial_write
+JNIEXPORT jint JNICALL Java_akka_serial_sync_UnsafeSerial_write
 (JNIEnv *env, jobject instance, jobject buffer, jint size)
 {
 
@@ -122,11 +122,11 @@ JNIEXPORT jint JNICALL Java_ch_jodersky_akka_serial_sync_UnsafeSerial_write
 }
 
 /*
- * Class:     ch_jodersky_akka_serial_sync_UnsafeSerial
+ * Class:     akka_serial_sync_UnsafeSerial
  * Method:    close
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_ch_jodersky_akka_serial_sync_UnsafeSerial_close
+JNIEXPORT void JNICALL Java_akka_serial_sync_UnsafeSerial_close
 (JNIEnv *env, jobject instance)
 {
 	int r = serial_close(get_config(env, instance));
@@ -136,11 +136,11 @@ JNIEXPORT void JNICALL Java_ch_jodersky_akka_serial_sync_UnsafeSerial_close
 }
 
 /*
- * Class:     ch_jodersky_akka_serial_sync_UnsafeSerial__
+ * Class:     akka_serial_sync_UnsafeSerial__
  * Method:    debug
  * Signature: (Z)V
  */
-JNIEXPORT void JNICALL Java_ch_jodersky_akka_serial_sync_UnsafeSerial_00024_debug
+JNIEXPORT void JNICALL Java_akka_serial_sync_UnsafeSerial_00024_debug
 (JNIEnv *env, jobject instance, jboolean value)
 {
 	UNUSED_ARG(env);
