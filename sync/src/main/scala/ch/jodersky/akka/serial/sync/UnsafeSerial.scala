@@ -1,4 +1,5 @@
 package ch.jodersky.akka.serial
+package sync
 
 import java.nio.ByteBuffer
 
@@ -16,7 +17,7 @@ import ch.jodersky.jni.nativeLoader
   *
   * @param serialAddr address of natively allocated serial configuration structure
   */
-@nativeLoader("flow4")
+@nativeLoader("akkaserial5")
 private[serial] class UnsafeSerial(final val serialAddr: Long) {
 
   final val ParityNone: Int = 0

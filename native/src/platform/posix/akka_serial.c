@@ -6,7 +6,7 @@
 #include <fcntl.h>
 #include <sys/file.h>
 #include <sys/select.h>
-#include "flow.h"
+#include "akka_serial.h"
 
 #define DATA_CANCEL 0xffffffff
 

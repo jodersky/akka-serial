@@ -6,6 +6,7 @@ import akka.actor.{ActorRef, ActorSystem}
 import akka.testkit.{ImplicitSender, TestKit}
 import akka.util.ByteString
 import org.scalatest._
+import sync._
 
 case class Ack(n: Int) extends Serial.Event
 

@@ -9,8 +9,9 @@ import akka.io.IO
 import akka.stream.scaladsl.Flow
 import akka.util.ByteString
 
-import ch.jodersky.akka.serial.{Serial => CoreSerial}
 import impl._
+import ch.jodersky.akka.serial.{Serial => CoreSerial}
+
 
 object Serial extends ExtensionId[Serial] with ExtensionIdProvider {
 

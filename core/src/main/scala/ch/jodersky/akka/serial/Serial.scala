@@ -127,6 +127,6 @@ object Serial extends ExtensionKey[SerialExt] {
    *
    * @param value set to enable debugging
    */
-  def debug(value: Boolean) = UnsafeSerial.debug(value)
+  def debug(value: Boolean) = sync.UnsafeSerial.debug(value)
 
 }

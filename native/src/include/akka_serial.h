@@ -1,5 +1,5 @@
-#ifndef FLOW_H
-#define FLOW_H
+#ifndef AKKA_SERIAL_H
+#define AKKA_SERIAL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -100,4 +100,4 @@ void serial_debug(bool value);
 }
 #endif
 
-#endif /* FLOW_H */
+#endif /* AKKA_SERIAL_H */

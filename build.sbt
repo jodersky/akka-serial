@@ -34,18 +34,22 @@ pomExtra in ThisBuild := {
 
 // Project structure
 lazy val root = (project in file("."))
-  .aggregate(core, native, stream)
+  .aggregate(core, native, stream, sync)
 
 lazy val core = (project in file("core"))
   .settings(name := "akka-serial-core")
-  .dependsOn(native % "test->runtime")
+  .dependsOn(sync, sync % "test->test")
 
 lazy val native = (project in file("native"))
   .settings(name := "akka-serial-native")
 
 lazy val stream = (project in file("stream"))
   .settings(name := "akka-serial-stream")
-  .dependsOn(core, core % "test->test", native % "test->runtime")
+  .dependsOn(core, sync % "test->test", native % "test->runtime")
+
+lazy val sync = (project in file("sync"))
+  .settings(name := "akka-serial-sync")
+  .dependsOn(native % "test->runtime")
 
 lazy val samplesTerminal = (project in file("samples") / "terminal")
   .dependsOn(core, native % Runtime)

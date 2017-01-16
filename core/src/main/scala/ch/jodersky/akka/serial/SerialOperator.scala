@@ -4,6 +4,8 @@ import akka.actor.{ Actor, ActorLogging, ActorRef, Props, Terminated }
 import akka.util.ByteString
 import java.nio.ByteBuffer
 
+import sync.SerialConnection
+
 /**
   * Operator associated to an open serial port. All communication with a port is done via an operator. Operators are created though the serial manager.
   * @see SerialManager
@@ -21,8 +23,7 @@ private[serial] class SerialOperator(connection: SerialConnection, bufferSize: I
       while (!connection.isClosed && !stop) {
         try {
           buffer.clear()
-          val length = connection.read(buffer)
-          buffer.limit(length)
+          connection.read(buffer)
           val data = ByteString.fromByteBuffer(buffer)
           client.tell(Serial.Received(data), self)
         } catch {

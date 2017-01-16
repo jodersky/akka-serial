@@ -11,8 +11,8 @@ set(ignoreMe "${SBT}") # sbt-jni defines -DSBT
 # Define project and related variables
 # (required by sbt-jni) please use semantic versioning
 #
-project (flow)
-set(PROJECT_VERSION_MAJOR 4)
+project (akkaserial)
+set(PROJECT_VERSION_MAJOR 5)
 set(PROJECT_VERSION_MINOR 0)
 set(PROJECT_VERSION_PATCH 0)
 

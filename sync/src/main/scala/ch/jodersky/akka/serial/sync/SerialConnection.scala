@@ -1,4 +1,5 @@
 package ch.jodersky.akka.serial
+package sync
 
 import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicBoolean
@@ -10,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  *
  * The underlying serial port is assumed open when this class is initialized.
  */
-private[serial] class SerialConnection private (
+class SerialConnection private (
   unsafe: UnsafeSerial,
   val port: String
 ) {
@@ -49,14 +50,14 @@ private[serial] class SerialConnection private (
 
   /**
    * Reads data from underlying serial connection into a ByteBuffer.
-   * Note that data is read into the buffer's memory, its attributes
-   * such as position and limit are not modified.
+   * Note that data is read into the buffer's memory, starting at the
+   * first position. The buffer's limit is set to the number of bytes
+   * read.
    *
    * A call to this method is blocking, however it is interrupted
    * if the connection is closed.
    *
-   * This method works for direct and indirect buffers but is optimized
-   * for the former.
+   * This method works only for direct buffers.
    *
    * @param buffer a ByteBuffer into which data is read
    * @return the actual number of bytes read
@@ -67,7 +68,9 @@ private[serial] class SerialConnection private (
     if (!closed.get) {
       try {
         reading = true
-        unsafe.read(buffer)
+        val n = unsafe.read(buffer)
+        buffer.limit(n)
+        n
       } finally {
         reading = false
         if (closed.get) readLock.notify()
@@ -85,8 +88,7 @@ private[serial] class SerialConnection private (
    * The write is non-blocking, this function returns as soon as the data is copied into the kernel's
    * transmission buffer.
    *
-   * This method works for direct and indirect buffers but is optimized
-   * for the former.
+   * This method works only for direct buffers.
    *
    * @param buffer a ByteBuffer from which data is taken
    * @return the actual number of bytes written
@@ -108,7 +110,7 @@ private[serial] class SerialConnection private (
 
 }
 
-private[serial] object SerialConnection {
+object SerialConnection {
 
   /**
    * Opens a new connection to a serial port.

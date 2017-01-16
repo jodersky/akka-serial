@@ -3,6 +3,7 @@ package ch.jodersky.akka.serial
 import akka.actor.{ Actor, ActorLogging, OneForOneStrategy }
 import akka.actor.SupervisorStrategy.{ Escalate, Stop }
 import scala.util.{ Failure, Success, Try }
+import sync.SerialConnection
 
 /**
  * Entry point to the serial API. Actor that manages serial port creation. Once opened, a serial port is handed over to
