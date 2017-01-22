@@ -1,4 +1,4 @@
-# (unreleased)
+# Version 4.0.0-RC1
 - Rename project to akka-serial
 - Move non-akka-dependent serial code into separate project, "akka-serial-sync"
 
