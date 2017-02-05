@@ -1,6 +1,8 @@
-# Version 4.0.0-RC1
+# Version 4.0.0
 - Rename project to akka-serial
+- Refactor top-level package to "akka.serial"
 - Move non-akka-dependent serial code into separate project, "akka-serial-sync"
+- Upgrade Akka to 2.4.16
 
 # Version 3.0.4
 - Implement unit tests
