@@ -6,26 +6,11 @@ title: User Guide
 * TOC
 {:toc}
 
------
-
-## Migrating from 3.x to 4.x
-
-The latest major release, 4, introduces some source compatibility-breaking changes:
-
-- The project has been renamed from "flow" to "akka-serial"
-- The package "ch.jodersky.flow" has been renamed to "akka.serial"
-- A new major version of the native library has been released, `libakkserial1`
-
-It should be sufficient to change any imports that previously used "ch.jodersky.flow" to "akka.serial".
-In case you manually installed the native library, you will also need to upgrade to libakkaserial1 (see the Developer Guide for more information).
-
------
-
 # Getting Started
 akka-serial uses sbt as build system. To get started, include a dependency to akka-serial in your project:
 
 ~~~scala
-libraryDependencies += "ch.jodersky" %% "akka-serial-core" % "4.0.0-RC1"
+libraryDependencies += "ch.jodersky" %% "akka-serial-core" % "4.0.0"
 ~~~
 
 Next, you need to include akka-serial's native library that supports communication for serial devices.
@@ -43,7 +28,7 @@ It is recommended that you use the first option for testing purposes or end-user
 In case your kernel/architecture combination is present in the "supported platforms" table in the [downloads section]({{site.url}}/downloads/), add a second dependency to your project:
 
 ~~~scala
-libraryDependencies += "ch.jodersky" % "akka-serial-native" % "4.0.0-RC1" % "runtime"
+libraryDependencies += "ch.jodersky" % "akka-serial-native" % "4.0.0" % "runtime"
 ~~~
 
 This will add a jar to your classpath containing native libraries for various platforms. At run-time, the correct library for the current platform is selected, extracted and loaded. This solution enables running applications seamlessly, as if they were pure JVM applications.
@@ -64,7 +49,7 @@ Then, for every end-user application that relies on akka-serial, manually add th
 ---
 
 # Communication Protocol
-The following is a general guide on the usage of akak-serial. If you prefer a complete example, check out the code contained in the [samples](https://github.com/jodersky/akka-serial/tree/v4.0.0-RC1/samples) directory.
+The following is a general guide on the usage of akak-serial. If you prefer a complete example, check out the code contained in the [samples](https://github.com/jodersky/akka-serial/tree/v4.0.0/samples) directory.
 
 akka-serial's API follows that of an actor based system, where each actor is assigned specific functions involved in serial communication. The two main actor types are:
 
@@ -201,7 +186,7 @@ Note that the manager has a deathwatch on every subscribed client. Hence, should
 akka-serial provides support for Akka streams and thus can be interfaced with reactive-streams. Support is implemented in a separate module, which needs to be added as a library dependency:
 
 ~~~scala
-libraryDependencies += "ch.jodersky" %% "akka-serial-stream" % "4.0.0-RC1"
+libraryDependencies += "ch.jodersky" %% "akka-serial-stream" % "4.0.0"
 ~~~
 
 The main entry point for serial streaming is `akka.serial.stream.Serial`. Its API is also well documented and should serve as the starting point when searching documentation on serial streaming.
