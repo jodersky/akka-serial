@@ -1,3 +1,4 @@
+[![Scaladex](https://index.scala-lang.org/jodersky/akka-serial/akka-serial-core/latest.svg)](https://index.scala-lang.org/jodersky/akka-serial/akka-serial-core)
 [![Build Status](https://travis-ci.org/jodersky/akka-serial.svg?branch=master)](https://travis-ci.org/jodersky/akka-serial)
 [![Download](https://img.shields.io/maven-central/v/ch.jodersky/akka-serial-native.svg)](http://search.maven.org/#search|ga|1|ch.jodersky%20akka-serial-)
 
