@@ -1,10 +1,16 @@
 package akka.serial
 
-import akka.actor.ExtensionKey
+import akka.actor.{ActorSystem, ExtendedActorSystem, ExtensionId, ExtensionIdProvider}
 import akka.util.ByteString
 
 /** Defines messages used by akka-serial's serial IO layer. */
-object Serial extends ExtensionKey[SerialExt] {
+object Serial extends ExtensionId[SerialExt] with ExtensionIdProvider {
+
+  override def lookup = Serial
+
+  override def createExtension(system: ExtendedActorSystem): SerialExt = new SerialExt(system)
+
+  override def get(system: ActorSystem): SerialExt = super.get(system)
 
   /** Base trait for any akka-serial-related messages. */
   sealed trait Message

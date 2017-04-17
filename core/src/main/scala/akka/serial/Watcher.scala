@@ -3,7 +3,7 @@ package akka.serial
 import akka.actor.{ Actor, ActorRef, Props, Terminated }
 import java.nio.file.{ ClosedWatchServiceException, FileSystems, Files, Path, Paths, WatchEvent, WatchKey }
 import java.nio.file.StandardWatchEventKinds._
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.collection.mutable.{ HashMap, Map, MultiMap, Set }
 import scala.util.{ Failure, Success, Try }
 
@@ -23,7 +23,7 @@ private[serial] class Watcher(from: Option[ActorRef]) extends Actor {
       while (!stop) {
         try {
           val key = service.take()
-          key.pollEvents() foreach { ev =>
+          key.pollEvents().asScala foreach { ev =>
             val event = ev.asInstanceOf[WatchEvent[Path]]
             if (event.kind == ENTRY_CREATE) {
               val directory = key.watchable().asInstanceOf[Path]
@@ -95,7 +95,7 @@ private[serial] class Watcher(from: Option[ActorRef]) extends Actor {
         case Success(key) =>
           context watch sender
           if (!skipInitial) {
-            Files.newDirectoryStream(normalPath) foreach { path =>
+            Files.newDirectoryStream(normalPath).asScala foreach { path =>
               if (!Files.isDirectory(path)) {
                 reply(Serial.Connected(path.toString), sender)
               }
