@@ -1,3 +1,6 @@
+# Version 4.1.0
+- Upgrade Akka to version 2.5.0
+
 # Version 4.0.0
 - Rename project to akka-serial
 - Refactor top-level package to "akka.serial"
