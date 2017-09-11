@@ -37,6 +37,7 @@ libraryDependencies += "ch.jodersky" %% "akka-serial-stream" % "{{site.version_l
 	<tbody>
 		<tr><td rowspan="3">Linux (glibc >= 2.4)</td><td>x86_64</td></tr>
 		<tr><td>x86</td></tr>
+		<tr><td>armv6</td></tr>
 		<tr><td>armv7l</td></tr>
 		<tr><td>Darwin (Mac OSX >= 10.8)</td><td>x86_64</td></tr>
 	</tbody>
