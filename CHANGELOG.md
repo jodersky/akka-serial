@@ -1,3 +1,6 @@
+# Version 4.1.1
+- (Re-)Include armv6 binary in fat jar (thanks @mthmulders)
+
 # Version 4.1.0
 - Upgrade Akka to version 2.5.0
 
