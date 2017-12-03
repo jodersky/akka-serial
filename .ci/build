@@ -23,7 +23,7 @@ EOF
 
     # Setup publishing
     cat <<EOF > sonatype.sbt
-    credentials += Credentials(
+    credentials in Global += Credentials(
         "Sonatype Nexus Repository Manager",
         "oss.sonatype.org",
         "8VNUX6+2",
@@ -34,5 +34,14 @@ EOF
     # Build and publish
     sbt clean
     sbt -Drelease=true +test
-    sbt -Drelease=true +publishSigned sonatypeRelease
+
+    # Separate publish steps are required as the "native" project does
+    # not cross-compile and sbt complains if a published file is
+    # overwritten
+    sbt -Drelease=true \
+	native/publishSigned \
+	+sync/publishSigned \
+	+core/publishSigned \
+	+stream/publishSigned \
+	sonatypeRelease
 fi

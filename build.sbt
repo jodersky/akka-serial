@@ -20,10 +20,12 @@ organization in ThisBuild := "ch.jodersky"
 licenses in ThisBuild := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause")))
 homepage in ThisBuild := Some(url("https://jodersky.github.io/akka-serial"))
 publishMavenStyle in ThisBuild := true
-publishTo in ThisBuild := {
-  val nexus = "https://oss.sonatype.org/"
-  Some("releases" at nexus + "service/local/staging/deploy/maven2")
-}
+publishTo in ThisBuild := Some(
+  if (isSnapshot.value)
+    Opts.resolver.sonatypeSnapshots
+  else
+    Opts.resolver.sonatypeStaging
+)
 pomExtra in ThisBuild := {
   <scm>
     <url>git@github.com:jodersky/akka-serial.git</url>

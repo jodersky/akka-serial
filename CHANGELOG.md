@@ -1,4 +1,4 @@
-# UNRELEASED
+# Version 4.1.2
 - Upgrade Akka to 2.5.7
 - Build: upgrade sbt to 1.0.4 and related plugins
 
