@@ -1,3 +1,7 @@
+# UNRELEASED
+- Upgrade Akka to 2.5.7
+- Build: upgrade sbt to 1.0.4 and related plugins
+
 # Version 4.1.1
 - (Re-)Include armv6 binary in fat jar (thanks @mthmulders)
 

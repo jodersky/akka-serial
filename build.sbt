@@ -1,6 +1,9 @@
 // Build settings
-version in ThisBuild := ("git describe --always --dirty=-SNAPSHOT --match v[0-9].*" !!).tail.trim
-crossScalaVersions in ThisBuild := List("2.12.2", "2.11.11")
+version in ThisBuild := {
+  import scala.sys.process._
+  ("git describe --always --dirty=-SNAPSHOT --match v[0-9].*" !!).tail.trim
+}
+crossScalaVersions in ThisBuild := List("2.12.4", "2.11.11")
 scalaVersion in ThisBuild := crossScalaVersions.value.head
 scalacOptions in ThisBuild ++= Seq(
   "-deprecation",
@@ -64,8 +67,8 @@ lazy val samplesWatcher = (project in file("samples") / "watcher")
 
 // Root project settings
 publishArtifact := false
-publish := ()
-publishLocal := ()
+publish := {}
+publishLocal := {}
 // make sbt-pgp happy
 publishTo := Some(Resolver.file("Unused transient repository", target.value / "unusedrepo"))
 
@@ -80,8 +83,7 @@ preprocessVars in Preprocess := Map(
 
 // Add scaladoc to documentation
 enablePlugins(SiteScaladocPlugin)
-import UnidocKeys._
-unidocSettings
+enablePlugins(ScalaUnidocPlugin)
 unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(
   samplesTerminal, samplesTerminalStream, samplesWatcher)
 scalacOptions in (ScalaUnidoc, doc) ++= Seq(
@@ -90,6 +92,7 @@ scalacOptions in (ScalaUnidoc, doc) ++= Seq(
   "-implicits", // Add methods "inherited" through implicit conversions
   "-sourcepath", baseDirectory.value.getAbsolutePath
 ) ++ {
+  import scala.sys.process._
   val latestTag: String = "git describe --abbrev=0 --match v[0-9].*".!!
   Opts.doc.sourceUrl(
     s"https://github.com/jodersky/akka-serial/blob/$latestTag€{FILE_PATH}.scala"
