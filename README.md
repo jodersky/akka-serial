@@ -42,4 +42,4 @@ This project is also an experiment on working with JNI and automating build infr
 akka-serial is released under the terms of the 3-clause BSD license. See LICENSE for details.
 
 ## Notes
-This project used to called "flow". It was renamed to "akka-serial".
+This project used to be called "flow". It was renamed to "akka-serial".
