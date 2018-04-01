@@ -1,5 +1,7 @@
 #!/bin/bash
-set -ev
+set -o errexit
+set -o nounset
+set -o verbose
 
 sbt +test
 sbt \
@@ -10,26 +12,31 @@ sbt \
 # Automatic publishing for tags that start with `v<digit>`
 if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_TAG" =~ ^v[0-9].* ]]; then
     # Setup gpg keys
-    gpg --keyserver keyserver.ubuntu.com --recv-keys "DC6A9A5E884B2D680E080467E107A4A6CF561C67"
-    openssl aes-256-cbc -K $encrypted_e5a450dd395a_key -iv $encrypted_e5a450dd395a_iv -in .ci/sec.gpg.enc -out sec.gpg -d
+    gpg --keyserver keyserver.ubuntu.com --recv-keys "2B50AAFF11989ECC8531EB4A7C921C6769797655"
+    openssl aes-256-cbc \
+	    -K "$encrypted_1f829de8111f_key" \
+	    -iv "$encrypted_1f829de8111f_iv" \
+	    -in .ci/sec.gpg.enc \
+	    -out sec.gpg \
+	    -d
     gpg --import sec.gpg
 
     # Setup sbt-pgp plugin
-    cat <<EOF > gpg.sbt
-    pgpSigningKey in Global := Some(0xE107A4A6CF561C67l)
-    useGpgAgent in Global := true
-    useGpg in Global := true
-EOF
+    cat <<-EOF > gpg.sbt
+	pgpSigningKey in Global := Some(0x7C921C6769797655l)
+	useGpgAgent in Global := true
+	useGpg in Global := true
+	EOF
 
     # Setup publishing
-    cat <<EOF > sonatype.sbt
-    credentials in Global += Credentials(
-        "Sonatype Nexus Repository Manager",
-        "oss.sonatype.org",
-        "8VNUX6+2",
-        "$SONATYPE_PASS"
-    )
-EOF
+    cat <<-EOF > sonatype.sbt
+	credentials in Global += Credentials(
+	    "Sonatype Nexus Repository Manager",
+	    "oss.sonatype.org",
+	    "8VNUX6+2",
+	    "$SONATYPE_PASS"
+	)
+	EOF
     
     # Build and publish
     sbt clean
