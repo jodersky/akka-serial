@@ -1,6 +1,6 @@
 # Site settings
 title: akka-serial
 description: Serial communication library for Akka and Scala.
-url: "https://jakob.odersky.com/akka-serial"
+url: "https://jodersky.github.io/akka-serial"
 version_latest: 4.1.2
 version_docs: 4.1
