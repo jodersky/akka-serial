@@ -21,20 +21,19 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_TAG" =~ ^v[0-9].* ]]; then
 	    -d
     gpg --import sec.gpg
 
-    # Setup sbt-pgp plugin
-    cat <<-EOF > gpg.sbt
-	pgpSigningKey in Global := Some(0x7C921C6769797655l)
-	useGpgAgent in Global := true
-	useGpg in Global := true
-	EOF
-
     # Setup publishing
     cat <<-EOF > sonatype.sbt
 	credentials in Global += Credentials(
-	    "Sonatype Nexus Repository Manager",
-	    "oss.sonatype.org",
-	    "8VNUX6+2",
-	    "$SONATYPE_PASS"
+	  "GnuPG Key ID",
+	  "gpg",
+	  "2B50AAFF11989ECC8531EB4A7C921C6769797655",
+	  "ignored"
+	)
+	credentials in Global += Credentials(
+	  "Sonatype Nexus Repository Manager",
+	  "oss.sonatype.org",
+	  "8VNUX6+2",
+	  "$SONATYPE_PASS"
 	)
 	EOF
     
@@ -46,9 +45,9 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_TAG" =~ ^v[0-9].* ]]; then
     # not cross-compile and sbt complains if a published file is
     # overwritten
     sbt -Drelease=true \
-	native/publishSigned \
-	+sync/publishSigned \
-	+core/publishSigned \
-	+stream/publishSigned \
+	native/publish \
+	+sync/publish \
+	+core/publish \
+	+stream/publish \
 	sonatypeRelease
 fi

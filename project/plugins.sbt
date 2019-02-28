@@ -15,7 +15,7 @@ addSbtPlugin("com.eed3si9n" % "sbt-unidoc" % "0.4.2")
 addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.3.2")
 
 // Sign published artifacts
-addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.0")
+addSbtPlugin("io.crashbox" % "sbt-gpg" % "0.2.0")
 
 // Publish to sonatype and sync with maven central
 addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "2.4")
