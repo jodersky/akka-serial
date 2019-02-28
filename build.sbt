@@ -3,7 +3,7 @@ version in ThisBuild := {
   import scala.sys.process._
   ("git describe --always --dirty=-SNAPSHOT --match v[0-9].*" !!).tail.trim
 }
-crossScalaVersions in ThisBuild := List("2.12.4", "2.11.11")
+crossScalaVersions in ThisBuild := List("2.12.8", "2.11.12")
 scalaVersion in ThisBuild := crossScalaVersions.value.head
 scalacOptions in ThisBuild ++= Seq(
   "-deprecation",
