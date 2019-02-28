@@ -1,3 +1,8 @@
+# Version 4.1.3
+- Upgrade Scala and library patch versions
+- Build: upgrade sbt, move from sbt-pgp to sbt-gpg for signing of
+  published artifacts.
+
 # Version 4.1.2
 - Upgrade Akka to 2.5.7
 - Build: upgrade sbt to 1.0.4 and related plugins
