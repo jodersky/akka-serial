@@ -9,6 +9,10 @@ target/
 .cache
 .history
 
+# IntelliJ specific
+.idea/
+*.iml
+
 # Ensime
 .ensime
 .ensime_cache
