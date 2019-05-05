@@ -1,7 +1,7 @@
 language: scala
 
 jdk:
-  - oraclejdk8 # this should be changed to openjdk as soon as it becomes available on Travis CI
+  - oraclejdk8
   - openjdk8
   - openjdk11
 
