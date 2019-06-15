@@ -1,3 +1,6 @@
+# Version 4.1.4
+- Add support Scala 2.13.0
+
 # Version 4.1.3
 - Upgrade Scala and library patch versions
 - Build: upgrade sbt, move from sbt-pgp to sbt-gpg for signing of
