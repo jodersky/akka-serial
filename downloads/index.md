@@ -53,7 +53,7 @@ akka-serial is POSIX compatible so it can be built for a lot more platforms.</p>
 Consult the <a href="https://github.com/jodersky/akka-serial/blob/master/CHANGELOG.md">release notes</a> for important changes.
 
 ## Requirements
-akka-serial depends on Akka 2.5 and requires a Java runtime version of 1.8. It is released for Scala binary versions 2.11, 2.12 and 2.13.
+akka-serial depends on Akka 2.6 and requires a Java runtime version of 1.8. It is released for Scala binary versions 2.12 and 2.13.
 
 ## Previous Versions
 Archived releases are available in <a href="https://github.com/jodersky/akka-serial/releases">GitHub releases</a>.
