@@ -2,5 +2,5 @@
 title: akka-serial
 description: Serial communication library for Akka and Scala.
 url: "https://jodersky.github.io/akka-serial"
-version_latest: 4.1.4
-version_docs: 4.4
+version_latest: 4.2.0
+version_docs: 4.2
