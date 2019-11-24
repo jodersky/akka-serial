@@ -1,3 +1,9 @@
+# Version 4.2.0
+- Upgrade Akka to 2.6.0
+- Upgrade sbt-jni to 1.4.0, enabling building of akka-serial on platforms with
+  JDK >= 1.10
+- Drop support for Scala 2.11
+
 # Version 4.1.4
 - Add support Scala 2.13.0
 
