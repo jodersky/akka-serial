@@ -3,7 +3,7 @@
  */
 
 // Build, package and load native libraries
-addSbtPlugin("ch.jodersky" % "sbt-jni" % "1.3.4")
+addSbtPlugin("ch.jodersky" % "sbt-jni" % "1.4.0")
 
 /*
  * Utility plugins, can be disabled during plain build
