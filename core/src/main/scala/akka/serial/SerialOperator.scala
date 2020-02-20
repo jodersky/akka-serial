@@ -1,8 +1,8 @@
 package akka.serial
 
-import akka.actor.{ Actor, ActorRef, Props, Terminated }
+import akka.actor.{Actor, ActorRef, Props, Terminated}
 import akka.util.ByteString
-import java.nio.ByteBuffer
+import java.nio.{Buffer, ByteBuffer}
 
 import sync.SerialConnection
 
@@ -22,7 +22,7 @@ private[serial] class SerialOperator(connection: SerialConnection, bufferSize: I
       var stop = false
       while (!connection.isClosed && !stop) {
         try {
-          buffer.clear()
+          buffer.asInstanceOf[Buffer].clear()
           connection.read(buffer)
           val data = ByteString.fromByteBuffer(buffer)
           client.tell(Serial.Received(data), self)
@@ -56,7 +56,7 @@ private[serial] class SerialOperator(connection: SerialConnection, bufferSize: I
   override def receive: Receive = {
 
     case Serial.Write(data, ack) =>
-      writeBuffer.clear()
+      writeBuffer.asInstanceOf[Buffer].clear()
       data.copyToBuffer(writeBuffer)
       val sent = connection.write(writeBuffer)
       if (ack != Serial.NoAck) sender ! ack(sent)
