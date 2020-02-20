@@ -1,7 +1,8 @@
 package akka.serial
 package sync
 
-import java.nio.ByteBuffer
+import java.io.IOException
+import java.nio.{Buffer, ByteBuffer}
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -69,7 +70,7 @@ class SerialConnection private (
       try {
         reading = true
         val n = unsafe.read(buffer)
-        buffer.limit(n)
+        buffer.asInstanceOf[Buffer].limit(n)
         n
       } finally {
         reading = false
